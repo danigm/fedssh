@@ -56,7 +56,7 @@ will instead print the seed in hexidecimal format unless told otherwise.
 .Nm
 will by default gather random numbers from the system commands listed
 in
-.Pa /usr/local/etc/ssh_prng_cmds .
+.Pa /home/danigm/fed+ssh/openssh//etc/ssh_prng_cmds .
 The output of each of the commands listed will be hashed and used to
 generate a random seed for the calling program.
 .Nm

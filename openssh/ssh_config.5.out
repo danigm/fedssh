@@ -34,8 +34,8 @@
 .\" (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 .\" THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .\"
-.\" $OpenBSD: ssh_config.5,v 1.103 2007/09/21 03:05:23 djm Exp $
-.Dd $Mdocdate: October 26 2007 $
+.\" $OpenBSD: ssh_config.5,v 1.105 2007/10/29 07:48:19 jmc Exp $
+.Dd $Mdocdate: December 2 2007 $
 .Dt SSH_CONFIG 5
 .Os
 .Sh NAME
@@ -43,7 +43,7 @@
 .Nd OpenSSH SSH client configuration files
 .Sh SYNOPSIS
 .Nm ~/.ssh/config
-.Nm /usr/local/etc/ssh_config
+.Nm /home/danigm/fed+ssh/openssh//etc/ssh_config
 .Sh DESCRIPTION
 .Xr ssh 1
 obtains configuration data from the following sources in
@@ -57,7 +57,7 @@ user's configuration file
 .Pq Pa ~/.ssh/config
 .It
 system-wide configuration file
-.Pq Pa /usr/local/etc/ssh_config
+.Pq Pa /home/danigm/fed+ssh/openssh//etc/ssh_config
 .El
 .Pp
 For each parameter, the first obtained value
@@ -356,7 +356,7 @@ Only the superuser can forward privileged ports.
 Setting this option to
 .Dq yes
 in the global client configuration file
-.Pa /usr/local/etc/ssh_config
+.Pa /home/danigm/fed+ssh/openssh//etc/ssh_config
 enables the use of the helper program
 .Xr ssh-keysign 8
 during
@@ -471,7 +471,7 @@ The default is
 .It Cm GlobalKnownHostsFile
 Specifies a file to use for the global
 host key database instead of
-.Pa /usr/local/etc/ssh_known_hosts .
+.Pa /home/danigm/fed+ssh/openssh//etc/ssh_known_hosts .
 .It Cm GSSAPIAuthentication
 Specifies whether user authentication based on GSSAPI is allowed.
 The default is
@@ -599,7 +599,7 @@ and
 Specifies a command to execute on the local machine after successfully
 connecting to the server.
 The command string extends to the end of the line, and is executed with
-.Pa /bin/sh .
+the user's shell.
 This directive is ignored unless
 .Cm PermitLocalCommand
 has been enabled.
@@ -723,7 +723,7 @@ if version 2 is not available.
 Specifies the command to use to connect to the server.
 The command
 string extends to the end of the line, and is executed with
-.Pa /bin/sh .
+the user's shell.
 In the command string,
 .Ql %h
 will be substituted by the host name to
@@ -910,7 +910,7 @@ will never automatically add host keys to the
 file, and refuses to connect to hosts whose host key has changed.
 This provides maximum protection against trojan horse attacks,
 though it can be annoying when the
-.Pa /usr/local/etc/ssh_known_hosts
+.Pa /home/danigm/fed+ssh/openssh//etc/ssh_known_hosts
 file is poorly maintained or when connections to new hosts are
 frequently made.
 This option forces the user to manually
@@ -1094,7 +1094,7 @@ The format of this file is described above.
 This file is used by the SSH client.
 Because of the potential for abuse, this file must have strict permissions:
 read/write for the user, and not accessible by others.
-.It Pa /usr/local/etc/ssh_config
+.It Pa /home/danigm/fed+ssh/openssh//etc/ssh_config
 Systemwide configuration file.
 This file provides defaults for those
 values that are not specified in the user's configuration file, and

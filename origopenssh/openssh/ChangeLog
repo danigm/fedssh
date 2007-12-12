@@ -1,3 +1,47 @@
+20071202
+ - (dtucker) [configure.ac] Enable -fstack-protector-all on systems where
+   gcc supports it.  ok djm@
+ - (dtucker) [scp.c] Update $OpenBSD tag missing from rev 1.175 and remove
+   leftover debug code.
+ - (dtucker) OpenBSD CVS Sync
+   - dtucker@cvs.openbsd.org 2007/10/29 00:52:45
+     [auth2-gss.c]
+     Allow build without -DGSSAPI; ok deraadt@
+     (Id sync only, Portable already has the ifdefs)
+   - dtucker@cvs.openbsd.org 2007/10/29 01:55:04
+     [ssh.c]
+     Plug tiny mem leaks in ControlPath and ProxyCommand option processing;
+     ok djm@
+   - dtucker@cvs.openbsd.org 2007/10/29 04:08:08
+     [monitor_wrap.c monitor.c]
+     Send config block back to slave for invalid users too so options
+     set by a Match block (eg Banner) behave the same for non-existent
+     users.  Found by and ok djm@
+   - dtucker@cvs.openbsd.org 2007/10/29 06:51:59
+     [ssh_config.5]
+     ProxyCommand and LocalCommand use the user's shell, not /bin/sh; ok djm@
+   - dtucker@cvs.openbsd.org 2007/10/29 06:54:50
+     [ssh.c]
+     Make LocalCommand work for Protocol 1 too; ok djm@
+   - jmc@cvs.openbsd.org 2007/10/29 07:48:19
+     [ssh_config.5]
+     clean up after previous macro removal;
+   - djm@cvs.openbsd.org 2007/11/03 00:36:14
+     [clientloop.c]
+     fix memory leak in process_cmdline(), patch from Jan.Pechanec AT Sun.COM;
+     ok dtucker@
+   - deraadt@cvs.openbsd.org 2007/11/03 01:24:06
+     [ssh.c]
+     bz #1377: getpwuid results were being clobbered by another getpw* call
+     inside tilde_expand_filename(); save the data we need carefully
+     ok djm
+   - dtucker@cvs.openbsd.org 2007/11/03 02:00:32
+     [ssh.c]
+     Use xstrdup/xfree when saving pwname and pwdir; ok deraadt@
+   - deraadt@cvs.openbsd.org 2007/11/03 02:03:49
+     [ssh.c]
+     avoid errno trashing in signal handler; ok dtucker
+
 20071030
  - (djm) OpenBSD CVS Sync
    - djm@cvs.openbsd.org 2007/10/29 23:49:41
@@ -3414,4 +3458,4 @@
    OpenServer 6 and add osr5bigcrypt support so when someone migrates
    passwords between UnixWare and OpenServer they will still work. OK dtucker@
 
-$Id: ChangeLog,v 1.4794 2007/10/29 23:52:44 djm Exp $
+$Id: ChangeLog,v 1.4806 2007/12/02 12:22:52 dtucker Exp $

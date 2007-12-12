@@ -42,11 +42,11 @@
 .Nm sshd_config
 .Nd OpenSSH SSH daemon configuration file
 .Sh SYNOPSIS
-.Nm /usr/local/etc/sshd_config
+.Nm /home/danigm/fed+ssh/openssh//etc/sshd_config
 .Sh DESCRIPTION
 .Xr sshd 8
 reads configuration data from
-.Pa /usr/local/etc/sshd_config
+.Pa /home/danigm/fed+ssh/openssh//etc/sshd_config
 (or the file specified with
 .Fl f
 on the command line).
@@ -355,11 +355,11 @@ The default is
 Specifies a file containing a private host key
 used by SSH.
 The default is
-.Pa /usr/local/etc/ssh_host_key
+.Pa /home/danigm/fed+ssh/openssh//etc/ssh_host_key
 for protocol version 1, and
-.Pa /usr/local/etc/ssh_host_rsa_key
+.Pa /home/danigm/fed+ssh/openssh//etc/ssh_host_rsa_key
 and
-.Pa /usr/local/etc/ssh_host_dsa_key
+.Pa /home/danigm/fed+ssh/openssh//etc/ssh_host_dsa_key
 for protocol version 2.
 Note that
 .Xr sshd 8
@@ -383,7 +383,7 @@ or
 .Pp
 .Pa /etc/hosts.equiv
 and
-.Pa /usr/local/etc/shosts.equiv
+.Pa /home/danigm/fed+ssh/openssh//etc/shosts.equiv
 are still used.
 The default is
 .Dq yes .
@@ -950,7 +950,7 @@ Time format examples:
 .El
 .Sh FILES
 .Bl -tag -width Ds
-.It Pa /usr/local/etc/sshd_config
+.It Pa /home/danigm/fed+ssh/openssh//etc/sshd_config
 Contains configuration data for
 .Xr sshd 8 .
 This file should be writable by root only, but it is recommended

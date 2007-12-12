@@ -134,7 +134,7 @@ is either
 or
 .Dq ssh-dss .
 .Pp
-.Pa /usr/local/etc/ssh_known_hosts
+.Pa /home/danigm/fed+ssh/openssh//etc/ssh_known_hosts
 .Sh EXAMPLES
 Print the
 .Pa rsa1

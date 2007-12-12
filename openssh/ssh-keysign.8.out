@@ -40,7 +40,7 @@ required during host-based authentication with SSH protocol version 2.
 .Nm
 is disabled by default and can only be enabled in the
 global client configuration file
-.Pa /usr/local/etc/ssh_config
+.Pa /home/danigm/fed+ssh/openssh//etc/ssh_config
 by setting
 .Cm EnableSSHKeysign
 to
@@ -56,11 +56,11 @@ and
 for more information about host-based authentication.
 .Sh FILES
 .Bl -tag -width Ds
-.It Pa /usr/local/etc/ssh_config
+.It Pa /home/danigm/fed+ssh/openssh//etc/ssh_config
 Controls whether
 .Nm
 is enabled.
-.It Pa /usr/local/etc/ssh_host_dsa_key, /usr/local/etc/ssh_host_rsa_key
+.It Pa /home/danigm/fed+ssh/openssh//etc/ssh_host_dsa_key, /home/danigm/fed+ssh/openssh//etc/ssh_host_rsa_key
 These files contain the private parts of the host keys used to
 generate the digital signature.
 They should be owned by root, readable only by root, and not
