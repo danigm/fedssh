@@ -1,4 +1,4 @@
-* Utilizar conexiones seguras
+* Utilizar conexiones seguras (con openssl)
 * Mirar lo de los permisos del openssl
 * Compilar en ficheros separados lo del openssl
 * Meter función en el servidorRSA para que elimine los usuarios que lleguen al tiempo límite.
