@@ -1,0 +1,1 @@
+./configure --with-pam --with-default-path=/home/danigm/fed+ssh/openssh/ --prefix=/home/danigm/fed+ssh/openssh/

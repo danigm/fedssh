@@ -1,0 +1,26 @@
+- si tienes la clave publica en .ssh/authorized_keys, no mira los módulos pam.
+    Primero mira la clave publica, luego mira los modulos PAM.
+
+- Se puede hacer de la siguiente manera:
+    1. te logueas por web en el servidor central.
+    2. el servidor envía tu clave publica a todos los ssh federados.
+    3. cada ssh federado crea un usuario con esa clave.
+        3.1 esta clave puede tener un timeout, por lo que se elimina al pasar cierto tiempo.
+    4. el usuario puede entrar indistintamente a cada máquina, sin tener
+    que autenticarse nuevamente.
+
+    Si no tenemos la clave se genera y se instala automáticamente con un tipo mime y una aplicación externa. También se podría hacer a mano.
+
+
+fichero auth2-pubkey.c <- aquí es donde busca las claves en el fichero de claves
+user_key_allowed2(struct passwd *pw, Key *key, char *file)
+
+fichero auth-options.c <- aquí es donde autoriza a un usuario a entrar sabiendo el fichero en el que está la clave y la linea
+auth_parse_options(struct passwd *pw, char *opts, char *file, u_long linenum)
+
+
+@@ mar dic 11 13:53:36 CET 2007
+-He montado la aplicacion ssh en federacion21, bajo el directorio protegido, que está protegido por el SP de shibboleth
+-He tenido que modificar el fichero auth2-pubkey.c, para que no compruebe el propietario del fichero de claves publicas, puesto que sino falla.
+-He modificado el servidor RSA para que ahora mire las claves en un fichero de texto, y de forma fácil sea extendible para que lo mire de una base de datos o de lo que sea.
+-He realizado algunos test, y he comprobado que funciona.
