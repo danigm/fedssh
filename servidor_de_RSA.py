@@ -15,7 +15,7 @@ class iPeopleFinder():
         pass
 '''
 
-class PeopleFinder():
+class PeopleFinder:
     '''
     Buscamos en un fichero de texto plano
     '''
