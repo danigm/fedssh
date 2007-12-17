@@ -6,6 +6,22 @@
 
 <?php
 
+$mysqlhost = "localhost";
+$mysqlu = "federacionssh";
+$mysqlp = "fedssh.[pass]";
+$mysqldb = "federacionssh";
+
+if (!mysql_connect($mysqlhost, $mysqlu, $mysqlp)) {
+	print "Mejor lo dejamos, que no puedo ni conectar a la BD";
+	exit;
+}
+
+if (!mysql_select_db($mysqldb)) {
+	print "No puedo abrir la BD, ¡pasando!";
+	exit;
+}
+
+
 function display_form($color) {
 ?>
     <form action="" method="POST">
@@ -52,15 +68,18 @@ if (isset($certificate)) {
 
         // Store public key in user's authorized_keys file
         //$command = "sudo /var/www/sshfed/addkey.sh testuser \"$certificate\"";
-        $command = 'echo "'.$name.':'.$certificate.'" >> applog';
-        $response = exec($command, $output, $return);
+        //$command = 'echo "'.$name.':'.$certificate.'" >> applog';
+	$q = sprintf("insert into pubkey (uid, init, timeout, pubkey) values ('%s', NOW(), '300', '%s')",
+			mysql_real_escape_string($name), mysql_real_escape_string($certificate));
+	$response = mysql_query($q);
+        //$response = exec($command, $output, $return);
 
         // Check if command executed successfully
-        if(!$return) {
-            echo "<p>DEBUG: OK: $response</p>";
-            echo "<p>You may now log in using SSH, authenticating with your private key</p>";
+        if($response) {
+            echo "<p>DEBUG: OK:</p>";
+            echo "<p>You may now log in using SSH, authenticating with ". $name ."</p>";
         } else {
-            echo "<p>DEBUG: NOK: $response</p>";
+            echo "<p>DEBUG: NOK</p>";
         }
     } else {
 

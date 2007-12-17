@@ -4,6 +4,7 @@ import sys
 import socket
 import pdb
 from threading import Thread
+import MySQLdb
 #import peoplefinder
 
 '''
@@ -15,7 +16,7 @@ class iPeopleFinder():
         pass
 '''
 
-class PeopleFinder:
+class PeopleFinder():
     '''
     Buscamos en un fichero de texto plano
     '''
@@ -34,6 +35,32 @@ class PeopleFinder:
             
         return to_ret
 
+class PeopleFinderdb():
+    '''
+    Buscamos en una base de datos mysql
+    '''
+    def __init__(self, host, user, password, db):
+        self.host = host
+        self.user = user
+        self.password = password
+        self.db = db
+
+    def get_rsa(self, user):
+        to_ret = ''
+        try:
+            pdb.set_trace()
+            print self.host, self.user, self.password, self.db
+            db=MySQLdb.connect(host=self.host,user=self.user,passwd=self.password,db=self.db)
+            cursor = db.cursor()
+            q = "select pubkey from pubkey where uid='"+user+"'"
+            lines = cursor.execute(q)
+            if(lines):            
+                res = cursor.fetchall()
+                to_ret = res[0][0]
+        except:
+            pass   
+        return to_ret
+        
 
 class Responser(Thread):
     def __init__ (self, sock, addr):
@@ -43,7 +70,7 @@ class Responser(Thread):
         self.addr = addr
         self.buffer = ''
         self.msg = []
-        self.pfinder = PeopleFinder('applog')
+        self.pfinder = PeopleFinderdb('127.0.0.1','federacionssh','fedssh.[pass]','federacionssh')
 
     def run(self):
         print "inicio de " + str(self.addr) + "\n"
