@@ -1,4 +1,4 @@
-/* $OpenBSD: sshd.c,v 1.351 2007/05/22 10:18:52 djm Exp $ */
+/* $OpenBSD: sshd.c,v 1.353 2007/12/31 15:27:04 dtucker Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -953,8 +953,7 @@ server_listen(void)
 		    ntop, sizeof(ntop), strport, sizeof(strport),
 		    NI_NUMERICHOST|NI_NUMERICSERV)) != 0) {
 			error("getnameinfo failed: %.100s",
-			    (ret != EAI_SYSTEM) ? gai_strerror(ret) :
-			    strerror(errno));
+			    ssh_gai_strerror(ret));
 			continue;
 		}
 		/* Create socket for listening. */
@@ -1600,10 +1599,6 @@ main(int ac, char **av)
 	/* Get a connection, either from inetd or a listening TCP socket */
 	if (inetd_flag) {
 		server_accept_inetd(&sock_in, &sock_out);
-
-		if ((options.protocol & SSH_PROTO_1) &&
-		    sensitive_data.server_key == NULL)
-			generate_ephemeral_server_key();
 	} else {
 		server_listen();
 
@@ -1772,6 +1767,10 @@ main(int ac, char **av)
 		alarm(options.login_grace_time);
 
 	sshd_exchange_identification(sock_in, sock_out);
+
+	/* In inetd mode, generate ephemeral key only for proto 1 connections */
+	if (!compat20 && inetd_flag && sensitive_data.server_key == NULL)
+		generate_ephemeral_server_key();
 
 	packet_set_nonblocking();
 

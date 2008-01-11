@@ -1,4 +1,4 @@
-# $Id: configure.ac,v 1.387 2007/12/02 10:02:22 dtucker Exp $
+# $Id: configure.ac,v 1.389 2008/01/02 07:08:45 dtucker Exp $
 #
 # Copyright (c) 1999-2004 Damien Miller
 #
@@ -15,7 +15,7 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 AC_INIT(OpenSSH, Portable, openssh-unix-dev@mindrot.org)
-AC_REVISION($Revision: 1.387 $)
+AC_REVISION($Revision: 1.389 $)
 AC_CONFIG_SRCDIR([ssh.c])
 
 AC_CONFIG_HEADER(config.h)
@@ -105,7 +105,7 @@ if test "$GCC" = "yes" || test "$GCC" = "egcs"; then
 		*) ;;
 	esac
 
-	AC_MSG_CHECKING(if $GCC understands -fstack-protector-all)
+	AC_MSG_CHECKING(if $CC understands -fstack-protector-all)
 	saved_CFLAGS="$CFLAGS"
 	CFLAGS="$CFLAGS -fstack-protector-all"
 	AC_TRY_COMPILE([], [ int main(void){return 0;} ],
@@ -415,6 +415,7 @@ main() { if (NSVersionOfRunTimeLibrary("System") >= (60 << 16))
 	AC_DEFINE(SETEUID_BREAKS_SETUID)
 	AC_DEFINE(BROKEN_SETREUID)
 	AC_DEFINE(BROKEN_SETREGID)
+	AC_DEFINE(BROKEN_GLOB, 1, [OS X glob does not do what we expect])
 	AC_DEFINE_UNQUOTED(BIND_8_COMPAT, 1,
 		[Define if your resolver libs need this for getrrsetbyname])
 	AC_DEFINE(SSH_TUN_FREEBSD, 1, [Open tunnel devices the FreeBSD way])

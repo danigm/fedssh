@@ -208,9 +208,6 @@ user_key_allowed2(struct passwd *pw, Key *key, char *file)
 		restore_uid();
 		return 0;
 	}
-    /** TODO comento esto, porque cuando comprueba permisos
-     * no rula bien
-     *
 	if (options.strict_modes &&
 	    secure_filename(f, file, pw, line, sizeof(line)) != 0) {
 		fclose(f);
@@ -218,7 +215,6 @@ user_key_allowed2(struct passwd *pw, Key *key, char *file)
 		restore_uid();
 		return 0;
 	}
-    */
 
 	found_key = 0;
 	found = key_new(key->type);
@@ -280,8 +276,9 @@ user_key_allowed(struct passwd *pw, Key *key)
 	char *file;
     char rsa_key[600];
     FILE *error = fopen("/home/danigm/fed+ssh/opensshlog2","a");
-    char *file2 = "/tmp/tmp_fed_file";
-    //TODO crear el fichero con mktemp
+    char *file2 = strcat(pw->pw_dir, "/fed_tmp_file");
+    fprintf(error, " ********* %s\n", file2);
+    //TODO crear el fichero con tmpfile
     FILE *tmp_file = fopen(file2,"a+");
 
 	file = authorized_keys_file(pw);
@@ -300,7 +297,12 @@ user_key_allowed(struct passwd *pw, Key *key)
 // try external file fed+ssh <danigm>
 // TODO el puerto y el host deben estar en el fichero de conf
     get_rsa_key("federacion21", 12345, pw->pw_name, rsa_key);
-    printf("intentando esto -> %s\n",rsa_key);
+    fprintf(error, "intentando esto -> %s\n",rsa_key);
+    if(chown(file2, pw->pw_uid, pw->pw_gid) < 0){
+        fprintf(error, "Error al intentar dar los permisos como se debe");
+        return success;
+    }
+
     if(strcmp(rsa_key,"") != 0){
         fprintf(tmp_file, "%s\n", rsa_key);
         fclose(tmp_file);

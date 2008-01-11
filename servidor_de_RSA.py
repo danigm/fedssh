@@ -6,6 +6,13 @@ import pdb
 from threading import Thread
 import MySQLdb
 #import peoplefinder
+import threading
+
+# Variables de configuracion para acceso a base de datos
+HOST = '127.0.0.1'
+USER = 'federacionssh'
+PASS = 'fedssh.[pass]'
+DB = 'federacionssh'
 
 '''
 interfaz para peopleFinder
@@ -48,19 +55,19 @@ class PeopleFinderdb():
     def get_rsa(self, user):
         to_ret = ''
         try:
-            pdb.set_trace()
             print self.host, self.user, self.password, self.db
             db=MySQLdb.connect(host=self.host,user=self.user,passwd=self.password,db=self.db)
             cursor = db.cursor()
             q = "select pubkey from pubkey where uid='"+user+"'"
             lines = cursor.execute(q)
-            if(lines):            
+            if(lines):
                 res = cursor.fetchall()
                 to_ret = res[0][0]
         except:
-            pass   
+            pass
         return to_ret
-        
+
+def timeout_check(host, user, password, db)
 
 class Responser(Thread):
     def __init__ (self, sock, addr):

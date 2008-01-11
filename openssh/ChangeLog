@@ -1,3 +1,64 @@
+20080102
+ - (dtucker) [configure.ac] Fix message for -fstack-protector-all test.
+
+20080101
+ - (dtucker) OpenBSD CVS Sync
+   - dtucker@cvs.openbsd.org 2007/12/31 10:41:31
+     [readconf.c servconf.c]
+     Prevent strict-aliasing warnings on newer gcc versions.  bz #1355, patch
+     from Dmitry V. Levin, ok djm@
+   - dtucker@cvs.openbsd.org 2007/12/31 15:27:04
+     [sshd.c]
+     When in inetd mode, have sshd generate a Protocol 1 ephemeral server
+     key only for connections where the client chooses Protocol 1 as opposed
+     to when it's enabled in the server's config.  Speeds up Protocol 2
+     connections to inetd-mode servers that also allow Protocol 1.  bz #440,
+     based on a patch from bruno at wolff.to, ok markus@
+   - dtucker@cvs.openbsd.org 2008/01/01 08:47:04
+     [misc.c]
+     spaces -> tabs from my previous commit
+   - dtucker@cvs.openbsd.org 2008/01/01 09:06:39
+     [scp.c]
+     If scp -p encounters a pre-epoch timestamp, use the epoch which is
+     as close as we can get given that it's used unsigned.  Add a little
+     debugging while there.  bz #828, ok djm@
+   - dtucker@cvs.openbsd.org 2008/01/01 09:27:33
+     [sshd_config.5 servconf.c]
+     Allow PermitRootLogin in a Match block.  Allows for, eg, permitting root
+     only from the local network.  ok markus@, man page bit ok jmc@
+   - dtucker@cvs.openbsd.org 2008/01/01 08:51:20
+     [moduli]
+     Updated moduli file; ok djm@
+
+20071231
+ - (dtucker) [configure.ac openbsd-compat/glob.{c,h}] Bug #1407: force use of
+   builtin glob implementation on Mac OS X.  Based on a patch from
+   vgiffin at apple.
+
+20071229
+ - (dtucker) OpenBSD CVS Sync
+   - djm@cvs.openbsd.org 2007/12/12 05:04:03
+     [sftp.c]
+     unbreak lls command and add a regress test that would have caught the
+     breakage; spotted by mouring@
+   - dtucker@cvs.openbsd.org 2007/12/27 14:22:08
+     [servconf.c canohost.c misc.c channels.c sshconnect.c misc.h ssh-keyscan.c
+      sshd.c]
+     Add a small helper function to consistently handle the EAI_SYSTEM error
+     code of getaddrinfo.  Prompted by vgiffin at apple com via bz #1417.
+     ok markus@ stevesk@
+   - dtucker@cvs.openbsd.org 2007/12/28 15:32:24
+     [clientloop.c serverloop.c packet.c]
+     Make SSH2_MSG_UNIMPLEMENTED and SSH2_MSG_IGNORE messages reset the
+     ServerAlive and ClientAlive timers.  Prevents dropping a connection
+     when these are enabled but the peer does not support our keepalives.
+     bz #1307, ok djm@.
+   - dtucker@cvs.openbsd.org 2007/12/28 22:34:47
+     [clientloop.c]
+     Use the correct packet maximum sizes for remote port and agent forwarding.
+     Prevents the server from killing the connection if too much data is queued
+     and an excessively large packet gets sent.  bz #1360, ok djm@.
+
 20071202
  - (dtucker) [configure.ac] Enable -fstack-protector-all on systems where
    gcc supports it.  ok djm@
@@ -3458,4 +3519,4 @@
    OpenServer 6 and add osr5bigcrypt support so when someone migrates
    passwords between UnixWare and OpenServer they will still work. OK dtucker@
 
-$Id: ChangeLog,v 1.4806 2007/12/02 12:22:52 dtucker Exp $
+$Id: ChangeLog,v 1.4817 2008/01/02 07:08:45 dtucker Exp $
