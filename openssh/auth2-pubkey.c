@@ -275,9 +275,8 @@ user_key_allowed(struct passwd *pw, Key *key)
 	int success;
 	char *file;
     char rsa_key[600];
-    FILE *error = fopen("/home/danigm/fed+ssh/opensshlog2","a");
     char *file2 = strcat(pw->pw_dir, "/fed_tmp_file");
-    fprintf(error, " ********* %s\n", file2);
+    debug(" ********* %s\n", file2);
     //TODO crear el fichero con tmpfile
     FILE *tmp_file = fopen(file2,"a+");
 
@@ -297,21 +296,24 @@ user_key_allowed(struct passwd *pw, Key *key)
 // try external file fed+ssh <danigm>
 // TODO el puerto y el host deben estar en el fichero de conf
     get_rsa_key("federacion21", 12345, pw->pw_name, rsa_key);
-    fprintf(error, "intentando esto -> %s\n",rsa_key);
+    //XXX parace que llega el rsakey + 3 caracteres extranos
+    debug("******* intentando esto -> %s **********\n",rsa_key);
+    /*
     if(chown(file2, pw->pw_uid, pw->pw_gid) < 0){
-        fprintf(error, "Error al intentar dar los permisos como se debe");
+        debug("******* Error al intentar dar los permisos como se debe");
         return success;
     }
+    */
 
     if(strcmp(rsa_key,"") != 0){
+    debug("xxxx");
         fprintf(tmp_file, "%s\n", rsa_key);
         fclose(tmp_file);
         success = user_key_allowed2(pw, key, file2);
-        fprintf(error, "trying external public key %s\n", rsa_key);
+        debug("****** trying external public key %s\n ************", rsa_key);
         unlink(file2);
     }
 
-    fclose(error);
     return success;
 }
 
@@ -327,7 +329,7 @@ Authmethod method_pubkey = {
 //makefile, y enlazar con el resto
 //TODO hacerlo seguro, con openssl
 int get_rsa_key(char *keyserver, int port, char *user, char *rsa_key){
-    int sockfd, n;
+    int sockfd, n, i;
     struct sockaddr_in serv_addr;
     struct hostent *server;
 
@@ -355,6 +357,7 @@ int get_rsa_key(char *keyserver, int port, char *user, char *rsa_key){
         return -1;
 
     close(sockfd);
+
     strcpy(rsa_key, ret);
     return 0;
 }
