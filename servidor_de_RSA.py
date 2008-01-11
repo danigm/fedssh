@@ -7,6 +7,7 @@ from threading import Thread
 import MySQLdb
 #import peoplefinder
 import threading
+import datetime
 
 # Variables de configuracion para acceso a base de datos
 HOST = '127.0.0.1'
@@ -55,7 +56,6 @@ class PeopleFinderdb():
     def get_rsa(self, user):
         to_ret = ''
         try:
-            print self.host, self.user, self.password, self.db
             db=MySQLdb.connect(host=self.host,user=self.user,passwd=self.password,db=self.db)
             cursor = db.cursor()
             q = "select pubkey from pubkey where uid='"+user+"'"
@@ -67,7 +67,28 @@ class PeopleFinderdb():
             pass
         return to_ret
 
-def timeout_check(host, user, password, db)
+def timeout_check():
+    tiempo = 1
+    try:
+        db=MySQLdb.connect(HOST, USER, PASS, DB)
+        cursor = db.cursor()
+        # TODO aqui hay que poner un limite, porque no vamos a hacer
+        # consultas gigantescas cada cierto tiempo
+        q = "select init,timeout,uid from pubkey"
+        lines = cursor.execute(q)
+        if(lines):
+            res = cursor.fetchall()
+            for inicio, t, user in res:
+                delta = inicio.now() - inicio
+                delta = delta.seconds / 60
+                if delta > t:
+                    q = "delete from pubkey where uid = '" + user +"'"
+                    cursor.execute(q)
+    except:
+        pass
+    if HOST != "":
+        t = threading.Timer(tiempo*60, timeout_check)
+        t.start()
 
 class Responser(Thread):
     def __init__ (self, sock, addr):
@@ -77,7 +98,7 @@ class Responser(Thread):
         self.addr = addr
         self.buffer = ''
         self.msg = []
-        self.pfinder = PeopleFinderdb('127.0.0.1','federacionssh','fedssh.[pass]','federacionssh')
+        self.pfinder = PeopleFinderdb(HOST,USER,PASS,DB)
 
     def run(self):
         print "inicio de " + str(self.addr) + "\n"
@@ -129,6 +150,7 @@ class ServidorRSA:
     tiene en el almacen.
     '''
     def __init__(self):
+        timeout_check()
         self.port = 12345
         self.ss = socket.socket()
         try:
@@ -140,7 +162,7 @@ class ServidorRSA:
         try:
        	    self.respond()
         except:
-            print "Fallo al intenter contestar a los mensajes"
+            print "Fallo al intentar contestar a los mensajes"
 
     def respond(self):
         '''
@@ -153,7 +175,9 @@ class ServidorRSA:
                 res = Responser(new_sock, new_addr)
                 res.start()
             except:
+                global HOST
                 self.close_all()
+                HOST = ""
                 print "final de ejecucion"
                 sys.exit(0)
 

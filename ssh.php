@@ -69,7 +69,7 @@ if (isset($certificate)) {
         // Store public key in user's authorized_keys file
         //$command = "sudo /var/www/sshfed/addkey.sh testuser \"$certificate\"";
         //$command = 'echo "'.$name.':'.$certificate.'" >> applog';
-	$q = sprintf("insert into pubkey (uid, init, timeout, pubkey) values ('%s', NOW(), '300', '%s')",
+	$q = sprintf("insert into pubkey (uid, init, timeout, pubkey) values ('%s', NOW(), '5', '%s')",
 			mysql_real_escape_string($name), mysql_real_escape_string($certificate));
 	$response = mysql_query($q);
         //$response = exec($command, $output, $return);
