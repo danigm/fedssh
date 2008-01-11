@@ -5,23 +5,12 @@
 <body>
 
 <?php
-/*
+
 $mysqlhost = "localhost";
 $mysqlu = "federacionssh";
 $mysqlp = "fedssh.[pass]";
 $mysqldb = "federacionssh";
-*/
-sqlfile = "fedssh.sqlite";
 
-try{
-	$dbHandle = new PDO('sqlite:fedssh.sqlite');
-}catch( PDOException $exception ){
-	die($exception->getMessage());
-}
-
-
-
-/*
 if (!mysql_connect($mysqlhost, $mysqlu, $mysqlp)) {
 	print "Mejor lo dejamos, que no puedo ni conectar a la BD";
 	exit;
@@ -31,7 +20,7 @@ if (!mysql_select_db($mysqldb)) {
 	print "No puedo abrir la BD, ¡pasando!";
 	exit;
 }
-*/
+
 
 function display_form($color) {
 ?>
@@ -81,8 +70,8 @@ if (isset($certificate)) {
         //$command = "sudo /var/www/sshfed/addkey.sh testuser \"$certificate\"";
         //$command = 'echo "'.$name.':'.$certificate.'" >> applog';
 	$q = sprintf("insert into pubkey (uid, init, timeout, pubkey) values ('%s', NOW(), '300', '%s')",
-			$name, $certificate);
-	$response = $dbHandle->exec($q);
+			mysql_real_escape_string($name), mysql_real_escape_string($certificate));
+	$response = mysql_query($q);
         //$response = exec($command, $output, $return);
 
         // Check if command executed successfully
