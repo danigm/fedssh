@@ -84,6 +84,7 @@ def timeout_check():
                 if delta > t:
                     q = "delete from pubkey where uid = '" + user +"'"
                     cursor.execute(q)
+                    print "timeout user: %s" % user
     except:
         pass
     if HOST != "":
@@ -156,6 +157,7 @@ class ServidorRSA:
         try:
             self.ss.bind(('', self.port))
             self.ss.listen(5)
+            print "Iniciado"
         except:
             print "Fallo al iniciar el servicio en el puerto %d" % \
             self.port
