@@ -1,17 +1,17 @@
 * Utilizar conexiones seguras entre servidor RSA y servidor SSH (con openssl)
 * Mirar lo de los permisos del openssl
 * Compilar en ficheros separados lo del openssl
-* Meter función en el servidorRSA para que elimine los usuarios que lleguen al tiempo límite.
+     HECHO -> * Meter función en el servidorRSA para que elimine los usuarios que lleguen al tiempo límite.
 * Definir el protocolo de comunicaciones de manera formal
 * Aplicación web para crear usuarios en la máquina destino
 
 
 # Autenticación previa del servidorRSA (tenemos que confiar con este)
-# Base de datos
-    *uid id de usuario
-    datetime fecha
-    timeout segundos
-    pubkey clave publica
+     HECHO -> # Base de datos
+                *uid id de usuario
+                datetime fecha
+                timeout segundos
+                pubkey clave publica
 
 # Hacer log de todas las conexiones en ServidorRSA y en SSHD
 # esquema lpk
