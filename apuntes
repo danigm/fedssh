@@ -24,3 +24,7 @@ auth_parse_options(struct passwd *pw, char *opts, char *file, u_long linenum)
 -He tenido que modificar el fichero auth2-pubkey.c, para que no compruebe el propietario del fichero de claves publicas, puesto que sino falla.
 -He modificado el servidor RSA para que ahora mire las claves en un fichero de texto, y de forma fácil sea extendible para que lo mire de una base de datos o de lo que sea.
 -He realizado algunos test, y he comprobado que funciona.
+
+
+Ya he puesto la compilación de ssh_fed en un fichero separado, ssh_fed.{c,h}.
+Para que compile con este fichero hace falta incluir ssh_fed.o en el Makefile

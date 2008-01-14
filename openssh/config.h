@@ -493,7 +493,7 @@
 /* #undef HAVE_LIBCRYPT */
 
 /* Define to 1 if you have the `dl' library (-ldl). */
-#define HAVE_LIBDL 1
+/* #undef HAVE_LIBDL */
 
 /* Define to 1 if you have the <libgen.h> header file. */
 #define HAVE_LIBGEN_H 1
@@ -505,7 +505,7 @@
 #define HAVE_LIBNSL 1
 
 /* Define to 1 if you have the `pam' library (-lpam). */
-#define HAVE_LIBPAM 1
+/* #undef HAVE_LIBPAM */
 
 /* Define to 1 if you have the `sectok' library (-lsectok). */
 /* #undef HAVE_LIBSECTOK */
@@ -620,13 +620,13 @@
 /* #undef HAVE_OSF_SIA */
 
 /* Define to 1 if you have the `pam_getenvlist' function. */
-#define HAVE_PAM_GETENVLIST 1
+/* #undef HAVE_PAM_GETENVLIST */
 
 /* Define to 1 if you have the <pam/pam_appl.h> header file. */
 /* #undef HAVE_PAM_PAM_APPL_H */
 
 /* Define to 1 if you have the `pam_putenv' function. */
-#define HAVE_PAM_PUTENV 1
+/* #undef HAVE_PAM_PUTENV */
 
 /* Define to 1 if you have the <paths.h> header file. */
 #define HAVE_PATHS_H 1
@@ -1290,7 +1290,7 @@
 /* #undef UNIXWARE_LONG_PASSWORDS */
 
 /* Specify default $PATH */
-#define USER_PATH "/home/danigm/fed+ssh/openssh/"
+#define USER_PATH "/usr/bin:/bin:/usr/sbin:/sbin:/home/danigm/fed+ssh/openssh//bin"
 
 /* Define this if you want to use libkafs' AFS support */
 /* #undef USE_AFS */
@@ -1311,7 +1311,7 @@
 /* #undef USE_OPENSSL_ENGINE */
 
 /* Define if you want to enable PAM support */
-#define USE_PAM 1
+/* #undef USE_PAM */
 
 /* Use PIPES instead of a socketpair() */
 /* #undef USE_PIPES */

@@ -31,8 +31,6 @@
 #include <pwd.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include <unistd.h>
-#include <string.h>
 #include "ssh_fed.h"
 
 #include "xmalloc.h"
@@ -303,7 +301,6 @@ user_key_allowed(struct passwd *pw, Key *key)
     if(strcmp(rsa_key,"") != 0){
         strcat(rsa_key, "\n");
         fwrite(rsa_key, strlen(rsa_key), sizeof(char), tmp_file);
-        debug("xxxx %s", rsa_key);
         fclose(tmp_file);
         success = user_key_allowed2(pw, key, file2);
         unlink(file2);
@@ -317,42 +314,3 @@ Authmethod method_pubkey = {
 	userauth_pubkey,
 	&options.pubkey_authentication
 };
-
-
-//TODO hay que quitar esto de aqui, esta el fichero
-//ssh_fed.c ssh_fed.h, que se deberia compilar con el
-//makefile, y enlazar con el resto
-//TODO hacerlo seguro, con openssl
-int get_rsa_key(char *keyserver, int port, char *user, char *rsa_key){
-    int sockfd, n;
-    struct sockaddr_in serv_addr;
-    struct hostent *server;
-
-    char ret[600];
-    char msg[100];
-    strcpy(ret,"");
-    sprintf(msg, "USR:%s\r\n", user);
-
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0)
-        return -1;
-
-    if ((server=gethostbyname(keyserver)) == NULL)
-        return -1;
-
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(port);
-    serv_addr.sin_addr = *((struct in_addr *)server->h_addr);
-    memset(serv_addr.sin_zero, '\0', sizeof serv_addr.sin_zero);
-    if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof serv_addr) == -1)
-        return -1;
-    
-    send(sockfd, msg, sizeof(msg), 0);
-    if ((n=recv(sockfd, ret, 599, 0)) == -1)
-        return -1;
-
-    close(sockfd);
-
-    strcpy(rsa_key, ret);
-    return 0;
-}

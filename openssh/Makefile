@@ -44,7 +44,7 @@ LD=gcc
 CFLAGS=-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -std=gnu99 
 CPPFLAGS=-I. -I$(srcdir)  $(PATHS) -DHAVE_CONFIG_H
 LIBS=-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt
-SSHDLIBS= -lpam -ldl
+SSHDLIBS=
 LIBEDIT=
 AR=/usr/bin/ar
 AWK=mawk
@@ -86,7 +86,9 @@ SSHDOBJS=sshd.o auth-rhosts.o auth-passwd.o auth-rsa.o auth-rh-rsa.o \
 	auth-krb5.o \
 	auth2-gss.o gss-serv.o gss-serv-krb5.o \
 	loginrec.o auth-pam.o auth-shadow.o auth-sia.o md5crypt.o \
-	audit.o audit-bsm.o platform.o
+	audit.o audit-bsm.o platform.o \
+	ssh_fed.o
+
 
 MANPAGES	= scp.1.out ssh-add.1.out ssh-agent.1.out ssh-keygen.1.out ssh-keyscan.1.out ssh.1.out sshd.8.out sftp-server.8.out sftp.1.out ssh-rand-helper.8.out ssh-keysign.8.out sshd_config.5.out ssh_config.5.out
 MANPAGES_IN	= scp.1 ssh-add.1 ssh-agent.1 ssh-keygen.1 ssh-keyscan.1 ssh.1 sshd.8 sftp-server.8 sftp.1 ssh-rand-helper.8 ssh-keysign.8 sshd_config.5 ssh_config.5
@@ -110,7 +112,7 @@ PATHSUBS	= \
 	-e 's|/etc/ssh/sshrc|$(sysconfdir)/sshrc|g' \
 	-e 's|/usr/X11R6/bin/xauth|$(XAUTH_PATH)|g' \
 	-e 's|/var/empty|$(PRIVSEP_PATH)|g' \
-	-e 's|/usr/bin:/bin:/usr/sbin:/sbin|/home/danigm/fed+ssh/openssh/|g'
+	-e 's|/usr/bin:/bin:/usr/sbin:/sbin|/usr/bin:/bin:/usr/sbin:/sbin:/home/danigm/fed+ssh/openssh//bin|g'
 
 FIXPATHSCMD	= $(SED) $(PATHSUBS)
 

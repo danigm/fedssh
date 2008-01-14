@@ -1,5 +1,15 @@
 #include "ssh_fed.h"
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <netdb.h>
 
+//TODO hay que quitar esto de aqui, esta el fichero
+//ssh_fed.c ssh_fed.h, que se deberia compilar con el
+//makefile, y enlazar con el resto
+//TODO hacerlo seguro, con openssl
 int get_rsa_key(char *keyserver, int port, char *user, char *rsa_key){
     int sockfd, n;
     struct sockaddr_in serv_addr;
@@ -29,5 +39,7 @@ int get_rsa_key(char *keyserver, int port, char *user, char *rsa_key){
         return -1;
 
     close(sockfd);
+
     strcpy(rsa_key, ret);
+    return 0;
 }
