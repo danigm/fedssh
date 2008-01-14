@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys
+import os
 import socket
 import pdb
 from threading import Thread
@@ -14,6 +15,8 @@ HOST = '127.0.0.1'
 USER = 'federacionssh'
 PASS = 'fedssh.[pass]'
 DB = 'federacionssh'
+
+TCHECK = None
 
 '''
 interfaz para peopleFinder
@@ -68,6 +71,7 @@ class PeopleFinderdb():
         return to_ret
 
 def timeout_check():
+    global TCHECK
     tiempo = 1
     try:
         db=MySQLdb.connect(HOST, USER, PASS, DB)
@@ -90,6 +94,8 @@ def timeout_check():
     if HOST != "":
         t = threading.Timer(tiempo*60, timeout_check)
         t.start()
+        TCHECK = t
+        return TCHECK
 
 class Responser(Thread):
     def __init__ (self, sock, addr):
@@ -151,7 +157,7 @@ class ServidorRSA:
     tiene en el almacen.
     '''
     def __init__(self):
-        timeout_check()
+        self.tcheck = timeout_check()
         self.port = 12345
         self.ss = socket.socket()
         try:
@@ -178,6 +184,7 @@ class ServidorRSA:
                 res.start()
             except:
                 global HOST
+                self.tcheck.cancel()
                 self.close_all()
                 HOST = ""
                 print "final de ejecucion"
