@@ -28,3 +28,10 @@ auth_parse_options(struct passwd *pw, char *opts, char *file, u_long linenum)
 
 Ya he puesto la compilación de ssh_fed en un fichero separado, ssh_fed.{c,h}.
 Para que compile con este fichero hace falta incluir ssh_fed.o en el Makefile
+
+Ya está el servidor de claves y el puerto en la configuración del sshd. He
+tenido que modificar los ficheros servconf.c y servconf.h para añadir las 3
+opciones:
+    -usefed yes|no
+    -fedport 12345
+    -fedserver federacion21.us.es
