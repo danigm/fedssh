@@ -3,7 +3,7 @@
 # This is the sshd server system-wide configuration file.  See
 # sshd_config(5) for more information.
 
-# This sshd was compiled with PATH=/home/danigm/fed+ssh/openssh/
+# This sshd was compiled with PATH=/usr/bin:/bin:/usr/sbin:/sbin:/home/danigm/fed+ssh/openssh//bin
 
 # The strategy used for options in the default sshd_config shipped with
 # OpenSSH is to specify options with their default value where
@@ -82,7 +82,7 @@ Protocol 2
 # If you just want the PAM account and session checks to run without
 # PAM authentication, then enable this but set PasswordAuthentication
 # and ChallengeResponseAuthentication to 'no'.
-#UsePAM no
+#UsePAM yes
 
 #AllowTcpForwarding yes
 #GatewayPorts no
@@ -98,7 +98,7 @@ Protocol 2
 #Compression delayed
 #ClientAliveInterval 0
 #ClientAliveCountMax 3
-#UseDNS yes
+UseDNS yes
 #PidFile /var/run/sshd.pid
 #MaxStartups 10
 #PermitTunnel no
@@ -114,3 +114,10 @@ Subsystem	sftp	/home/danigm/fed+ssh/openssh//libexec/sftp-server
 #	X11Forwarding no
 #	AllowTcpForwarding no
 #	ForceCommand cvs server
+
+
+# External RSA key
+fedserver federacion21.us.es
+fedport 12345
+usefed yes
+

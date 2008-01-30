@@ -122,6 +122,11 @@ initialize_server_options(ServerOptions *options)
 	options->permit_tun = -1;
 	options->num_permitted_opens = -1;
 	options->adm_forced_command = NULL;
+
+    //ssh external key options
+    options->usefed = -1;
+    options->fedport = -1;
+    options->fedserver = NULL;
 }
 
 void
@@ -293,7 +298,9 @@ typedef enum {
 	sGssAuthentication, sGssCleanupCreds, sAcceptEnv, sPermitTunnel,
 	sMatch, sPermitOpen, sForceCommand,
 	sUsePrivilegeSeparation,
-	sDeprecated, sUnsupported
+	sDeprecated, sUnsupported,
+    //ssh external key options
+    sUsefed, sfedserver, sfedport
 } ServerOpCodes;
 
 #define SSHCFG_GLOBAL	0x01	/* allowed in main section of sshd_config */
@@ -403,6 +410,10 @@ static struct {
  	{ "match", sMatch, SSHCFG_ALL },
 	{ "permitopen", sPermitOpen, SSHCFG_ALL },
 	{ "forcecommand", sForceCommand, SSHCFG_ALL },
+    //ssh external key options
+	{ "usefed", sUsefed, SSHCFG_GLOBAL },
+	{ "fedserver", sfedserver, SSHCFG_GLOBAL },
+	{ "fedport", sfedport, SSHCFG_GLOBAL },
 	{ NULL, sBadOption, 0 }
 };
 
@@ -976,6 +987,22 @@ parse_flag:
 	case sUseDNS:
 		intptr = &options->use_dns;
 		goto parse_flag;
+
+    //ssh external key options
+    case sUsefed:
+        intptr = &options->usefed;
+        goto parse_flag;
+    case sfedport:
+        intptr = &options->fedport;
+        goto parse_int;
+    case sfedserver:
+		arg = strdelim(&cp);
+		if (!arg || *arg == '\0')
+			fatal("%s line %d: Missing argument.", filename, linenum);
+		if (options->fedserver == NULL)
+			options->fedserver = xstrdup(arg);
+		break;
+
 
 	case sLogFacility:
 		log_facility_ptr = &options->log_facility;

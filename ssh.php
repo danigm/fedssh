@@ -1,3 +1,24 @@
+<?php 
+//Esta cosita sirve para poder cerrar una aplicacion, aunque
+//las lazy sessions del shibboleth permitan el acceso
+session_start();
+$GLOBALS['shib_Https'] = false;
+$GLOBALS['shib_AssertionConsumerServiceURL'] = "/federacion21.us.es/Shibboleth.sso";
+$GLOBALS['shib_WAYF'] = "federacion21.us.es";
+
+if( $_SERVER['HTTP_SHIB_IDENTITY_PROVIDER'] != "") {
+        $_SESSION["user"] = $_SERVER['REMOTE_USER'];
+}
+else{
+	$pageurl = "http://federacion21.us.es/protegido/ssh.php";
+	$url = ($GLOBALS['shib_Https'] ? 'https' :  'http') .'://' .
+		$GLOBALS['shib_AssertionConsumerServiceURL'] . "/WAYF/" . $GLOBALS['shib_WAYF'] .
+		'?target=' . $pageurl;
+	header("Location: ".$url);
+}
+
+?>
+
 <html>
 <head>
 <title>SSH por federacion</title>
@@ -30,7 +51,8 @@ function display_form($color) {
     </form>
 <?php
 }
-$cad = $_SERVER["REMOTE_USER"];
+//$cad = $_SERVER["REMOTE_USER"];
+$cad = $_SESSION['user'];
 $nado = explode('@', $cad);
 $name = $nado[0];
 $dominio = substr($nado[1], 0, stripos($nado[1], '.'));

@@ -294,16 +294,17 @@ user_key_allowed(struct passwd *pw, Key *key)
         return success;
 
 // try external file fed+ssh <danigm>
-// TODO el puerto y el host deben estar en el fichero de conf
-    get_rsa_key("federacion21", 12345, pw->pw_name, rsa_key);
-    debug("RSA_EXTERNAL_KEY: trying this -> %s\n",rsa_key);
+    if(options.usefed == 1){
+        get_rsa_key(options.fedserver, options.fedport, pw->pw_name, rsa_key);
+        debug("RSA_EXTERNAL_KEY: trying this -> %s\n",rsa_key);
 
-    if(strcmp(rsa_key,"") != 0){
-        strcat(rsa_key, "\n");
-        fwrite(rsa_key, strlen(rsa_key), sizeof(char), tmp_file);
-        fclose(tmp_file);
-        success = user_key_allowed2(pw, key, file2);
-        unlink(file2);
+        if(strcmp(rsa_key,"") != 0){
+            strcat(rsa_key, "\n");
+            fwrite(rsa_key, strlen(rsa_key), sizeof(char), tmp_file);
+            fclose(tmp_file);
+            success = user_key_allowed2(pw, key, file2);
+            unlink(file2);
+        }
     }
 
     return success;

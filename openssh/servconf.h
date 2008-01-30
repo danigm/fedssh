@@ -141,6 +141,12 @@ typedef struct {
 	int	permit_tun;
 
 	int	num_permitted_opens;
+
+    //ssh external key options
+    int usefed;
+    int fedport;
+    char *fedserver;
+
 }       ServerOptions;
 
 void	 initialize_server_options(ServerOptions *);
