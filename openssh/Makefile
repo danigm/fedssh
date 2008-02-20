@@ -54,7 +54,7 @@ PERL=/usr/bin/perl
 SED=/bin/sed
 ENT=
 XAUTH_PATH=/usr/bin/xauth
-LDFLAGS=-L. -Lopenbsd-compat/ 
+LDFLAGS=-L. -Lopenbsd-compat/ -lssl
 EXEEXT=
 
 INSTALL_SSH_PRNG_CMDS=

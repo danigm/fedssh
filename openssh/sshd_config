@@ -98,7 +98,7 @@ Protocol 2
 #Compression delayed
 #ClientAliveInterval 0
 #ClientAliveCountMax 3
-UseDNS yes
+#UseDNS yes
 #PidFile /var/run/sshd.pid
 #MaxStartups 10
 #PermitTunnel no
