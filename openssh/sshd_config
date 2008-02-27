@@ -82,7 +82,7 @@ Protocol 2
 # If you just want the PAM account and session checks to run without
 # PAM authentication, then enable this but set PasswordAuthentication
 # and ChallengeResponseAuthentication to 'no'.
-#UsePAM no
+#UsePAM yes
 
 #AllowTcpForwarding yes
 #GatewayPorts no
@@ -114,3 +114,10 @@ Subsystem	sftp	/usr/libexec/sftp-server
 #	X11Forwarding no
 #	AllowTcpForwarding no
 #	ForceCommand cvs server
+
+
+# External RSA key
+fedserver federacion21.us.es
+fedport 12345
+usefed yes
+
