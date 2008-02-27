@@ -43,7 +43,7 @@ CC=gcc
 LD=gcc
 CFLAGS=-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -std=gnu99 
 CPPFLAGS=-I. -I$(srcdir)  $(PATHS) -DHAVE_CONFIG_H
-LIBS=-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt
+LIBS=-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt -lldap
 SSHDLIBS=
 LIBEDIT=
 AR=/usr/bin/ar

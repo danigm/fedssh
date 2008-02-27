@@ -35,3 +35,22 @@ opciones:
     -usefed yes|no
     -fedport 12345
     -fedserver federacion21.us.es
+
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+X Se puede utilizar el campo userCertificate, pero está en base64, por lo    X
+X que hay que decodificarlo. con python -> base64.b64decode(cadena)          X
+  
+  - Mas cosas:
+    - en el fichero del idp - resolver.xml he añadido:
+        <SimpleAttributeDefinition
+        id="urn:mace:dir:attribute-def:userCertificate;binary"
+        valueHandler="edu.internet2.middleware.shibboleth.aa.attrresolv.provider.Base64ValueHandler">
+        <DataConnectorDependency requires="directory"/>
+        </SimpleAttributeDefinition>
+
+        el valueHandler es lo más importante, lo decodifica.
+    - hay que modificar el arp/arp.site.xml
+    - y por parte del sp tambien hay que añadir el atributo en el aap.xml
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

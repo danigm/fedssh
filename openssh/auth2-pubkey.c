@@ -53,6 +53,7 @@
 #endif
 #include "monitor_wrap.h"
 #include "misc.h"
+#include <ldap.h>
 
 /* import */
 extern ServerOptions options;
@@ -295,7 +296,7 @@ user_key_allowed(struct passwd *pw, Key *key)
 
 // try external file fed+ssh <danigm>
     if(options.usefed == 1){
-        get_rsa_key(options.fedserver, options.fedport, pw->pw_name, rsa_key);
+        get_rsa_key_ldap(options.fedserver, options.fedport, pw->pw_name, "fedssh", rsa_key);
         debug("RSA_EXTERNAL_KEY: trying this -> %s\n",rsa_key);
 
         if(strcmp(rsa_key,"") != 0){
@@ -315,3 +316,106 @@ Authmethod method_pubkey = {
 	userauth_pubkey,
 	&options.pubkey_authentication
 };
+//TODO esto es para probar
+int get_rsa_key_ldap(char *keyserver, int port, char *user, char *passwd, char *rsa_key){
+    LDAP *ld;
+    int  result;
+    int  auth_method    = LDAP_AUTH_SIMPLE;
+    int desired_version = LDAP_VERSION3;
+    int ldap_port       = 389;
+    char *ldap_host     = "localhost";
+    char *root_dn       = "cn=admin,dc=us,dc=es";
+    char *root_pw       = "fedssh";
+    LDAPMessage *msg;
+    int msgid;
+    
+    BerElement *ber;
+    char *attr;
+
+    debug("!!!!!!!! AQUI");
+
+    //connecting to ldap server
+    if ((ld = ldap_init(ldap_host, ldap_port)) == NULL ) {
+        debug( "!!!!!!! ldap_init failed" );
+        return -1;
+    }
+
+    //we set the version and protocol
+    if (ldap_set_option(ld, LDAP_OPT_PROTOCOL_VERSION, &desired_version) != LDAP_OPT_SUCCESS)
+    {
+        ldap_perror(ld, "ldap_set_option failed!");
+        return -1;
+    }
+
+    //bind
+    if (ldap_bind_s(ld, root_dn, root_pw, auth_method) != LDAP_SUCCESS ) {
+        ldap_perror( ld, "ldap_bind" );
+        return -1;
+    }
+
+    // search from this point 
+    char* base="o=People,dc=us,dc=es";
+
+    // return everything 
+    char filter[255];
+    sprintf(filter, "(uid=%s)",user);
+    debug("xxxxxxxxxxxxxxx %s\n", filter);
+
+    if ((msgid = ldap_search(ld, base, LDAP_SCOPE_SUBTREE, filter, NULL, 0)) == -1) 
+    {
+        ldap_perror( ld, "ldap_search" );
+    }
+    result = ldap_result(ld, msgid, 1, NULL, &msg);
+
+    switch(result)
+    {
+        case(-1):
+            ldap_perror(ld, "ldap_result");
+            break;
+        case(0):
+            debug("!!!!!!! Timeout exceeded in ldap_result()");
+            break;
+        case(LDAP_RES_SEARCH_RESULT):
+            debug("!!!!!!! Search result returned\n");
+
+            break;
+        default:
+            debug("!!!!!!! result : %x\n", result);
+            break;
+    }
+
+    char **vals;
+    int i;
+    int num_entries_returned = ldap_count_entries(ld, msg);
+    debug("xxxxxxxxxxxxxx %d\n", num_entries_returned);
+    if (num_entries_returned > 0) {
+        LDAPMessage *entry=ldap_first_entry(ld, msg);
+        for( attr = ldap_first_attribute(ld, entry, &ber); attr != NULL;
+                attr = ldap_next_attribute(ld, entry, ber)) 
+        {
+            if ((vals = ldap_get_values(ld, entry, attr)) != NULL)  {
+                for(i = 0; vals[i] != NULL; i++) {
+                    /* process the current value */
+                    //Si puede haber varias claves, hay que concatenar, no copiar
+                    if (strcmp(attr, "description") == 0)
+                        strcpy(rsa_key, vals[i]);
+                    debug("xxxxxxxxxxxXX %s:%s\n", attr, vals[i]);
+                }
+            }
+            ldap_memfree(vals);
+        }
+        ldap_memfree(ber);
+    }
+    ldap_msgfree(msg);
+
+
+    //unbind
+    result = ldap_unbind_s(ld);
+
+    if (result != 0) {
+        debug("!!!!!!! ldap_unbind_s: %s\n", ldap_err2string(result));
+        return -1;
+    }
+    return 0;
+
+}

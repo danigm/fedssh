@@ -6,6 +6,7 @@ $GLOBALS['shib_Https'] = false;
 $GLOBALS['shib_AssertionConsumerServiceURL'] = "/federacion21.us.es/Shibboleth.sso";
 $GLOBALS['shib_WAYF'] = "federacion21.us.es";
 
+//si no esta autenticado, redirigimos al wayf
 if( $_SERVER['HTTP_SHIB_IDENTITY_PROVIDER'] != "") {
         $_SESSION["user"] = $_SERVER['REMOTE_USER'];
 }
@@ -27,42 +28,35 @@ else{
 
 <?php
 
-$mysqlhost = "localhost";
-$mysqlu = "federacionssh";
-$mysqlp = "fedssh.[pass]";
-$mysqldb = "federacionssh";
+$servidor_ldap = "goonie.us.es";
+$puerto_ldap = 389;
 
-if (!mysql_connect($mysqlhost, $mysqlu, $mysqlp)) {
-	print "Mejor lo dejamos, que no puedo ni conectar a la BD";
-	exit;
-}
-
-if (!mysql_select_db($mysqldb)) {
-	print "No puedo abrir la BD, ¡pasando!";
-	exit;
-}
-
+$ds=ldap_connect($servidor_ldap, $puerto_ldap) or die("No ha sido posible conectarse al servidor $servidor_ldap");
 
 function display_form($color) {
 ?>
     <form action="" method="POST">
         <textarea name="key" cols="60" rows="5"  style="border: 1px solid black;">texto</textarea><br/>
-        <input type="submit" style="border: 1px solid black;"></input>
+        <input type="submit" style="border: 1px solid black;" value="Enviar"></input>
     </form>
 <?php
 }
+
 //$cad = $_SERVER["REMOTE_USER"];
+//partiendo el nombre, para crear danigm-us a partir de danigm@us.es
 $cad = $_SESSION['user'];
 $nado = explode('@', $cad);
 $name = $nado[0];
 $dominio = substr($nado[1], 0, stripos($nado[1], '.'));
 $name = $name.'-'.$dominio;
-echo "<p>Welcome ".$name."</p>";
+echo "<p>Bienvenido ".$name."</p>";
 
 // Check if userCertificate attribute is set in SAML response
-if (isset($_SERVER["userCertificate"])) {
-    $certificate = $_SERVER["userCertificate"];
+if (isset($_SERVER["HTTP_USERCERTIFICATE"])) {
+    $certificate = $_SERVER["HTTP_USERCERTIFICATE"];
     echo "<p>Your public key was fetched from your home organisation LDAP</p>";
+    $certificate = base64_decode($certificate);
+    echo $certificate;
 } else {
 
     // Public key was not received from IdP. First check if user is posting its public key
@@ -71,8 +65,7 @@ if (isset($_SERVER["userCertificate"])) {
     } else {
 
         // Display form where public key can be submitted
-        echo "<p>Your public key could not be fetched from your home organisation. You may upload your key using the form below, 
-        using the following syntax:</p>";
+        echo "<p>No se ha recibido clave publica asosciada a esta cuenta, puedes asignar una temporal en el siguiente formulario:</p>";
         display_form("#000000");
     }
 }
@@ -99,7 +92,7 @@ if (isset($certificate)) {
         // Check if command executed successfully
         if($response) {
             echo "<p>DEBUG: OK:</p>";
-            echo "<p>You may now log in using SSH, authenticating with ". $name ."</p>";
+            echo "<p>Ahora puedes entrar por ssh en los servidores de la federaci&oacute;n, utilizando como nombre de usuario:". $name ."</p>";
         } else {
             echo "<p>DEBUG: NOK</p>";
         }
