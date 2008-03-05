@@ -77,15 +77,14 @@ function get_remote_user(){
 
 function get_certificate(){
         $certificate = "";
+ 	if (isset($_POST['key'])) {
+                // Public key was not received from IdP. First check if user is posting its public key
+		$certificate = $_POST['key'];
+        }
         // Check if userCertificate attribute is set in SAML response
-        if (isset($_SERVER["HTTP_USERCERTIFICATE"])) {
+        else if (isset($_SERVER["HTTP_USERCERTIFICATE"])) {
                 $certificate = $_SERVER["HTTP_USERCERTIFICATE"];
                 $certificate = base64_decode($certificate);
-        } else {
-                // Public key was not received from IdP. First check if user is posting its public key
-                if (isset($_POST['key'])) {
-                        $certificate = $_POST['key'];
-                }
         }
         return $certificate;
 }

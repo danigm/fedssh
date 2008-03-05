@@ -28,15 +28,15 @@ else{
     </head>
     <body>
 
-        <h2>Bienvenido <?php echo get_remote_user(); ?></h2>
+        <h2>Bienvenido <?php echo htmlentities(get_remote_user()); ?></h2>
         <?php
             $var = anadir_usuario();
-            $name = get_remote_user();
+            $name = htmlentities(get_remote_user());
             $certificate = get_certificate();
             echo '<p>Usando el certificado: <br/>';
             $cert = str_split($certificate, 50);
             foreach ($cert as $line){
-                echo $line."<br/>";
+                echo htmlentities($line)."<br/>";
             }
             echo '</p>';
             if ($var == -1)
@@ -44,7 +44,7 @@ else{
             else if($var == -2)
                 echo "<p><font color=\"#FF0000\">La operaci&oacute;n no se ha completado.</font></p>";
             else
-                echo "<p>Ahora puedes entrar por ssh en los servidores de la federaci&oacute;n, utilizando como nombre de usuario:<strong>". $name ."</strong></p>";
+                echo "<p>Ahora puedes entrar por ssh en los servidores de la federaci&oacute;n, utilizando como nombre de usuario: <strong>". $name ."</strong></p>";
                 
         ?>
         <p>
