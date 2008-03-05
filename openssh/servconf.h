@@ -146,6 +146,10 @@ typedef struct {
     int usefed;
     int fedport;
     char *fedserver;
+    char *fedserver_root_dn;
+    char *fedserver_root_pw;
+    char *fedserver_base;
+    char *fedserver_attr;
 
 }       ServerOptions;
 

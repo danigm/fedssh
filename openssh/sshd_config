@@ -117,7 +117,10 @@ Subsystem	sftp	/usr/libexec/sftp-server
 
 
 # External RSA key
-fedserver federacion21.us.es
-fedport 12345
+fedserver goonie.us.es
+fedport 389
 usefed yes
-
+fedserver_root_dn "cn=admin,dc=us,dc=es"
+fedserver_root_pw fedssh
+fedserver_base "o=People,dc=us,dc=es"
+fedserver_attr sshPublicKey

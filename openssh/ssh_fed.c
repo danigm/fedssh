@@ -1,49 +1,19 @@
-#include "ssh_fed.h"
+#include <ldap.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <netdb.h>
-#include <ldap.h>
+#include "ssh_fed.h"
+
+#include "includes.h"
+#include <stdarg.h>
+
+#include "log.h"
 #include "servconf.h"
 
 extern ServerOptions options;
-
-//TODO hacerlo seguro, con openssl
-int get_rsa_key(char *keyserver, int port, char *user, char *rsa_key){
-int sockfd, n;
-struct sockaddr_in serv_addr;
-struct hostent *server;
-
-char ret[600];
-char msg[100];
-strcpy(ret,"");
-sprintf(msg, "USR:%s\r\n", user);
-
-sockfd = socket(AF_INET, SOCK_STREAM, 0);
-if (sockfd < 0)
-    return -1;
-
-if ((server=gethostbyname(keyserver)) == NULL)
-    return -1;
-
-serv_addr.sin_family = AF_INET;
-serv_addr.sin_port = htons(port);
-serv_addr.sin_addr = *((struct in_addr *)server->h_addr);
-memset(serv_addr.sin_zero, '\0', sizeof serv_addr.sin_zero);
-if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof serv_addr) == -1)
-    return -1;
-
-send(sockfd, msg, sizeof(msg), 0);
-if ((n=recv(sockfd, ret, 599, 0)) == -1)
-    return -1;
-
-close(sockfd);
-
-strcpy(rsa_key, ret);
-return 0;
-}
 
 //TODO esto es para probar
 int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
@@ -53,12 +23,12 @@ int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
     int desired_version = LDAP_VERSION3;
     int ldap_port       = port;
     char *ldap_host     = keyserver;
+    debug("\n\nOPTIONS: %s, %s, %s, %s\n\n", options.fedserver_root_dn, options.fedserver_root_pw, options.fedserver_base, options.fedserver_attr);
     //TODO al fichero de configuracion
-    char *root_dn       = "cn=admin,dc=us,dc=es";
-    char *root_pw       = "fedssh";
-    char* base          = "o=People,dc=us,dc=es";
-    char *attribute     = "description";
-    int attr_bin        = 0; //por si es el atributo usercertificate, b64decode
+    char *root_dn       = options.fedserver_root_dn;
+    char *root_pw       = options.fedserver_root_pw;
+    char* base          = options.fedserver_base;
+    char *attribute     = options.fedserver_attr;
     char filter[255];
     sprintf(filter, "(uid=%s)",user);
 
@@ -127,9 +97,10 @@ int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
                 for(i = 0; vals[i] != NULL; i++) {
                     /* process the current value */
                     //Si puede haber varias claves, hay que concatenar, no copiar
-                    if (strcmp(attr, attribute) == 0)
-                        strcpy(rsa_key, vals[i]);
-                    debug("xxxxxxxxxxxXX %s:%s\n", attr, vals[i]);
+                    if (strcmp(attr, attribute) == 0){
+                            strcpy(rsa_key, vals[i]);
+                        debug("xxxxxxxxxxxXX %s:%s\n", attr, rsa_key);
+                    }
                 }
             }
             ldap_memfree(vals);
@@ -147,4 +118,41 @@ int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
         return -1;
     }
     return 0;
+}
+
+
+
+//TODO hacerlo seguro, con openssl
+int get_rsa_key(char *keyserver, int port, char *user, char *rsa_key){
+int sockfd, n;
+struct sockaddr_in serv_addr;
+struct hostent *server;
+
+char ret[600];
+char msg[100];
+strcpy(ret,"");
+sprintf(msg, "USR:%s\r\n", user);
+
+sockfd = socket(AF_INET, SOCK_STREAM, 0);
+if (sockfd < 0)
+    return -1;
+
+if ((server=gethostbyname(keyserver)) == NULL)
+    return -1;
+
+serv_addr.sin_family = AF_INET;
+serv_addr.sin_port = htons(port);
+serv_addr.sin_addr = *((struct in_addr *)server->h_addr);
+memset(serv_addr.sin_zero, '\0', sizeof serv_addr.sin_zero);
+if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof serv_addr) == -1)
+    return -1;
+
+send(sockfd, msg, sizeof(msg), 0);
+if ((n=recv(sockfd, ret, 599, 0)) == -1)
+    return -1;
+
+close(sockfd);
+
+strcpy(rsa_key, ret);
+return 0;
 }

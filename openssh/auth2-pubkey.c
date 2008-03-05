@@ -53,7 +53,7 @@
 #endif
 #include "monitor_wrap.h"
 #include "misc.h"
-#include <ldap.h>
+#include <unistd.h>
 
 /* import */
 extern ServerOptions options;
