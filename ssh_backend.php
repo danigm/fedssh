@@ -15,17 +15,19 @@ function modify($ds, $uid, $pubkey){
         $hoy = getdate();
         $timeout = $hoy[0]+$timeout;
         $dn = "uid=". $uid .",". $base_dn;
-        $info2["sshPublicKey"] = $pubkey;
+        $info["sshPublicKey"][0] = $pubkey;
         $info["schacUserStatus"][0] = "schac:userStatus:us.es:timeout:" . $timeout;
 
         // anadir la informacion al directorio
         $r=ldap_modify($ds, $dn, $info);
+	/**
         if ($r){
                 $r = @ldap_mod_add($ds, $dn, $info2);
                 if (!$r)
                         echo "<p>Ya est&aacute; esta clave, actualizado el timeout</p>";
                         return true;
         }
+	**/
         return $r;
 }
 
@@ -86,15 +88,15 @@ function get_certificate(){
                 $certificate = $_SERVER["HTTP_USERCERTIFICATE"];
                 $certificate = base64_decode($certificate);
         }
-        return $certificate;
-}
-
-function check_certificate($certificate){
         // Trim certificate string
         $certificate = trim($certificate);
         $certificate = str_replace("\r","",$certificate);
         $certificate = str_replace("\n","",$certificate);
 
+        return $certificate;
+}
+
+function check_certificate($certificate){
         // Check if certificate syntax is correct
         if (substr($certificate, 0, 7) == "ssh-rsa" || substr($certificate, 0, 7) == "ssh-dss")
                 return true;
