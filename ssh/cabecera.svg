@@ -17,7 +17,10 @@
    version="1.0"
    sodipodi:docbase="/home/danigm/Documentos/Projects/fed+ssh/ssh"
    sodipodi:docname="cabecera.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/danigm/Documentos/Projects/fed+ssh/ssh/cabecera.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4">
     <linearGradient
@@ -173,10 +176,6 @@
      inkscape:label="Capa 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <path
-       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.39999998;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M -9.15625,104.15625 L -9.15625,178.34375 L 785.34375,178.34375 L 785.34375,104.15625 L 777,104.15625 L 777,120 L 0,120 L 0,104.15625 L -9.15625,104.15625 z "
-       id="rect4198" />
     <g
        id="g2161"
        transform="translate(-9.1314103,-5.8108975)">
