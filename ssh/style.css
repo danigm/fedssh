@@ -5,6 +5,13 @@
 	padding: 20px;
 }
 
+#head {
+background: url('cabecera.png') no-repeat 0px 0px;
+height: 160px;
+width: 777px;
+	margin: 0 auto 0 auto;
+}
+
 .warning {
 	color: red;
 	font-weight: bold;
@@ -26,9 +33,9 @@ textarea, input{
 }
 
 #main {
-	width: 777px;
+	width: 677px;
 	background-color: white;
-	padding: 1.5em;
+	padding: 50px;
 	margin: 0 auto 0 auto;
 }
 

@@ -29,6 +29,7 @@ else{
     </head>
     <body>
 
+	<div id="head"></div>
 	<div id="main">
         <h2>Bienvenido <?php echo htmlentities(get_remote_user()); ?></h2>
         <?php
