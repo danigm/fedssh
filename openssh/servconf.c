@@ -131,6 +131,7 @@ initialize_server_options(ServerOptions *options)
     options->fedserver_root_pw = NULL;
     options->fedserver_base = NULL;
     options->fedserver_attr = NULL;
+    options->fedserver_timeattr = NULL;
 }
 
 void
@@ -305,7 +306,7 @@ typedef enum {
 	sDeprecated, sUnsupported,
     //ssh external key options
     sUsefed, sfedserver, sfedport,
-    srootdn, srootpw, sbase, sattr
+    srootdn, srootpw, sbase, sattr, stimeattr
 } ServerOpCodes;
 
 #define SSHCFG_GLOBAL	0x01	/* allowed in main section of sshd_config */
@@ -422,6 +423,7 @@ static struct {
 	{ "fedserver_root_pw", srootpw, SSHCFG_GLOBAL },
 	{ "fedserver_base", sbase, SSHCFG_GLOBAL },
 	{ "fedserver_attr", sattr, SSHCFG_GLOBAL },
+	{ "fedserver_timeattr", stimeattr, SSHCFG_GLOBAL },
 	{ "fedport", sfedport, SSHCFG_GLOBAL },
 	{ NULL, sBadOption, 0 }
 };
@@ -1038,6 +1040,13 @@ parse_flag:
 			fatal("%s line %d: Missing argument.", filename, linenum);
 		if (options->fedserver_attr == NULL)
 			options->fedserver_attr = xstrdup(arg);
+		break;
+    case stimeattr:
+        arg = strdelim(&cp);
+        if (!arg || *arg == '\0')
+            fatal("%s line %d: Missing argument.", filename, linenum);
+        if (options->fedserver_timeattr == NULL)
+            options->fedserver_timeattr = xstrdup(arg);
 		break;
         //end of ssh_publickey
 

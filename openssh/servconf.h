@@ -150,6 +150,7 @@ typedef struct {
     char *fedserver_root_pw;
     char *fedserver_base;
     char *fedserver_attr;
+    char *fedserver_timeattr;
 
 }       ServerOptions;
 

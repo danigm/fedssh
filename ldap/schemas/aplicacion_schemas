@@ -1,0 +1,13 @@
+Aplicación de schemas en openldap:
+
+    1 - copiar el schema a /etc/ldap/schema/
+    2 - Añadir el fichero de schema al fichero de configuración del ldap.
+        /etc/ldap/slapd.conf
+            include         /etc/ldap/schema/openssh-lpk_openldap.schema
+            include         /etc/ldap/schema/schac-20061017-1.3.0b2.schema
+
+
+############# schemas a utilizar ################
+
+* schacUserEntitlements (schacUserStatus) -> timeout
+[[http://www.rediris.es/ldap/esquemas/]]

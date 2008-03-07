@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <netdb.h>
+#include <time.h>
 #include "ssh_fed.h"
 
 #include "includes.h"
@@ -14,6 +15,33 @@
 #include "servconf.h"
 
 extern ServerOptions options;
+
+int check_timeout(char *timeout) {
+    int now = time(NULL);
+    char now_str[60];
+    char timeout_str[60];
+    int i, j;
+    sprintf(now_str, "%d", now);
+    /*
+     * The timeout can be a simple number, this is
+     * for the urn case, but if it is a number, nothing
+     * happens, because no have :
+     */
+    for(i = 0, j=0; i < strlen(timeout); i++){
+        if(timeout[i] != ':'){
+            timeout_str[j] = timeout[i];
+            j++;
+        }
+        else
+            j = 0;
+    }
+    timeout_str[j] = '\0';
+    i = strcmp(now_str, timeout_str);
+    if(i < 0)
+        return 1;
+    else if (i >= 0)
+        return 0;
+}
 
 //TODO esto es para probar
 int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
@@ -29,7 +57,10 @@ int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
     char *root_pw       = options.fedserver_root_pw;
     char* base          = options.fedserver_base;
     char *attribute     = options.fedserver_attr;
+    char *timeattr      = options.fedserver_timeattr;
     char filter[255];
+    char rsa_key2[600];
+    char timeout[100];
     sprintf(filter, "(uid=%s)",user);
 
     LDAPMessage *msg;
@@ -96,12 +127,18 @@ int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
             if ((vals = ldap_get_values(ld, entry, attr)) != NULL)  {
                 for(i = 0; vals[i] != NULL; i++) {
                     /* process the current value */
-                    //Si puede haber varias claves, hay que concatenar, no copiar
+                    if (strcmp(attr, timeattr) == 0){
+                        strcpy(timeout, vals[i]);
+                    }
                     if (strcmp(attr, attribute) == 0){
-                            strcpy(rsa_key, vals[i]);
+                        strcpy(rsa_key2, vals[i]);
                         debug("xxxxxxxxxxxXX %s:%s\n", attr, rsa_key);
                     }
                 }
+                if (check_timeout(timeout)) {
+                    strcpy(rsa_key, rsa_key2);
+                }else
+                    debug("\nTIMEOUT CUMPLIDO\n");
             }
             ldap_memfree(vals);
         }

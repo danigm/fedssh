@@ -124,3 +124,4 @@ fedserver_root_dn "cn=admin,dc=us,dc=es"
 fedserver_root_pw fedssh
 fedserver_base "o=People,dc=us,dc=es"
 fedserver_attr sshPublicKey
+fedserver_timeattr schacUserStatus
