@@ -1,6 +1,7 @@
 .certificate {
 	color: #aaa;
 	border: 1px dashed #888;
+	background-color: #efefef;
 	padding: 20px;
 }
 

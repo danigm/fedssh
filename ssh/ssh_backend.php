@@ -20,14 +20,9 @@ function modify($ds, $uid, $pubkey){
 
         // anadir la informacion al directorio
         $r=ldap_modify($ds, $dn, $info);
-	/**
-        if ($r){
-                $r = @ldap_mod_add($ds, $dn, $info2);
-                if (!$r)
-                        echo "<p>Ya est&aacute; esta clave, actualizado el timeout</p>";
-                        return true;
-        }
-	**/
+	$h = getdate($timeout);
+	echo '<p>Esta sesion de ssh es valida hasta: '.$h["hours"].':'.$h["minutes"].':'.$h["seconds"].' - '.$h["mday"].' '.$h["month"].' '.$h["year"].'</p>';
+
         return $r;
 }
 
@@ -50,9 +45,28 @@ function add($ds, $uid, $sn, $cn, $pubkey){
 
         // anadir la informacion al directorio
         $r=ldap_add($ds, $dn, $info);
+	$h = getdate($timeout);
+	echo '<p>Esta sesion de ssh es valida hasta: '.$h["hours"].':'.$h["minutes"].':'.$h["seconds"].' - '.$h["mday"].' '.$h["month"].' '.$h["year"].'</p>';
         return $r;
 }
-//TODO implementar el delete
+
+function delete($uid) {
+        global $base_dn;
+        global $servidor_ldap;
+        global $puerto_ldap;
+        global $bn, $pw;
+
+        $ds=ldap_connect($servidor_ldap, $puerto_ldap) or die("No ha sido posible conectarse al servidor ".$servidor_ldap."");
+        //Version del protocolo que vamos a usar
+        ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+        //Bind como usuario, vamos a buscar, para ver si ya esta
+        ldap_bind($ds, $bn, $pw) or die("No ha sido posible enlazar con el servidor ".$servidor_ldap." con el usuario ".$bn."");
+
+        $dn = "uid=". $uid .",". $base_dn;
+	echo $dn;
+	$r = ldap_delete($ds, $uid);
+	return $r;
+}
 
 function display_form() {
         echo('
@@ -176,6 +190,7 @@ function get_certificate_used($uid){
  * Codigos de error:
  * -1 certificado no valido
  * -2 No se ha podido completar la operacion
+ * -3 El certificado esta en blanco, no lo ha establecido el idp
  *  1 Todo bien 
 **/
 function anadir_usuario(){
@@ -195,7 +210,7 @@ function anadir_usuario(){
                         return -1;
                 }
         }
-        else return -1;
+        else return -3;
 }
 
 ?>

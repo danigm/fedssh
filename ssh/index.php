@@ -47,6 +47,9 @@ else{
                 echo '<p class="warning">No ha introducido un certificado valido.</p>';
             else if($var == -2)
                 echo '<p class="warning">La operaci&oacute;n no se ha completado.</p>';
+
+            else if($var == -3)
+                echo '<p class="warning">No se ha facilitado un certificado, introduzcalo manualmente</p>';
             else
                 echo '<p class="ok">Ahora puedes entrar por ssh en los servidores de la federaci&oacute;n, utilizando como nombre de usuario: <span class="user">'. $name .'</span></p>';
                 
