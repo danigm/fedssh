@@ -183,9 +183,16 @@ function get_attr($uid, $attr){
 
 }
 
-//TODO ver si este certificado esta cumplido, en cuyo caso no devolver nada
+//TODO atributos configurables
 function get_certificate_used($uid){
+    $timestamp = get_attr($uid, 'schacuserstatus');
+    $timestamp = split(":", $timestamp);
+    $timestamp = $timestamp[count($timestamp)-1];
+    $now = getdate();
+    if ($now > $timestamp)
 	return get_attr($uid, 'sshpublickey');
+    else
+	return "";
 }
 
 /**
