@@ -1,11 +1,5 @@
 <?php
 session_start();
-//soporte para traducciones
-$language="en_GB";
-putenv("LC_ALL=$language");
-setlocale(LC_ALL, $language);
-bindtextdomain("ssh_backend", "./locale");
-textdomain("ssh_backend");
 
 $base_dn ='o=People,dc=us,dc=es';
 $servidor_ldap = "goonie.us.es";

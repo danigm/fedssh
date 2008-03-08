@@ -7,43 +7,52 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-08 01:38+0100\n"
-"PO-Revision-Date: 2008-03-08 01:49+0100\n"
+"POT-Creation-Date: 2008-03-08 02:35+0100\n"
+"PO-Revision-Date: 2008-03-08 02:47+0100\n"
 "Last-Translator: danigm <danigm@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ssh.php:34
+#: ssh.php:41
 msgid "Bienvenido "
-msgstr "Welcome"
+msgstr "Welcome "
 
-#: ssh.php:39
+#: ssh.php:46
 msgid "Usando el certificado: "
 msgstr "Using the certificate: "
 
-#: ssh.php:48
+#: ssh.php:55
 msgid "No ha introducido un certificado valido."
 msgstr "You don't insert a valid certificate."
 
-#: ssh.php:50
+#: ssh.php:57
 msgid "La operaci&oacute;n no se ha completado."
 msgstr "The operation isn't completed."
 
-#: ssh.php:53
+#: ssh.php:60
 msgid "No se ha facilitado un certificado, introduzcalo manualmente"
 msgstr "You don't gave a valid certificate, insert by hand"
 
-#: ssh.php:55
+#: ssh.php:62
 msgid "Ahora puedes entrar por ssh en los servidores de la federaci&oacute;n, utilizando como nombre de usuario: "
 msgstr "Now you can login by ssh in federation servers, using as user name: "
 
-#: ssh.php:61
+#: ssh.php:68
 msgid "Si no est&aacute;s en tu puesto de trabajo, o no se encuentra tu clave, puedes proporcionar una manualmente, introducciendola en el siguiente campo. Mira en tu directorio $HOME/.ssh/id_rsa.pub"
-msgstr "If you aren't in your workstation, or your key is not found, you can insert by hand, writting in the textarea below. Look for in your directory $HOME/.ssh/id_rsa.pub"
+msgstr "If you aren't in your workstation, or your key is not found, you can insert by hand, writting in the textarea below. Look for in your directory "
 
-#: ssh.php:66
+#: ssh.php:73
 msgid "Para utilizar el proceso autom&aacute;tico, ponte en contacto con tu proveedor de identidad."
 msgstr "To use the automatic proccess, contact with your identity provider."
+
+#: ssh_backend.php:25
+#: ssh_backend.php:50
+msgid "Esta sesion de ssh es valida hasta: "
+msgstr "This ssh session is valid up to: "
+
+#: ssh_backend.php:76
+msgid "Enviar"
+msgstr "Send"
 

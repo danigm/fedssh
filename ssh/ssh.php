@@ -2,7 +2,11 @@
 
 session_start();
 //soporte para traducciones
-$language="en_GB";
+$lang=$_GET['lang'];
+if($lang=='en')
+    $language="en_US.utf8";
+else
+    $language="es_ES.utf8";
 putenv("LC_ALL=$language");
 setlocale(LC_ALL, $language);
 bindtextdomain("ssh", "./locale");
