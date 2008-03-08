@@ -30,13 +30,32 @@ h1, h2, h3 {
 
 textarea, input{
 	border: 1px solid black;
+	width: 100%;
+}
+
+input {
+	background-color: #eee;
 }
 
 #main {
 	width: 677px;
 	background-color: white;
 	padding: 50px;
+	padding-top: 1px;
 	margin: 0 auto 0 auto;
+}
+
+.info {
+	padding: 1em;
+	background: url('green_deg.png') repeat-y 0px 0px;
+	margin-bottom: 1em;
+}
+
+.user {
+	color: #fff;
+	background-color: green;
+	padding-left: 3px;
+	padding-right: 3px;
 }
 
 body {

@@ -22,7 +22,7 @@ function modify($ds, $uid, $pubkey){
         // anadir la informacion al directorio
         $r=ldap_modify($ds, $dn, $info);
 	$h = getdate($timeout);
-	echo '<p>'._('Esta sesion de ssh es valida hasta: ').$h["hours"].':'.$h["minutes"].':'.$h["seconds"].' - '.$h["mday"].' '.$h["month"].' '.$h["year"].'</p>';
+	echo '<p class="info">'._('Esta sesion de ssh es valida hasta: ').$h["hours"].':'.$h["minutes"].':'.$h["seconds"].' - '.$h["mday"].' '.$h["month"].' '.$h["year"].'</p>';
 
         return $r;
 }
@@ -47,7 +47,7 @@ function add($ds, $uid, $sn, $cn, $pubkey){
         // anadir la informacion al directorio
         $r=ldap_add($ds, $dn, $info);
 	$h = getdate($timeout);
-	echo '<p>'._('Esta sesion de ssh es valida hasta: ').$h["hours"].':'.$h["minutes"].':'.$h["seconds"].' - '.$h["mday"].' '.$h["month"].' '.$h["year"].'</p>';
+	echo '<p class="info">'._('Esta sesion de ssh es valida hasta: ').$h["hours"].':'.$h["minutes"].':'.$h["seconds"].' - '.$h["mday"].' '.$h["month"].' '.$h["year"].'</p>';
         return $r;
 }
 
@@ -183,6 +183,7 @@ function get_attr($uid, $attr){
 
 }
 
+//TODO ver si este certificado esta cumplido, en cuyo caso no devolver nada
 function get_certificate_used($uid){
 	return get_attr($uid, 'sshpublickey');
 }

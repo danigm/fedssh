@@ -46,15 +46,7 @@ else{
         <?php
             $var = anadir_usuario();
             $name = htmlentities(get_remote_user());
-            $certificate = get_certificate_used($name);
-            echo '<p>'._('Usando el certificado: ').'<br/>';
-            $cert = str_split($certificate, 50);
-	    echo '<div class="certificate">';
-            foreach ($cert as $line){
-                echo htmlentities($line)."<br/>";
-            }
-	    echo '</div>';
-            echo '</p>';
+
             if ($var == -1)
                 echo '<p class="warning">'._('No ha introducido un certificado valido.').'</p>';
             else if($var == -2)
@@ -65,7 +57,17 @@ else{
             else
                 echo '<p class="ok">'._('Ahora puedes entrar por ssh en los servidores de la federaci&oacute;n, utilizando como nombre de usuario: ').'<span class="user">'. $name .'</span></p>';
                 
+            $certificate = get_certificate_used($name);
+            echo '<p>'._('Usando el certificado: ').'<br/>';
+            $cert = str_split($certificate, 50);
+	    echo '<div class="certificate">';
+            foreach ($cert as $line){
+                echo htmlentities($line)."<br/>";
+            }
+	    echo '</div>';
+            echo '</p>';
         ?>
+
 	<div class="info">
     <p>
 <?php
