@@ -1,5 +1,12 @@
 <?php
 session_start();
+//soporte para traducciones
+$language="en_GB";
+putenv("LC_ALL=$language");
+setlocale(LC_ALL, $language);
+bindtextdomain("ssh_backend", "./locale");
+textdomain("ssh_backend");
+
 $base_dn ='o=People,dc=us,dc=es';
 $servidor_ldap = "goonie.us.es";
 $puerto_ldap = 389;
@@ -21,7 +28,7 @@ function modify($ds, $uid, $pubkey){
         // anadir la informacion al directorio
         $r=ldap_modify($ds, $dn, $info);
 	$h = getdate($timeout);
-	echo '<p>Esta sesion de ssh es valida hasta: '.$h["hours"].':'.$h["minutes"].':'.$h["seconds"].' - '.$h["mday"].' '.$h["month"].' '.$h["year"].'</p>';
+	echo '<p>'._('Esta sesion de ssh es valida hasta: ').$h["hours"].':'.$h["minutes"].':'.$h["seconds"].' - '.$h["mday"].' '.$h["month"].' '.$h["year"].'</p>';
 
         return $r;
 }
@@ -46,7 +53,7 @@ function add($ds, $uid, $sn, $cn, $pubkey){
         // anadir la informacion al directorio
         $r=ldap_add($ds, $dn, $info);
 	$h = getdate($timeout);
-	echo '<p>Esta sesion de ssh es valida hasta: '.$h["hours"].':'.$h["minutes"].':'.$h["seconds"].' - '.$h["mday"].' '.$h["month"].' '.$h["year"].'</p>';
+	echo '<p>'._('Esta sesion de ssh es valida hasta: ').$h["hours"].':'.$h["minutes"].':'.$h["seconds"].' - '.$h["mday"].' '.$h["month"].' '.$h["year"].'</p>';
         return $r;
 }
 
@@ -71,8 +78,8 @@ function delete($uid) {
 function display_form() {
         echo('
                         <form action="" method="post">
-                        <textarea name="key" cols="60" rows="5">texto</textarea><br/>
-                        <input type="submit" value="Enviar"></input>
+                        <textarea name="key" cols="60" rows="5"></textarea><br/>
+                        <input type="submit" value="'._('Enviar').'"></input>
                         </form>
                         ');
 }
