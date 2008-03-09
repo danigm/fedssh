@@ -8,9 +8,9 @@ top_srcdir=..
 
 CC=gcc
 LD=gcc
-CFLAGS=-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -std=gnu99 
-CPPFLAGS=-I. -I.. -I$(srcdir) -I$(srcdir)/..  -DHAVE_CONFIG_H
-LIBS=-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt
+CFLAGS=-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -fstack-protector-all -std=gnu99 
+CPPFLAGS=-I. -I.. -I$(srcdir) -I$(srcdir)/..  -DLDAP_DEPRECATED -DHAVE_CONFIG_H
+LIBS=-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt -lldap
 AR=/usr/bin/ar
 RANLIB=ranlib
 INSTALL=/usr/bin/install -c

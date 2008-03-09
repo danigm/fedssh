@@ -524,14 +524,14 @@ s,@DEFS@,|#_!!_#|-DHAVE_CONFIG_H,g
 s,@ECHO_C@,|#_!!_#|,g
 s,@ECHO_N@,|#_!!_#|-n,g
 s,@ECHO_T@,|#_!!_#|,g
-s,@LIBS@,|#_!!_#|-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt,g
+s,@LIBS@,|#_!!_#|-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt -lldap,g
 s,@build_alias@,|#_!!_#|,g
 s,@host_alias@,|#_!!_#|,g
 s,@target_alias@,|#_!!_#|,g
 s,@CC@,|#_!!_#|gcc,g
-s,@CFLAGS@,|#_!!_#|-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -std=gnu99 ,g
+s,@CFLAGS@,|#_!!_#|-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -fstack-protector-all -std=gnu99 ,g
 s,@LDFLAGS@,|#_!!_#|,g
-s,@CPPFLAGS@,|#_!!_#|,g
+s,@CPPFLAGS@,|#_!!_#| -DLDAP_DEPRECATED,g
 s,@ac_ct_CC@,|#_!!_#|gcc,g
 s,@EXEEXT@,|#_!!_#|,g
 s,@OBJEXT@,|#_!!_#|o,g

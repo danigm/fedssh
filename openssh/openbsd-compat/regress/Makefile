@@ -8,11 +8,11 @@ top_srcdir=../..
 
 CC=gcc
 LD=gcc
-CFLAGS=-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -std=gnu99 
-CPPFLAGS=-I. -I.. -I$(srcdir) -I$(srcdir)/..  -DHAVE_CONFIG_H
+CFLAGS=-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -fstack-protector-all -std=gnu99 
+CPPFLAGS=-I. -I.. -I$(srcdir) -I$(srcdir)/..  -DLDAP_DEPRECATED -DHAVE_CONFIG_H
 EXEEXT=
 LIBCOMPAT=../libopenbsd-compat.a
-LIBS=-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt
+LIBS=-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt -lldap
 LDFLAGS= $(LIBCOMPAT)
 
 TESTPROGS=closefromtest$(EXEEXT) snprintftest$(EXEEXT) strduptest$(EXEEXT) \

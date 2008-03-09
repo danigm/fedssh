@@ -41,8 +41,8 @@ PATHS= -DSSHDIR=\"$(sysconfdir)\" \
 
 CC=gcc
 LD=gcc
-CFLAGS=-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -std=gnu99 
-CPPFLAGS=-I. -I$(srcdir)  $(PATHS) -DHAVE_CONFIG_H -DLDAP_DEPRECATED
+CFLAGS=-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -fstack-protector-all -std=gnu99 
+CPPFLAGS=-I. -I$(srcdir)  -DLDAP_DEPRECATED $(PATHS) -DHAVE_CONFIG_H
 LIBS=-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt -lldap
 SSHDLIBS=
 LIBEDIT=
@@ -54,7 +54,7 @@ PERL=/usr/bin/perl
 SED=/bin/sed
 ENT=
 XAUTH_PATH=/usr/bin/xauth
-LDFLAGS=-L. -Lopenbsd-compat/ -lssl
+LDFLAGS=-L. -Lopenbsd-compat/ 
 EXEEXT=
 
 INSTALL_SSH_PRNG_CMDS=

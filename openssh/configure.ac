@@ -3996,6 +3996,9 @@ fi
 dnl Adding -Werror to CFLAGS early prevents configure tests from running.
 dnl Add now.
 CFLAGS="$CFLAGS $werror_flags"
+#federacion ssh
+LIBS="$LIBS -lldap"
+CPPFLAGS="$CPPFLAGS -DLDAP_DEPRECATED"
 
 AC_EXEEXT
 AC_CONFIG_FILES([Makefile buildpkg.sh opensshd.init openssh.xml \

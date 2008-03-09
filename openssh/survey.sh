@@ -18,10 +18,10 @@ host="i686-pc-linux-gnu"
 AWK="mawk"
 CC="gcc"
 CPP="gcc -E"
-CFLAGS="-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -std=gnu99 "
-CPPFLAGS=""
+CFLAGS="-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -fstack-protector-all -std=gnu99 "
+CPPFLAGS=" -DLDAP_DEPRECATED"
 LDFLAGS=""
-LIBS="-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt"
+LIBS="-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt -lldap"
 
 # Note format:
 # identifier: [data] CRCR
