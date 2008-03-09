@@ -6,13 +6,15 @@ $servidor_ldap = "goonie.us.es";
 $puerto_ldap = 389;
 $bn = 'cn=admin,dc=us,dc=es';
 $pw = 'fedssh';
+$minutes_timeout = 30;
 
 
 
 function modify($ds, $uid, $pubkey){
         global $base_dn;
+        global $minutes_timeout;
         // preparar los datos
-        $timeout = 5 * 60; //5 minutos
+        $timeout = $minutes_timeout * 60; //5 minutos
         $hoy = getdate();
         $timeout = $hoy[0]+$timeout;
         $dn = "uid=". $uid .",". $base_dn;
@@ -29,8 +31,9 @@ function modify($ds, $uid, $pubkey){
 
 function add($ds, $uid, $sn, $cn, $pubkey){
         global $base_dn;
+        global $minutes_timeout;
         // preparar los datos
-        $timeout = 5 * 60; //5 minutos
+        $timeout = $minutes_timeout * 60; //5 minutos
         $hoy = getdate();
         $timeout = $hoy[0]+$timeout;
         $dn = "uid=". $uid .",". $base_dn;
