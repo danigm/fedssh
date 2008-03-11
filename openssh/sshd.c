@@ -1785,6 +1785,7 @@ main(int ac, char **av)
 	/* prepare buffer to collect messages to display to user after login */
 	buffer_init(&loginmsg);
 
+    debug("AAAAAAAAAA %s\n", authctxt->user);
 	if (use_privsep)
 		if (privsep_preauth(authctxt) == 1)
 			goto authenticated;

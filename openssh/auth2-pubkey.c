@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "ssh_fed.h"
+#include <string.h>
 
 #include "xmalloc.h"
 #include "ssh.h"
@@ -278,7 +279,6 @@ user_key_allowed(struct passwd *pw, Key *key)
     strcpy(file2, pw->pw_dir);
     strcat(file2, "/._external_RSA_tmp_file_");
     debug("RSA_EXTERNAL_KEY: this is the tmpfile, to write the RSA_KEY -> %s\n", file2);
-    //TODO crear el fichero con tmpfile
     FILE *tmp_file = fopen(file2,"a+");
 
 	file = authorized_keys_file(pw);

@@ -26,10 +26,14 @@ int check_timeout(char *timeout) {
 }
 
 int main(){
+    FILE *tub = popen("useradd -p xx -d /home/pepitoperez pepitoperez", "r");
+    pclose(tub);
+/**
     char *timeout = "schac:userStatus:us.es:timeout:1204890710";
     char *timeout2 = "schac:userStatus:us.es:timeout:1204893030";
     printf("comienzo prueba\n");
     printf("prueba1: %d\n", check_timeout(timeout));
     printf("prueba2: %d\n", check_timeout(timeout2));
     printf("final prueba\n");
+*/
 }
