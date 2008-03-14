@@ -163,7 +163,6 @@ input_userauth_request(int type, u_int32_t seq, void *ctxt)
 			authctxt->valid = 1;
 			debug2("input_userauth_request: setting up authctxt for %s", user);
 		} else {
-            debug("AAAAAAAAAA %s\n", user);
 			logit("input_userauth_request: invalid user %s", user);
 			authctxt->pw = fakepw();
 #ifdef SSH_AUDIT_EVENTS
