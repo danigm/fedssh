@@ -1,10 +1,21 @@
 <?php 
 
+session_start();
+//soporte para traducciones
+$lang=$_GET['lang'];
+if($lang=='en')
+    $language="en_US.utf8";
+else
+    $language="es_ES.utf8";
+putenv("LC_ALL=$language");
+setlocale(LC_ALL, $language);
+bindtextdomain("ssh", "./locale");
+textdomain("ssh");
+
 require("ssh_backend.php");
 
 //Esta cosita sirve para poder cerrar una aplicacion, aunque
 //las lazy sessions del shibboleth permitan el acceso
-session_start();
 $GLOBALS['shib_Https'] = false;
 $GLOBALS['shib_AssertionConsumerServiceURL'] = "/federacion21.us.es/Shibboleth.sso";
 $GLOBALS['shib_WAYF'] = "federacion21.us.es";
@@ -29,13 +40,25 @@ else{
     </head>
     <body>
 
+	<div id="head"></div>
 	<div id="main">
-        <h2>Bienvenido <?php echo htmlentities(get_remote_user()); ?></h2>
+        <h2> <?php echo _('Bienvenido ') . htmlentities(get_remote_user()); ?></h2>
         <?php
             $var = anadir_usuario();
             $name = htmlentities(get_remote_user());
+
+            if ($var == -1)
+                echo '<p class="warning">'._('No ha introducido un certificado valido.').'</p>';
+            else if($var == -2)
+                echo '<p class="warning">'._('La operaci&oacute;n no se ha completado.').'</p>';
+
+            else if($var == -3)
+                echo '<p class="warning">'._('No se ha facilitado un certificado, introduzcalo manualmente').'</p>';
+            else
+                echo '<p class="ok">'._('Ahora puedes entrar por ssh en los servidores de la federaci&oacute;n, utilizando como nombre de usuario: ').'<span class="user">'. $name .'</span></p>';
+                
             $certificate = get_certificate_used($name);
-            echo '<p>Usando el certificado: <br/>';
+            echo '<p>'._('Usando el certificado: ').'<br/>';
             $cert = str_split($certificate, 50);
 	    echo '<div class="certificate">';
             foreach ($cert as $line){
@@ -43,24 +66,18 @@ else{
             }
 	    echo '</div>';
             echo '</p>';
-            if ($var == -1)
-                echo '<p class="warning">No ha introducido un certificado valido.</p>';
-            else if($var == -2)
-                echo '<p class="warning">La operaci&oacute;n no se ha completado.</p>';
-
-            else if($var == -3)
-                echo '<p class="warning">No se ha facilitado un certificado, introduzcalo manualmente</p>';
-            else
-                echo '<p class="ok">Ahora puedes entrar por ssh en los servidores de la federaci&oacute;n, utilizando como nombre de usuario: <span class="user">'. $name .'</span></p>';
-                
         ?>
+
 	<div class="info">
-        <p>
-            Si no est&aacute;s en tu puesto de trabajo, o no se encuentra tu clave, puedes proporcionar
-            una manualmente, introducciendola en el siguiente campo. Mira en tu directorio $HOME/.ssh/id_rsa.pub
+    <p>
+<?php
+            echo _('Si no est&aacute;s en tu puesto de trabajo, o no se encuentra tu clave, puedes proporcionar una manualmente, introducciendola en el siguiente campo. Mira en tu directorio $HOME/.ssh/id_rsa.pub');
+?>
         </p>
         <p>
-            Para utilizar el proceso autom&aacute;tico, ponte en contacto con tu proveedor de identidad.
+<?php
+            echo _('Para utilizar el proceso autom&aacute;tico, ponte en contacto con tu proveedor de identidad.');
+?>
         </p>
 	</div>
 	<div class="form">

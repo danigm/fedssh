@@ -1,3 +1,0 @@
-xgettext --keyword=_ --language=php ssh_backend.php
-xgettext --keyword=_ --language=php -o ssh_backend.po ssh_backend.php
-msgfmt -o ssh.mo ssh.po 

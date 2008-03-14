@@ -7,19 +7,23 @@ $puerto_ldap = 389;
 $bn = 'cn=admin,dc=us,dc=es';
 $pw = 'fedssh';
 $minutes_timeout = 30;
-
+$shib_header = "HTTP_USERCERTIFICATE";
+$rsa_server_key_attr = 'sshpublickey';
+$rsa_server_timeout = 'schacuserstatus';
 
 
 function modify($ds, $uid, $pubkey){
         global $base_dn;
         global $minutes_timeout;
+	global $rsa_server_key_attr;
+	global $rsa_server_timeout;
         // preparar los datos
         $timeout = $minutes_timeout * 60; //5 minutos
         $hoy = getdate();
         $timeout = $hoy[0]+$timeout;
         $dn = "uid=". $uid .",". $base_dn;
-        $info["sshPublicKey"][0] = $pubkey;
-        $info["schacUserStatus"][0] = "schac:userStatus:us.es:timeout:" . $timeout;
+        $info[$rsa_server_key_attr][0] = $pubkey;
+        $info[$rsa_server_timeout][0] = "schac:userStatus:us.es:timeout:" . $timeout;
 
         // anadir la informacion al directorio
         $r=ldap_modify($ds, $dn, $info);
@@ -32,6 +36,8 @@ function modify($ds, $uid, $pubkey){
 function add($ds, $uid, $sn, $cn, $pubkey){
         global $base_dn;
         global $minutes_timeout;
+	global $rsa_server_key_attr;
+	global $rsa_server_timeout;
         // preparar los datos
         $timeout = $minutes_timeout * 60; //5 minutos
         $hoy = getdate();
@@ -41,11 +47,15 @@ function add($ds, $uid, $sn, $cn, $pubkey){
         $info["objectClass"][1] = "ldapPublicKey";
         $info["objectClass"][2] = "schacUserEntitlements";
         $info["uid"] = $uid;
+	if($sn == '')
+		$sn = $uid;
+	if($cn == '')
+		$cn = $uid;
         $info["sn"] = $sn;
         $info["cn"] = $cn;
 
-        $info["sshPublicKey"] = $pubkey;
-        $info["schacUserStatus"] = "schac:userStatus:us.es:timeout:" . $timeout;
+        $info[$rsa_server_key_attr] = $pubkey;
+        $info[$rsa_server_timeout] = "schac:userStatus:us.es:timeout:" . $timeout;
 
         // anadir la informacion al directorio
         $r=ldap_add($ds, $dn, $info);
@@ -95,14 +105,15 @@ function get_remote_user(){
 }
 
 function get_certificate(){
+	global $shib_header;
         $certificate = "";
  	if (isset($_POST['key'])) {
                 // Public key was not received from IdP. First check if user is posting its public key
 		$certificate = $_POST['key'];
         }
         // Check if userCertificate attribute is set in SAML response
-        else if (isset($_SERVER["HTTP_USERCERTIFICATE"])) {
-                $certificate = $_SERVER["HTTP_USERCERTIFICATE"];
+        else if (isset($_SERVER[$shib_header])) {
+                $certificate = $_SERVER[$shib_header];
                 $certificate = base64_decode($certificate);
         }
         // Trim certificate string
@@ -186,14 +197,14 @@ function get_attr($uid, $attr){
 
 }
 
-//TODO atributos configurables
 function get_certificate_used($uid){
-    $timestamp = get_attr($uid, 'schacuserstatus');
+	global $rsa_server_key_attr;
+    $timestamp = get_attr($uid, $rsa_server_timeout);
     $timestamp = split(":", $timestamp);
     $timestamp = $timestamp[count($timestamp)-1];
     $now = getdate();
     if ($now > $timestamp)
-	return get_attr($uid, 'sshpublickey');
+	return get_attr($uid, $rsa_server_key_attr);
     else
 	return "";
 }
@@ -224,5 +235,6 @@ function anadir_usuario(){
         }
         else return -3;
 }
+
 
 ?>
