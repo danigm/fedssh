@@ -42,7 +42,7 @@ PATHS= -DSSHDIR=\"$(sysconfdir)\" \
 CC=gcc
 LD=gcc
 CFLAGS=-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -fstack-protector-all -std=gnu99 
-CPPFLAGS=-I. -I$(srcdir)  -DLDAP_DEPRECATED $(PATHS) -DHAVE_CONFIG_H
+CPPFLAGS=-I. -I$(srcdir) $(PATHS) -DHAVE_CONFIG_H
 LIBS=-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt -lldap
 SSHDLIBS=
 LIBEDIT=

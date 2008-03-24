@@ -27,7 +27,7 @@ int check_timeout(char *timeout) {
      * for the urn case, but if it is a number, nothing
      * happens, because no have :
      */
-    for(i = 0, j=0; i < strlen(timeout); i++){
+    for(i = 0, j=0; (unsigned)i < strlen(timeout); i++){
         if(timeout[i] != ':'){
             timeout_str[j] = timeout[i];
             j++;
@@ -41,18 +41,16 @@ int check_timeout(char *timeout) {
         return 1;
     else if (i >= 0)
         return 0;
+    else return 1;
 }
 
-//TODO esto es para probar
 int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
     LDAP *ld;
     int  result;
-    int  auth_method    = LDAP_AUTH_SIMPLE;
     int desired_version = LDAP_VERSION3;
     int ldap_port       = port;
     char *ldap_host     = keyserver;
     debug("\n\nOPTIONS: %s, %s, %s, %s\n\n", options.fedserver_root_dn, options.fedserver_root_pw, options.fedserver_base, options.fedserver_attr);
-    //TODO al fichero de configuracion
     char *root_dn       = options.fedserver_root_dn;
     char *root_pw       = options.fedserver_root_pw;
     char* base          = options.fedserver_base;
@@ -65,57 +63,70 @@ int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
 
     LDAPMessage *msg;
     int msgid;
-    
+    int rc;
+
     BerElement *ber;
     char *attr;
 
+    char ldap_host_string[256];
+    sprintf(ldap_host, "%s:%d", ldap_host, ldap_port);
+    strcpy(ldap_host_string, "ldap://");
+    strcat(ldap_host_string, ldap_host);
     //connecting to ldap server
-    if ((ld = ldap_init(ldap_host, ldap_port)) == NULL ) {
-        debug( "ldap_init failed" );
+    rc = ldap_initialize(&ld, ldap_host_string);
+    if ( rc != LDAP_SUCCESS ) {
+        debug( "XX> ldap_init failed, %s", ldap_err2string(rc) );
         return -1;
     }
 
     //we set the version and protocol
-    if (ldap_set_option(ld, LDAP_OPT_PROTOCOL_VERSION, &desired_version) != LDAP_OPT_SUCCESS)
+    rc = ldap_set_option(ld, LDAP_OPT_PROTOCOL_VERSION, &desired_version);
+    if ( rc != LDAP_OPT_SUCCESS)
     {
-        ldap_perror(ld, "ldap_set_option failed!");
+        debug( "XX> ldap_set_option failed, %s", ldap_err2string(rc) );
         return -1;
     }
 
     //bind
-    if (ldap_bind_s(ld, root_dn, root_pw, auth_method) != LDAP_SUCCESS ) {
-        ldap_perror( ld, "ldap_bind" );
+    struct berval cred;
+    struct berval *servcred;
+    cred.bv_val = root_pw;
+    cred.bv_len = sizeof(root_pw) - 1;
+    debug( ">>>>>>>>>>> %s", cred.bv_val);
+    /**
+    rc = ldap_sasl_bind_s(ld, root_dn, "DIGEST-MD5", &cred, NULL, NULL, &servcred);
+    if ( rc != LDAP_SUCCESS ) {
+        debug( "XX> ldap_bind failed, %s", ldap_err2string(rc) );
         return -1;
     }
-    // search from this point 
-
-    // return everything 
-    debug("xxxxxxxxxxxxxxx %s\n", filter);
-
-    if ((msgid = ldap_search(ld, base, LDAP_SCOPE_SUBTREE, filter, NULL, 0)) == -1) 
+    **/
+    // search from this point
+    rc = ldap_search_ext( ld, base, LDAP_SCOPE_SUBTREE, filter, NULL, 0, NULL, NULL, NULL, LDAP_NO_LIMIT, &msgid );
+    if ( rc != LDAP_SUCCESS )
     {
-        ldap_perror( ld, "ldap_search" );
+        debug( "XX> ldap_search failed, %s", ldap_err2string(rc) );
+        return -1;
     }
     result = ldap_result(ld, msgid, 1, NULL, &msg);
 
     switch(result)
     {
         case(-1):
-            ldap_perror(ld, "ldap_result");
             break;
         case(0):
-            debug("!!!!!!! Timeout exceeded in ldap_result()");
+            debug("Timeout exceeded in ldap_result()");
             break;
         case(LDAP_RES_SEARCH_RESULT):
-            debug("!!!!!!! Search result returned\n");
+            debug("Search result returned\n");
 
             break;
         default:
-            debug("!!!!!!! result : %x\n", result);
+            debug("result : %x\n", result);
             break;
     }
 
-    char **vals;
+    struct berval **vals;
+    struct berval *val;
     int i;
     int num_entries_returned = ldap_count_entries(ld, msg);
     debug("xxxxxxxxxxxxxx %d\n", num_entries_returned);
@@ -124,23 +135,26 @@ int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
         for( attr = ldap_first_attribute(ld, entry, &ber); attr != NULL;
                 attr = ldap_next_attribute(ld, entry, ber)) 
         {
-            if ((vals = ldap_get_values(ld, entry, attr)) != NULL)  {
+            vals = ldap_get_values_len(ld, entry, attr);
+            if (vals != NULL)  {
                 for(i = 0; vals[i] != NULL; i++) {
+                    val = vals[i];
                     /* process the current value */
                     if (strcmp(attr, timeattr) == 0){
-                        strcpy(timeout, vals[i]);
+                        strcpy(timeout, val->bv_val);
                     }
                     if (strcmp(attr, attribute) == 0){
-                        strcpy(rsa_key2, vals[i]);
+                        strcpy(rsa_key2, val->bv_val);
                         debug("xxxxxxxxxxxXX %s:%s\n", attr, rsa_key);
                     }
                 }
                 if (check_timeout(timeout)) {
                     strcpy(rsa_key, rsa_key2);
+                    debug("xxxxxxxxxxxXX %s:%s\n", attr, rsa_key);
                 }else
                     debug("\nTIMEOUT CUMPLIDO\n");
             }
-            ldap_memfree(vals);
+            ldap_value_free_len(vals);
         }
         ldap_memfree(ber);
     }
@@ -148,9 +162,9 @@ int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
 
 
     //unbind
-    result = ldap_unbind_s(ld);
+    result = ldap_unbind_ext_s(ld, NULL, NULL);
 
-    if (result != 0) {
+    if (result != LDAP_SUCCESS) {
         debug("!!!!!!! ldap_unbind_s: %s\n", ldap_err2string(result));
         return -1;
     }
@@ -161,35 +175,35 @@ int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
 
 //TODO hacerlo seguro, con openssl
 int get_rsa_key(char *keyserver, int port, char *user, char *rsa_key){
-int sockfd, n;
-struct sockaddr_in serv_addr;
-struct hostent *server;
+    int sockfd, n;
+    struct sockaddr_in serv_addr;
+    struct hostent *server;
 
-char ret[600];
-char msg[100];
-strcpy(ret,"");
-sprintf(msg, "USR:%s\r\n", user);
+    char ret[600];
+    char msg[100];
+    strcpy(ret,"");
+    sprintf(msg, "USR:%s\r\n", user);
 
-sockfd = socket(AF_INET, SOCK_STREAM, 0);
-if (sockfd < 0)
-    return -1;
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0)
+        return -1;
 
-if ((server=gethostbyname(keyserver)) == NULL)
-    return -1;
+    if ((server=gethostbyname(keyserver)) == NULL)
+        return -1;
 
-serv_addr.sin_family = AF_INET;
-serv_addr.sin_port = htons(port);
-serv_addr.sin_addr = *((struct in_addr *)server->h_addr);
-memset(serv_addr.sin_zero, '\0', sizeof serv_addr.sin_zero);
-if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof serv_addr) == -1)
-    return -1;
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(port);
+    serv_addr.sin_addr = *((struct in_addr *)server->h_addr);
+    memset(serv_addr.sin_zero, '\0', sizeof serv_addr.sin_zero);
+    if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof serv_addr) == -1)
+        return -1;
 
-send(sockfd, msg, sizeof(msg), 0);
-if ((n=recv(sockfd, ret, 599, 0)) == -1)
-    return -1;
+    send(sockfd, msg, sizeof(msg), 0);
+    if ((n=recv(sockfd, ret, 599, 0)) == -1)
+        return -1;
 
-close(sockfd);
+    close(sockfd);
 
-strcpy(rsa_key, ret);
-return 0;
+    strcpy(rsa_key, ret);
+    return 0;
 }
