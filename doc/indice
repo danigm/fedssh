@@ -1,0 +1,33 @@
+1. Resumen - 1 página
+
+2. Introducción
+    2.1 Objetivos
+    2.2 Antecedentes
+        (feide, parche opensshldap)
+
+3. Análisis del problema
+    3.1 Necesidad de federación
+    3.2 Uso de la federación fuera de la web
+    3.3 La importancia del ssh (túneles, importación X ...)
+
+4. Solución propuesta
+    4.1 Parche para openssh (proceso de autenticación sshd)
+    4.2 Servidor de claves, flexibilidad, LDAP, python...
+    4.3 Aplicación de login.
+    4.4 Ejemplo aplicación creación de cuentas.
+
+5. Implementación y despliegue
+    5.1 Código del openssh, (mínimas variaciones).
+    5.2 Código de las aplicaciones federadas, (ssh, useradd).
+    5.3 Necesidades para montar la plataforma.
+
+6. Conclusiones
+    6.1 Por qué es importante, y por qué soy el mejor.
+
+7. Anexos
+    7.1 Aplicación del parche sobre openssh
+    7.2 Despliegue del servidor ssh con el parche
+    7.3 Seguridad mínima (permisos, cambiar passwd, etc)
+    7.4 Despliegue de la aplicación federada.
+    7.5 Schemas ldap utilizados, dónde encontrarlos, cómo instalarlos
+    en openldap.

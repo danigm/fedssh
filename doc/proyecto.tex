@@ -1,0 +1,61 @@
+\include{encabezado}
+\tableofcontents
+
+\newpage
+
+\section{Resumen}
+
+\newpage
+
+\section{Introducción}
+    \subsection{Objetivos}
+    \subsection{Antecedentes}
+        (feide, parche opensshldap)
+
+\newpage
+
+
+\section{Análisis del problema}
+    \subsection{Necesidad de federación}
+    \subsection{Uso de la federación fuera de la web}
+    \subsection{La importancia del ssh}
+         (túneles, importación X ...)
+
+\newpage
+
+
+\section{Solución propuesta}
+    \subsection{Parche para openssh (proceso de autenticación sshd)}
+    \subsection{Servidor de claves, flexibilidad, LDAP, python...}
+    \subsection{Aplicación de login.}
+    \subsection{Ejemplo aplicación creación de cuentas.}
+
+\newpage
+
+
+\section{Implementación y despliegue}
+    \subsection{Código del openssh, (mínimas variaciones)}
+    \subsection{Código de las aplicaciones federadas, (ssh, useradd)}
+    \subsection{Necesidades para montar la plataforma}
+
+\newpage
+
+
+\section{Conclusiones}
+    \subsection{Por qué es importante, y por qué soy el mejor}
+
+\newpage
+
+
+\section{Anexos}
+    \subsection{Aplicación del parche sobre openssh}
+    \subsection{Despliegue del servidor ssh con el parche}
+    \subsection{Seguridad mínima (permisos, cambiar passwd, etc)}
+    \subsection{Despliegue de la aplicación federada}
+    \subsection{Schemas ldap utilizados, dónde encontrarlos, cómo instalarlos
+    en openldap}
+
+\newpage
+
+
+\end{document}

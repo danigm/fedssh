@@ -1,0 +1,12 @@
+                 --- PLANTILLA LaTeX PARA LA MEMORIA DEL ---
+                 ---  PROYECTO FIN DE CARRERA DE ESIDE   ---
+
+
+                 ---     COSAS QUE FALTAN POR HACER      ---
+
+
+Se ha intentado guardar compatibilidad hacia atrás. Según se vaya viendo el
+interés y uso de las macros, es posible que algunos "ajustes" antiguos vayan
+desapareciendo en futuras versiones.
+
+Aún así, la macro "\autores" ha variado, puesto que ya no se necesita el DNI.
