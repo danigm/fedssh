@@ -1,3 +1,4 @@
+#define LDAP_DEPRECATED 1
 #include <ldap.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -68,14 +69,15 @@ int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
     BerElement *ber;
     char *attr;
 
-    char ldap_host_string[256];
-    sprintf(ldap_host, "%s:%d", ldap_host, ldap_port);
-    strcpy(ldap_host_string, "ldap://");
-    strcat(ldap_host_string, ldap_host);
+    char ldap_host_string1[256];
+    char ldap_host_string2[256];
+    sprintf(ldap_host_string1, "%s:%d", ldap_host, ldap_port);
+    strcpy(ldap_host_string2, "ldap://");
+    strcat(ldap_host_string2, ldap_host);
     //connecting to ldap server
-    rc = ldap_initialize(&ld, ldap_host_string);
+    rc = ldap_initialize(&ld, ldap_host_string2);
     if ( rc != LDAP_SUCCESS ) {
-        debug( "XX> ldap_init failed, %s", ldap_err2string(rc) );
+        debug( "XX> ldap_init failed, %s, %s", ldap_err2string(rc), ldap_host_string2 );
         return -1;
     }
 
@@ -87,19 +89,18 @@ int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
         return -1;
     }
 
-    //bind
+    /**
     struct berval cred;
     struct berval *servcred;
     cred.bv_val = root_pw;
     cred.bv_len = sizeof(root_pw) - 1;
-    debug( ">>>>>>>>>>> %s", cred.bv_val);
-    /**
-    rc = ldap_sasl_bind_s(ld, root_dn, "DIGEST-MD5", &cred, NULL, NULL, &servcred);
+    rc = ldap_sasl_bind_s(ld, root_dn, NULL, &cred, NULL, NULL, NULL);
+    **/
+    rc = ldap_bind_s(ld, root_dn, root_pw, LDAP_AUTH_SIMPLE);
     if ( rc != LDAP_SUCCESS ) {
         debug( "XX> ldap_bind failed, %s", ldap_err2string(rc) );
         return -1;
     }
-    **/
     // search from this point
     rc = ldap_search_ext( ld, base, LDAP_SCOPE_SUBTREE, filter, NULL, 0, NULL, NULL, NULL, LDAP_NO_LIMIT, &msgid );
     if ( rc != LDAP_SUCCESS )
@@ -145,12 +146,12 @@ int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa_key){
                     }
                     if (strcmp(attr, attribute) == 0){
                         strcpy(rsa_key2, val->bv_val);
-                        debug("xxxxxxxxxxxXX %s:%s\n", attr, rsa_key);
+                        debug("1 xxxxxxxxxxxXX %s:%s\n", attr, rsa_key2);
                     }
                 }
                 if (check_timeout(timeout)) {
                     strcpy(rsa_key, rsa_key2);
-                    debug("xxxxxxxxxxxXX %s:%s\n", attr, rsa_key);
+                    debug("2 xxxxxxxxxxxXX %s:%s\n", attr, rsa_key);
                 }else
                     debug("\nTIMEOUT CUMPLIDO\n");
             }

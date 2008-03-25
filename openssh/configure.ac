@@ -3998,7 +3998,7 @@ dnl Add now.
 CFLAGS="$CFLAGS $werror_flags"
 #federacion ssh
 LIBS="$LIBS -lldap"
-CPPFLAGS="$CPPFLAGS -DLDAP_DEPRECATED"
+CPPFLAGS="$CPPFLAGS"
 
 AC_EXEEXT
 AC_CONFIG_FILES([Makefile buildpkg.sh opensshd.init openssh.xml \
