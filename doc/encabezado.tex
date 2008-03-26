@@ -1,12 +1,22 @@
 \documentclass[12pt,spanish]{article}
 \usepackage[spanish]{babel}
 \usepackage[utf8x]{inputenc}
-\oddsidemargin 0in
-\textwidth 6.75in
-\topmargin 0in
-\textheight 8.5in
-\parindent 0em
+\usepackage{fancyhdr}
+\parindent 2em
 \parskip 2ex
+\pagestyle{fancy}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{\rightmark}
+\fancyhead[RO,LE]{\thepage}
+\fancyfoot[RO]{Daniel García Moreno}
+\fancyfoot[LO]{SSH sobre federación de identidad}
+\fancyfoot[CO,CE]{}
+
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\footrulewidth}{0.6pt}
+\setlength{\headheight}{1.5\headheight}
+
+
 \begin{document}
 
 

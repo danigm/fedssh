@@ -6,13 +6,13 @@
         (feide, parche opensshldap)
 
 3. Análisis del problema
-    3.1 Necesidad de federación
-    3.2 Uso de la federación fuera de la web
-    3.3 La importancia del ssh (túneles, importación X ...)
+    3.1 Parte global (aplicación web(ssh) y ldap)
+    3.2 Parte del cliente(servidor ssh parcheado)
+    3.3 Creación de cuentas
 
 4. Solución propuesta
-    4.1 Parche para openssh (proceso de autenticación sshd)
-    4.2 Servidor de claves, flexibilidad, LDAP, python...
+    4.1 Servidor de claves, flexibilidad, LDAP, python...
+    4.2 Parche para openssh (proceso de autenticación sshd)
     4.3 Aplicación de login.
     4.4 Ejemplo aplicación creación de cuentas.
 

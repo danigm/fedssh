@@ -1,25 +1,25 @@
 \contentsline {section}{\numberline {1}Resumen}{3}
-\contentsline {section}{\numberline {2}Introducci\IeC {\'o}n}{4}
-\contentsline {subsection}{\numberline {2.1}Objetivos}{4}
-\contentsline {subsection}{\numberline {2.2}Antecedentes}{4}
-\contentsline {section}{\numberline {3}An\IeC {\'a}lisis del problema}{5}
-\contentsline {subsection}{\numberline {3.1}Necesidad de federaci\IeC {\'o}n}{5}
-\contentsline {subsection}{\numberline {3.2}Uso de la federaci\IeC {\'o}n fuera de la web}{5}
-\contentsline {subsection}{\numberline {3.3}La importancia del ssh}{5}
-\contentsline {section}{\numberline {4}Soluci\IeC {\'o}n propuesta}{6}
-\contentsline {subsection}{\numberline {4.1}Parche para openssh (proceso de autenticaci\IeC {\'o}n sshd)}{6}
-\contentsline {subsection}{\numberline {4.2}Servidor de claves, flexibilidad, LDAP, python...}{6}
-\contentsline {subsection}{\numberline {4.3}Aplicaci\IeC {\'o}n de login.}{6}
-\contentsline {subsection}{\numberline {4.4}Ejemplo aplicaci\IeC {\'o}n creaci\IeC {\'o}n de cuentas.}{6}
-\contentsline {section}{\numberline {5}Implementaci\IeC {\'o}n y despliegue}{7}
-\contentsline {subsection}{\numberline {5.1}C\IeC {\'o}digo del openssh, (m\IeC {\'\i }nimas variaciones)}{7}
-\contentsline {subsection}{\numberline {5.2}C\IeC {\'o}digo de las aplicaciones federadas, (ssh, useradd)}{7}
-\contentsline {subsection}{\numberline {5.3}Necesidades para montar la plataforma}{7}
-\contentsline {section}{\numberline {6}Conclusiones}{8}
-\contentsline {subsection}{\numberline {6.1}Por qu\IeC {\'e} es importante, y por qu\IeC {\'e} soy el mejor}{8}
-\contentsline {section}{\numberline {7}Anexos}{9}
-\contentsline {subsection}{\numberline {7.1}Aplicaci\IeC {\'o}n del parche sobre openssh}{9}
-\contentsline {subsection}{\numberline {7.2}Despliegue del servidor ssh con el parche}{9}
-\contentsline {subsection}{\numberline {7.3}Seguridad m\IeC {\'\i }nima (permisos, cambiar passwd, etc)}{9}
-\contentsline {subsection}{\numberline {7.4}Despliegue de la aplicaci\IeC {\'o}n federada}{9}
-\contentsline {subsection}{\numberline {7.5}Schemas ldap utilizados, d\IeC {\'o}nde encontrarlos, c\IeC {\'o}mo instalarlos en openldap}{9}
+\contentsline {section}{\numberline {2}Introducci\IeC {\'o}n}{5}
+\contentsline {subsection}{\numberline {2.1}Objetivos}{5}
+\contentsline {subsection}{\numberline {2.2}Antecedentes}{6}
+\contentsline {section}{\numberline {3}An\IeC {\'a}lisis del problema}{7}
+\contentsline {subsection}{\numberline {3.1}Necesidad de federaci\IeC {\'o}n}{7}
+\contentsline {subsection}{\numberline {3.2}Uso de la federaci\IeC {\'o}n fuera de la web}{7}
+\contentsline {subsection}{\numberline {3.3}La importancia del ssh}{7}
+\contentsline {section}{\numberline {4}Soluci\IeC {\'o}n propuesta}{8}
+\contentsline {subsection}{\numberline {4.1}Parche para openssh (proceso de autenticaci\IeC {\'o}n sshd)}{8}
+\contentsline {subsection}{\numberline {4.2}Servidor de claves, flexibilidad, LDAP, python...}{8}
+\contentsline {subsection}{\numberline {4.3}Aplicaci\IeC {\'o}n de login.}{8}
+\contentsline {subsection}{\numberline {4.4}Ejemplo aplicaci\IeC {\'o}n creaci\IeC {\'o}n de cuentas.}{8}
+\contentsline {section}{\numberline {5}Implementaci\IeC {\'o}n y despliegue}{9}
+\contentsline {subsection}{\numberline {5.1}C\IeC {\'o}digo del openssh, (m\IeC {\'\i }nimas variaciones)}{9}
+\contentsline {subsection}{\numberline {5.2}C\IeC {\'o}digo de las aplicaciones federadas, (ssh, useradd)}{9}
+\contentsline {subsection}{\numberline {5.3}Necesidades para montar la plataforma}{9}
+\contentsline {section}{\numberline {6}Conclusiones}{10}
+\contentsline {subsection}{\numberline {6.1}Por qu\IeC {\'e} es importante, y por qu\IeC {\'e} soy el mejor}{10}
+\contentsline {section}{\numberline {7}Anexos}{11}
+\contentsline {subsection}{\numberline {7.1}Aplicaci\IeC {\'o}n del parche sobre openssh}{11}
+\contentsline {subsection}{\numberline {7.2}Despliegue del servidor ssh con el parche}{11}
+\contentsline {subsection}{\numberline {7.3}Seguridad m\IeC {\'\i }nima (permisos, cambiar passwd, etc)}{11}
+\contentsline {subsection}{\numberline {7.4}Despliegue de la aplicaci\IeC {\'o}n federada}{11}
+\contentsline {subsection}{\numberline {7.5}Schemas ldap utilizados, d\IeC {\'o}nde encontrarlos, c\IeC {\'o}mo instalarlos en openldap}{11}

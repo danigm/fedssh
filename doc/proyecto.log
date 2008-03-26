@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2008.1.10)  25 MAR 2008 14:03
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2008.1.10)  26 MAR 2008 18:27
 entering extended mode
  %&-line parsing enabled.
 **proyecto.tex
@@ -67,21 +67,45 @@ File: uni-global.def 2004/10/17 UCS: Unicode global data
 \uc@combtoks=\toks17
 \uc@combtoksb=\toks18
 \uc@temptokena=\toks19
-) (./proyecto.aux)
+)
+(/usr/share/texmf-texlive/tex/latex/fancyhdr/fancyhdr.sty
+\fancy@headwidth=\skip43
+\f@ncyO@elh=\skip44
+\f@ncyO@erh=\skip45
+\f@ncyO@olh=\skip46
+\f@ncyO@orh=\skip47
+\f@ncyO@elf=\skip48
+\f@ncyO@erf=\skip49
+\f@ncyO@olf=\skip50
+\f@ncyO@orf=\skip51
+)
+
+Package Fancyhdr Warning: \fancyhead's `E' option without twoside option is use
+less on input line 9.
+
+
+Package Fancyhdr Warning: \fancyhead's `E' option without twoside option is use
+less on input line 10.
+
+
+Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
+less on input line 13.
+
+(./proyecto.aux (./resumen.aux) (./intro.aux))
 \openout1 = `proyecto.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
 
 (/usr/share/texmf-texlive/tex/latex/ucs/ucsencs.def
 File: ucsencs.def 2003/11/29 Fixes to fontencodings LGR, T3
@@ -92,7 +116,10 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <8> on input line 3.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 3.
- [1
+
+(/usr/share/texmf-texlive/tex/latex/ucs/data/uni-0.def
+File: uni-0.def 2004/10/17 UCS: Unicode data U+0000..U+00FF
+) [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
 
@@ -101,28 +128,56 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 \@writefile{lof}{\select@language{spanish}}
 \@writefile{lot}{\select@language{spanish}}
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}])
+])
 \tf@toc=\write3
 \openout3 = `proyecto.toc'.
 
- [2] [3]
-(/usr/share/texmf-texlive/tex/latex/ucs/data/uni-0.def
-File: uni-0.def 2004/10/17 UCS: Unicode data U+0000..U+00FF
-) [4] [5] [6] [7]
-[8] [9] (./proyecto.aux) ) 
+ [2]
+\openout2 = `resumen.aux'.
+
+ (./resumen.tex
+Overfull \hbox (0.53667pt too wide) in paragraph at lines 19--27
+[]\OT1/cmr/m/n/12 La fe-de-ra-ci^^Son de iden-ti-dad con-sis-te en que una se-r
+ie de en-ti-da-des \OT1/cmr/bx/n/12 conf^^S^^Pan
+ []
+
+[3
+
+]) [4]
+\openout2 = `intro.aux'.
+
+ (./intro.tex [5
+
+
+]) [6] [7
+
+] [8] [9] [10]
+Overfull \hbox (4.05954pt too wide) in paragraph at lines 46--46
+[]\OT1/cmr/bx/n/14.4 Seguridad m^^S^^Pni-ma (per-mi-sos, cam-biar passwd, etc) 
+
+ []
+
+
+Overfull \hbox (2.07785pt too wide) in paragraph at lines 49--49
+[]\OT1/cmr/bx/n/14.4 Schemas ldap uti-li-za-dos, d^^Sonde en-con-trar-los, c^^S
+omo
+ []
+
+[11] (./proyecto.aux (./resumen.aux) (./intro.aux)) ) 
 Here is how much of TeX's memory you used:
- 1519 strings out of 94101
- 18868 string characters out of 1165810
+ 1689 strings out of 94101
+ 20576 string characters out of 1165810
  78958 words of memory out of 1500000
- 4836 multiletter control sequences out of 10000+50000
+ 4988 multiletter control sequences out of 10000+50000
  7894 words of font info for 28 fonts, out of 1200000 for 2000
  637 hyphenation exceptions out of 8191
- 29i,5n,27p,347b,533s stack positions out of 5000i,500n,6000p,200000b,5000s
-</usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmbx
-12.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr12.pfb>
-Output written on proyecto.pdf (9 pages, 29049 bytes).
+ 31i,11n,45p,350b,688s stack positions out of 5000i,500n,6000p,200000b,5000s
+</usr/share/texmf-texlive/
+fonts/type1/bluesky/cm/cmbx12.pfb></usr/share/texmf-texlive/fonts/type1/bluesky
+/cm/cmr12.pfb>
+Output written on proyecto.pdf (11 pages, 39380 bytes).
 PDF statistics:
- 40 PDF objects out of 1000 (max. 8388607)
+ 46 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

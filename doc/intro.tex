@@ -1,0 +1,67 @@
+\section{Introducción}
+\subsection{Objetivos}
+
+Las facilidades que ofrece la federación de identidad son más que
+evidentes, y podría ser interesante en muchos casos, tener estas
+facilidades para otros servicios que requieran autenticación.
+
+El principal objetivo de este proyecto es llevar las facilidades de la
+gestión de identidad del ámbito de la web a otros servicios, como por
+ejemplo el SSH. En este proyecto nos hemos centrado en integrar la
+federación de identidad con el acceso por SSH, y puede servir como
+prueba de concepto a la hora de llevar la autenticación por federación
+de identidad a servicios diferentes de la web.
+
+Las características más importantes de la federación de identidad, que
+nos serán útiles en el SSH son:
+\begin{enumerate}
+
+    \item \textbf{Acceso a recursos de otras entidades}: La base de la
+    federación de identidad es poder acceder a recursos de otra
+    entidad con la misma cuenta con la que accedes a los recursos o
+    servicios de tu propia entidad.
+
+    \item \textbf{Gestión de identidad distribuida}: Al encargarse
+    cada entidad de la federación de sus propios usuarios, y
+    basándonos en las relaciones de confianza de la federación, se
+    puede dar servicio a un mayor número de usuarios gestionando tan
+    solo una pequeña cantidad de ellos. Esto puede crear algún tipo de
+    duda, puesto que se pierde el control sobre los usuarios, pero no
+    hay que olvidar que la federación es una red de confianza, donde
+    cada entidad debe confiar en las demás, y para ello hay mecanismos
+    seguros, como por ejemplo los certificados.
+
+    \item \textbf{Unicidad de contraseña}: La federación de identidad
+    nos brinda la posibilidad de acceder a diferentes servicios, que
+    requieren autenticación, con la misma cuenta y la misma
+    contraseña, y sin necesidad de replicar esta en los diferentes
+    servicios, sino estando en tu propia entidad, incrementando así la
+    seguridad de la misma, y la comodidad a la hora de cambiar de
+    contraseña, o de nombre de usuario.
+
+    \item \textbf{Login único}: También se busca implementar el Single
+    Sing On(SSO) para el SSH sobre federación, de tal forma que un
+    usuario sólo tenga que autenticarse una vez, y a partir de ahí,
+    tener acceso, sin necesidad de introducir ningún tipo de
+    contraseña, a todos los servidores SSH disponibles.
+
+\end{enumerate}
+
+Por otra parte, hemos elegido llevar la federación al servicio SSH
+porque es ampliamente utilizado, además de que ofrece una gran
+potencia y versatilidad, abriendo así la puerta a la utilización de
+otros servicios de forma fácil.
+
+Por ejemplo, en el ambiente académico, puede ser interesante dar
+acceso a un servidor SSH a todos los alumnos de Informática, bien sea
+para que utilicen un supercomputador, o para que tengan una cuenta
+dónde hacer las practicas. Dentro del objetivo de este proyecto
+entraría delegar la gestión de estos usuarios a la federación,
+facilitar así el proceso, así como por parte del alumno, como por
+parte del administrador de las máquinas.
+%TODO importancia del SSH, túneles, importación X
+
+\subsection{Antecedentes}
+    (feide, parche opensshldap)
+
+
