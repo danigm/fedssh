@@ -1,5 +1,5 @@
-\section{Introducción}
-\subsection{Objetivos}
+\chapter{Introducción}
+\section{Objetivos}
 
 Las facilidades que ofrece la federación de identidad son más que
 evidentes, y podría ser interesante en muchos casos, tener estas
@@ -59,9 +59,134 @@ dónde hacer las practicas. Dentro del objetivo de este proyecto
 entraría delegar la gestión de estos usuarios a la federación,
 facilitar así el proceso, así como por parte del alumno, como por
 parte del administrador de las máquinas.
+
+\section{Caso de uso}
+
+    En el siguiente caso de uso se muestra el funcionamiento básico del
+    sistema, así como una serie de detalles que serán explicados
+    detalladamente en la sección ``Implementación y despliegue''
+    [\ref{implementacion}].
+
+    \textbf{Caso de uso del proyecto SSH sobre federación de identidad}:
+
+    \begin{itemize}
+
+    \item \textbf{Descripción}:
+    
+    La federación está pensada para aplicaciones webs, pero sería
+    interesante poder utilizar estos mecanismos para aplicaciones que
+    autentican de otra manera diferente.
+
+    En el caso del ssh federado intentamos llevar el concepto de hacer
+    login una sola vez, y en tu entidad, al acceso por ssh. Buscando poder
+    acceder por ssh a diferentes máquinas sin tener que escribir usuario y
+    contraseña, una vez nos hayamos autenticado.  A través de ssh se pueden
+    hacer muchas más cosas, como por ejemplo túneles ssh, port-forwarding,
+    etc.
+
+    \item \textbf{Proceso de Autenticación}:
+
+    \begin{enumerate}
+
+        \item Se accede a una página especifica, protegida tras un SP.
+
+        \item El usuario se autentica en la federación, y puede ver la
+        página.
+
+        \item Esta aplicación web intentará conseguir la clave RSA publica
+        del usuario a través de los datos que manda la federación.
+
+        \item Una vez autenticado en esa aplicación web, el usuario puede
+        acceder a las cuentas ssh federadas de las que disponga sin tener
+        que introducir password.
+
+    \end{enumerate}
+
+    Se puede ver un esquema del funcionamiento de este proceso en la figura
+    \ref{fig:casodeuso}
+
+    \item \textbf{Proceso de Autenticación alternativo}:
+    La clave publica que recibe la aplicación a través de la federación
+    será la de la máquina habitual del usuario. En caso de estar utilizando
+    otra máquina es posible utilizar otra clave temporalmente.
+
+    \begin{enumerate}
+
+        \item Se accede a una página especifica, protegida tras un SP.
+
+        \item El usuario se autentica en la federación, y puede ver la página.
+
+        \item En la aplicación web se introduce la clave publica RSA temporal,
+        para esta sesión.
+
+        \item Una vez autenticado en esa aplicación web, el usuario puede
+        acceder a las cuentas ssh federadas de las que disponga sin tener que
+        introducir password.
+
+    \end{enumerate}
+
+    \item \textbf{Implementación}:
+    Para la implementación se ha optado por utilizar el mecanismo de acceso
+    por clave publica-privada que nos ofrece el mismo protocolo ssh.
+    Este mecanismo es el siguiente:
+    El usuario crea un par de claves, para la máquina en la que se
+    encuentra (ssh-keygen).
+
+    Para dar acceso remoto sólo necesitamos conocer la clave publica
+    (\$HOME/.ssh/id\_rsa.pub).
+    
+    Para poder acceder es necesario que el usuario disponga de su par
+    privado.
+    
+    El servidor openssh, mira en el directorio personal del usuario, y
+    busca en el archivo authorized\_keys (\$HOME/.ssh/authorized\_keys), antes
+    de pedir password. Si encuentra alguna clave, intenta la autenticación
+    por RSA, que es automática, sin petición de password. Por lo tanto
+    nuestro objetivo es utilizar este servicio, pero en lugar de mirar en
+    un archivo local, preguntaremos a un servidor remoto.
+    
+    \item \textbf{Requisitos}:
+
+    Para poder acceder a cualquier máquina remota por ssh, en el servidor
+    se debe poner el sshd parcheado. Además se debe crear una cuenta de
+    usuario. Es recomendable el deshabilitar la posibilidad de cambiar el
+    password, puesto que si se puede cambiar el password de la cuenta, es
+    posible acceder a esta sin pasar por la federación. También es
+    conveniente no permitir la creación, o borrar, los ficheros dentro de
+    .ssh del home del usuario, por la misma razón que lo anterior.
+
+    También será necesario definir un schema para la federación, que añada
+    el campo ssh\_rsa\_public\_key, si queremos que el acceso sea lo más
+    automatizado posible.
+
+    \item \textbf{Temas a discutir}:
+
+    \begin{enumerate}
+        \item Timeout para hacer login.
+
+        \item Schema a usar para guardar la clave publica en LDAP.
+
+        \item Diferentes roles como otros atributos, para dar permiso a unos y a
+        otros nos.
+
+        \item Posibilidad de cambiar password, y permisos en la cuenta previamente
+        creada.
+    \end{enumerate}
+
+    \end{itemize}
+
+%TODO explicar la figura
+
+    \begin{figure}[htp!]
+        \centering
+            \includegraphics[width=\textwidth]{img/casodeuso1.png}
+            \caption{Caso de Uso}
+        \label{fig:casodeuso}
+    \end{figure}
+
 %TODO importancia del SSH, túneles, importación X
 
-\subsection{Antecedentes}
+\section{Antecedentes}
     (feide, parche opensshldap)
 
 

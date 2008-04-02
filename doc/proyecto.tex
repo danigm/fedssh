@@ -1,51 +1,45 @@
 \include{encabezado}
-\tableofcontents
-
-\newpage
 
 \include{resumen}
 
+\tableofcontents
+
 \include{intro}
 
-
-\section{Análisis del problema}
-    \subsection{Necesidad de federación}
-    \subsection{Uso de la federación fuera de la web}
-    \subsection{La importancia del ssh}
+\chapter{Análisis del problema}
+    \section{Necesidad de federación}
+    \section{Uso de la federación fuera de la web}
+    \section{La importancia del ssh}
          (túneles, importación X ...)
 
-\newpage
+
+\chapter{Solución propuesta}
+    \section{Parche para openssh (proceso de autenticación sshd)}
+    \section{Servidor de claves, flexibilidad, LDAP, python...}
+    \section{Aplicación de login.}
+    \section{Ejemplo aplicación creación de cuentas.}
 
 
-\section{Solución propuesta}
-    \subsection{Parche para openssh (proceso de autenticación sshd)}
-    \subsection{Servidor de claves, flexibilidad, LDAP, python...}
-    \subsection{Aplicación de login.}
-    \subsection{Ejemplo aplicación creación de cuentas.}
-
-\newpage
+\chapter{Implementación y despliegue}
+    \label{implementacion}
+    \section{Código del openssh, (mínimas variaciones)}
+    \section{Código de las aplicaciones federadas, (ssh, useradd)}
+    \section{Necesidades para montar la plataforma}
 
 
-\section{Implementación y despliegue}
-    \subsection{Código del openssh, (mínimas variaciones)}
-    \subsection{Código de las aplicaciones federadas, (ssh, useradd)}
-    \subsection{Necesidades para montar la plataforma}
 
-\newpage
+\chapter{Conclusiones}
+\chapter{Conclusiones}
+    \section{Por qué es importante, y por qué soy el mejor}
 
 
-\section{Conclusiones}
-    \subsection{Por qué es importante, y por qué soy el mejor}
 
-\newpage
-
-
-\section{Anexos}
-    \subsection{Aplicación del parche sobre openssh}
-    \subsection{Despliegue del servidor ssh con el parche}
-    \subsection{Seguridad mínima (permisos, cambiar passwd, etc)}
-    \subsection{Despliegue de la aplicación federada}
-    \subsection{Schemas ldap utilizados, dónde encontrarlos, cómo instalarlos
+\chapter{Anexos}
+    \section{Aplicación del parche sobre openssh}
+    \section{Despliegue del servidor ssh con el parche}
+    \section{Seguridad mínima (permisos, cambiar passwd, etc)}
+    \section{Despliegue de la aplicación federada}
+    \section{Schemas ldap utilizados, dónde encontrarlos, cómo instalarlos
     en openldap}
 
 \newpage
