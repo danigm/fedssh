@@ -1,9 +1,9 @@
-\include{encabezado}
+\input{encabezado}
 
 \tableofcontents
-\include{resumen}
+\input{resumen}
 
-\include{intro}
+\input{intro}
 
 \chapter{Análisis del problema}
     \section{Necesidad de federación}
@@ -15,6 +15,7 @@
 \chapter{Solución propuesta}
     \section{Parche para openssh (proceso de autenticación sshd)}
     \label{openssh}
+        \subsection{SSO para SSH, posibilidad}
     \section{Servidor de claves, flexibilidad, LDAP, python...}
     \section{Aplicación de login.}
     \section{Ejemplo aplicación creación de cuentas.}
@@ -25,18 +26,17 @@
     \section{Código del openssh, (mínimas variaciones)}
     \section{Código de las aplicaciones federadas, (ssh, useradd)}
     \section{Necesidades para montar la plataforma}
+        \subsection{Cómo aplicar el parche}
+        \subsection{Cómo montar el SP y la aplicación web}
+        \subsection{Cómo instalar el servidor de claves (openldap)}
 
 
-
-\chapter{Conclusiones}
 \chapter{Conclusiones}
     \section{Por qué es importante, y por qué soy el mejor}
 
 
 
 \chapter{Anexos}
-    \section{Aplicación del parche sobre openssh}
-    \section{Despliegue del servidor ssh con el parche}
     \section{Seguridad mínima (permisos, cambiar passwd, etc)}
     \section{Despliegue de la aplicación federada}
     \section{Schemas ldap utilizados, dónde encontrarlos, cómo instalarlos
