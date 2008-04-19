@@ -1,0 +1,191 @@
+\chapter{Análisis del problema}
+    \section{Necesidad de federación de identidad}
+        \subsection{¿Qué es la federación de identidad?}
+
+    La gestión de identidad centralizada fue creada para ayudar con el
+    trato de usuarios y seguridad de datos, cuando el usuario accede
+    desde dentro de la misma red, o al menos desde dentro del mismo
+    dominio de control. Cada vez más, los usuarios están accediendo a
+    sistemas externos, que están fuera de su dominio de control, y
+    usuarios externos están accediendo a sistemas internos.
+
+    La federación de identidad es un concepto nuevo, nacido a partir
+    del uso masivo de la web, así como de la necesidad de
+    interoperabilidad entre diferentes entidades que gestionan
+    diferentes grupos de usuarios de maneras totalmente diferente.
+
+    Mediante soluciones de Identidad Federada los individuos pueden
+    emplear la misma identificación personal (típicamente usuario y
+    contraseña) para identificarse en redes de diferentes
+    departamentos, empresas o entidades. De este modo las empresas o
+    entidades comparten información sin compartir tecnologías de
+    directorio, seguridad y autenticación, como requieren otras
+    soluciones (metadirectorio, Single Sign On, etc.). Para su
+    funcionamiento es necesaria la utilización de estándares que
+    definan mecanismos que permiten a las empresas compartir
+    información entre dominios. El modelo es aplicable a un grupo de
+    empresas o a una gran empresa con numerosas delegaciones y se basa
+    en el "círculo de confianza" de estas, un concepto que identifica
+    que un determinado usuario es conocido en una comunidad
+    determinada y tiene acceso a servicios específicos.
+
+    La federación de identidad, describe las tecnologías, estándares y
+    casos de uso los cuales sirven para habilitar la portabilidad de
+    información de identidad entre diferentes dominios de seguridad
+    autónomos. El objetivo final de la federación de identidad es dar
+    acceso seguro a datos, sistemas u otros dominios, a los usuarios
+    de un dominio, y sin necesidad de redundancia de administración de
+    usuarios.
+
+    El uso de la federación de identidad puede reducir costes
+    eliminando la necesidad de escalar el sistema de gestión de
+    identidad. La federación de identidad puede incrementar la
+    seguridad y reducir los riesgos habilitando a una organización a
+    identificar y autenticar un usuario una vez, y luego usar esta
+    información de identidad entre diferentes sistemas, incluso entre
+    páginas de organizaciones externas. Puede mejorar la privacidad
+    permitiendo al usuario gestionar qué información es compartida, o
+    limitando la cantidad de información compartida. Además puede
+    mejorar drásticamente la experiencia del usuario final eliminando
+    la necesidad de registrar una cuenta nueva, o la necesidad de
+    tener que hacer login de manera redundante.
+
+    Empresas líderes en todo el mundo han desplegado la federación de
+    identidad para acercarse a sus socios, mejorar el servicio de
+    compra, acelerar la ejecución de negocios, recortar costes y
+    complejidad de integración con otros servicios, y liberarse a sí
+    mismos de la autenticación.
+
+        \subsection{Partes en la federación de identidad}
+
+    Un sistema de federación de identidad está formado por diferentes
+    partes, o sistemas necesarios para dar el servicio. A continuación
+    se detallan las partes más importantes de este tipo de sistema,
+    junto con algunos ejemplos de posibles tecnologías que pueden
+    desempeñar el papel.
+
+            \begin{itemize}
+
+            \item \textbf{Single Sing On (SSO)}
+
+    Un sistema Single Sing On, es un sistema que permite simplificar
+    el acceso por parte del usuario, y de las aplicaciones, a
+    diferentes aplicaciones, que comparten los mismos usuarios, y por
+    tanto el mismo sistema de autenticación.
+
+    Este sistema nace de la necesidad de autenticar y autorizar al
+    mismo grupo de usuarios, pero en diferentes aplicaciones. Por lo
+    tanto se propone un sistema de autenticación único, de tal modo
+    que todas las aplicaciones utilicen este mismo sistema, y
+    mejorando así la experiencia del usuario final, ya que siempre
+    introducirá sus credenciales en un sistema homogéneo,
+    independientemente de la aplicación, y además la sesión permanece
+    entre diferentes aplicaciones. Por parte de las aplicaciones que
+    utilizan este sistema, evita la necesidad de tratar con la
+    identidad de estos usuarios, ya que el sistema de Single Sing On
+    es el que los autentica.
+
+    SSO es un método de control de acceso que permite autenticar al
+    usuario una vez, y conseguir acceso a diferentes recursos en
+    diferentes sistemas software.
+
+    En una infraestructura homogénea, o al menos en una en la que
+    exista un único esquema de autenticación, o donde existe una base
+    de datos centralizada de usuarios, el sistema SSO es una gran
+    ventaja.
+
+    En la federación de identidad, el Sigle Sing On no es algo
+    necesario, pero sí recomendable. No es un requisito indispensable
+    para montar un sistema de gestión de identidad federada, pero sí
+    que facilita mucho el acceso por parte del usuario.
+
+    Por lo tanto en la mayoría de los sistemas de federación de
+    identidad se hace uso de SSO.
+
+    Algunos ejemplos de software que puede servir como SSO:
+    \begin{itemize}
+        \item \textbf{OpenID} \href{http://openid.net/}http://openid.net/
+        \item \textbf{PAPI} \href{http://papi.rediris.es}http://papi.rediris.es
+        \item \textbf{Sun Access Manager}
+        \href{http://www.sun.com/software/products/access_mgr/index.jsp}http://www.sun.com/software/products/access\_mgr/index.jsp
+        \item \textbf{OpenSSO} \href{https://opensso.dev.java.net/}https://opensso.dev.java.net/
+    \end{itemize}
+
+            \item \textbf{Proveedor de identidad (IdP)}
+
+    Un proveedor de identidad es un sistema que gestiona la identidad
+    de los usuarios de una organización, y ofrece un servicio de
+    autenticación a otras aplicaciones.
+
+    En la práctica un Proveedor de Identidad es una aplicación web a
+    la cual serán redirigidos todos los usuarios de una organización
+    que quieran acceder a una aplicación federada, donde se
+    autenticarán, y este IdP ofrecerá los datos de autenticación a las
+    diferentes aplicaciones federadas.
+
+    Es necesario que haya un IdP por cada organización participante en
+    la federación de identidad, puesto que es la vía de autenticación
+    de sus usuarios internos.
+
+    Es aquí donde se hace importante el sistema SSO del que hemos
+    hablado antes, ya que se puede enlazar el IdP con el sistema de
+    SSO para ofrecer un sistema de autenticación único para todas las
+    aplicaciones federadas, ya sean internas a la organización o
+    externas, por lo que el usuario final tendrá un acceso homogéneo a
+    todo el sistema federado.
+
+    Algunos ejemplos de software que pueden dar el servicio de Proveedor
+    de Identidad:
+    \begin{itemize}
+        \item \textbf{Shibboleth IdP} \href{http://shibboleth.internet2.edu/}http://shibboleth.internet2.edu/
+        \item \textbf{SimpleSAMLPHP} \href{http://code.google.com/p/simplesamlphp/}http://code.google.com/p/simplesamlphp/
+    \end{itemize}
+
+            \item \textbf{Proveedor de servicio (SP)}
+
+    Un proveedor de servicio es la otra parte de la federación. Todas
+    las aplicaciones web federadas, deberán estar protegidas por un
+    proveedor de servicio.
+
+    El SP permite impedir el acceso a las aplicaciones, redirigiendo a
+    los usuarios a sus correspondientes IdP, para que se autentiquen,
+    y en ese caso permite el acceso, comunicándose con el IdP, que le
+    proporcionará la información necesaria para la autorización, y el
+    correcto funcionamiento de las aplicaciones.
+
+    Un SP está estrechamente relacionado con un servidor web, y se
+    comunica con los diferentes IdPs de la federación. Esta es la
+    forma que tiene el sistema de pasar los datos de identidad de una
+    organización a otra, de forma segura, a través del protocolo SAML.
+
+    Cada aplicación web federada debería estar protegida por un SP,
+    así pues puede haber más de un SP por cada organización.
+
+    Dada la estrecha relación entre el IdP y el SP, el software
+    necesario para dar este servicio se puede encontrar en las mismas
+    páginas. Tanto Shibboleth, como simplesamlphp ofrecen tanto el
+    servicio de IdP, como el de SP:
+
+    \begin{itemize}
+        \item \textbf{Shibboleth IdP} \href{http://shibboleth.internet2.edu/}http://shibboleth.internet2.edu/
+        \item \textbf{SimpleSAMLPHP} \href{http://code.google.com/p/simplesamlphp/}http://code.google.com/p/simplesamlphp/
+    \end{itemize}
+
+
+
+    En teoría es independiente el software que se utilice como IdP, o
+    como SP por las diferentes organizaciones, ya que todos deberían
+    compartir el mismo protocolo, SAML.
+
+            \item \textbf{Where are you from (WAYF)}
+
+            \item \textbf{Servicio de directorio (LDAP)}
+
+
+            \end{itemize}
+
+
+    \section{Uso de la federación fuera de la web}
+
+    \section{La importancia del ssh}
+         (túneles, importación X ...)

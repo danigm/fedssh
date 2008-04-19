@@ -5,24 +5,27 @@
 \contentsline {section}{\numberline {1.3}Antecedentes}{8}{section.1.3}
 \contentsline {subsection}{\numberline {1.3.1}Otros antecedentes a destacar}{11}{subsection.1.3.1}
 \contentsline {chapter}{\numberline {2}An\IeC {\'a}lisis del problema}{13}{chapter.2}
-\contentsline {section}{\numberline {2.1}Necesidad de federaci\IeC {\'o}n}{13}{section.2.1}
-\contentsline {section}{\numberline {2.2}Uso de la federaci\IeC {\'o}n fuera de la web}{13}{section.2.2}
-\contentsline {section}{\numberline {2.3}La importancia del ssh}{13}{section.2.3}
-\contentsline {chapter}{\numberline {3}Soluci\IeC {\'o}n propuesta}{14}{chapter.3}
-\contentsline {section}{\numberline {3.1}Parche para openssh (proceso de autenticaci\IeC {\'o}n sshd)}{14}{section.3.1}
-\contentsline {section}{\numberline {3.2}Servidor de claves, flexibilidad, LDAP, python...}{14}{section.3.2}
-\contentsline {section}{\numberline {3.3}Aplicaci\IeC {\'o}n de login.}{14}{section.3.3}
-\contentsline {section}{\numberline {3.4}Ejemplo aplicaci\IeC {\'o}n creaci\IeC {\'o}n de cuentas.}{14}{section.3.4}
-\contentsline {chapter}{\numberline {4}Implementaci\IeC {\'o}n y despliegue}{15}{chapter.4}
-\contentsline {section}{\numberline {4.1}C\IeC {\'o}digo del openssh, (m\IeC {\'\i }nimas variaciones)}{15}{section.4.1}
-\contentsline {section}{\numberline {4.2}C\IeC {\'o}digo de las aplicaciones federadas, (ssh, useradd)}{15}{section.4.2}
-\contentsline {section}{\numberline {4.3}Necesidades para montar la plataforma}{15}{section.4.3}
-\contentsline {chapter}{\numberline {5}Conclusiones}{16}{chapter.5}
-\contentsline {chapter}{\numberline {6}Conclusiones}{17}{chapter.6}
-\contentsline {section}{\numberline {6.1}Por qu\IeC {\'e} es importante, y por qu\IeC {\'e} soy el mejor}{17}{section.6.1}
-\contentsline {chapter}{\numberline {7}Anexos}{18}{chapter.7}
-\contentsline {section}{\numberline {7.1}Aplicaci\IeC {\'o}n del parche sobre openssh}{18}{section.7.1}
-\contentsline {section}{\numberline {7.2}Despliegue del servidor ssh con el parche}{18}{section.7.2}
-\contentsline {section}{\numberline {7.3}Seguridad m\IeC {\'\i }nima (permisos, cambiar passwd, etc)}{18}{section.7.3}
-\contentsline {section}{\numberline {7.4}Despliegue de la aplicaci\IeC {\'o}n federada}{18}{section.7.4}
-\contentsline {section}{\numberline {7.5}Schemas ldap utilizados, d\IeC {\'o}nde encontrarlos, c\IeC {\'o}mo instalarlos en openldap}{18}{section.7.5}
+\contentsline {section}{\numberline {2.1}Necesidad de federaci\IeC {\'o}n de identidad}{13}{section.2.1}
+\contentsline {subsection}{\numberline {2.1.1}\IeC {\textquestiondown }Qu\IeC {\'e} es la federaci\IeC {\'o}n de identidad?}{13}{subsection.2.1.1}
+\contentsline {subsection}{\numberline {2.1.2}Partes en la federaci\IeC {\'o}n de identidad}{14}{subsection.2.1.2}
+\contentsline {section}{\numberline {2.2}Uso de la federaci\IeC {\'o}n fuera de la web}{17}{section.2.2}
+\contentsline {section}{\numberline {2.3}La importancia del ssh}{17}{section.2.3}
+\contentsline {chapter}{\numberline {3}Soluci\IeC {\'o}n propuesta}{18}{chapter.3}
+\contentsline {section}{\numberline {3.1}Parche para openssh (proceso de autenticaci\IeC {\'o}n sshd)}{18}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}SSO para SSH, posibilidad}{18}{subsection.3.1.1}
+\contentsline {section}{\numberline {3.2}Servidor de claves, flexibilidad, LDAP, python...}{18}{section.3.2}
+\contentsline {section}{\numberline {3.3}Aplicaci\IeC {\'o}n de login.}{18}{section.3.3}
+\contentsline {section}{\numberline {3.4}Ejemplo aplicaci\IeC {\'o}n creaci\IeC {\'o}n de cuentas.}{18}{section.3.4}
+\contentsline {chapter}{\numberline {4}Implementaci\IeC {\'o}n y despliegue}{19}{chapter.4}
+\contentsline {section}{\numberline {4.1}C\IeC {\'o}digo del openssh, (m\IeC {\'\i }nimas variaciones)}{19}{section.4.1}
+\contentsline {section}{\numberline {4.2}C\IeC {\'o}digo de las aplicaciones federadas, (ssh, useradd)}{19}{section.4.2}
+\contentsline {section}{\numberline {4.3}Necesidades para montar la plataforma}{19}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}C\IeC {\'o}mo aplicar el parche}{19}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}C\IeC {\'o}mo montar el SP y la aplicaci\IeC {\'o}n web}{19}{subsection.4.3.2}
+\contentsline {subsection}{\numberline {4.3.3}C\IeC {\'o}mo instalar el servidor de claves (openldap)}{19}{subsection.4.3.3}
+\contentsline {chapter}{\numberline {5}Conclusiones}{20}{chapter.5}
+\contentsline {section}{\numberline {5.1}Por qu\IeC {\'e} es importante, y por qu\IeC {\'e} soy el mejor}{20}{section.5.1}
+\contentsline {chapter}{\numberline {6}Anexos}{21}{chapter.6}
+\contentsline {section}{\numberline {6.1}Seguridad m\IeC {\'\i }nima (permisos, cambiar passwd, etc)}{21}{section.6.1}
+\contentsline {section}{\numberline {6.2}Despliegue de la aplicaci\IeC {\'o}n federada}{21}{section.6.2}
+\contentsline {section}{\numberline {6.3}Schemas ldap utilizados, d\IeC {\'o}nde encontrarlos, c\IeC {\'o}mo instalarlos en openldap}{21}{section.6.3}
