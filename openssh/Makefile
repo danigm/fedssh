@@ -5,7 +5,7 @@
 
 AUTORECONF=autoreconf
 
-prefix=/home/danigm/fed+ssh/openssh/
+prefix=/home/danigm/fed+ssh/openssh
 exec_prefix=${prefix}
 bindir=${exec_prefix}/bin
 sbindir=${exec_prefix}/sbin
@@ -42,12 +42,12 @@ PATHS= -DSSHDIR=\"$(sysconfdir)\" \
 CC=gcc
 LD=gcc
 CFLAGS=-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -fstack-protector-all -std=gnu99 
-CPPFLAGS=-I. -I$(srcdir) $(PATHS) -DHAVE_CONFIG_H
+CPPFLAGS=-I. -I$(srcdir)  -DLDAP_DEPRECATED $(PATHS) -DHAVE_CONFIG_H
 LIBS=-lresolv -lcrypto -lutil -lz -lnsl  -lcrypt -lldap
 SSHDLIBS=
 LIBEDIT=
 AR=/usr/bin/ar
-AWK=mawk
+AWK=gawk
 RANLIB=ranlib
 INSTALL=/usr/bin/install -c
 PERL=/usr/bin/perl
@@ -112,7 +112,7 @@ PATHSUBS	= \
 	-e 's|/etc/ssh/sshrc|$(sysconfdir)/sshrc|g' \
 	-e 's|/usr/X11R6/bin/xauth|$(XAUTH_PATH)|g' \
 	-e 's|/var/empty|$(PRIVSEP_PATH)|g' \
-	-e 's|/usr/bin:/bin:/usr/sbin:/sbin|/usr/bin:/bin:/usr/sbin:/sbin:/home/danigm/fed+ssh/openssh//bin|g'
+	-e 's|/usr/bin:/bin:/usr/sbin:/sbin|/usr/bin:/bin:/usr/sbin:/sbin:/home/danigm/fed+ssh/openssh/bin|g'
 
 FIXPATHSCMD	= $(SED) $(PATHSUBS)
 

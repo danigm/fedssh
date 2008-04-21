@@ -171,15 +171,65 @@
         \item \textbf{SimpleSAMLPHP} \href{http://code.google.com/p/simplesamlphp/}http://code.google.com/p/simplesamlphp/
     \end{itemize}
 
-
-
     En teoría es independiente el software que se utilice como IdP, o
     como SP por las diferentes organizaciones, ya que todos deberían
     compartir el mismo protocolo, SAML.
 
             \item \textbf{Where are you from (WAYF)}
 
+    El objetivo del servicio "Where are you from" (WAYF) es guiar al
+    usuario a su propio Proveedor de Identidad (IdP). A veces es
+    llamado "Identity Provider Discovery".
+
+    Básicamente lo que hace es presentar al usuario una lista de
+    Proveedores de Identidad y redirigir al navegador del usuario al
+    IdP seleccionado.
+
+    Algunos sistemas WAYF implementan otras funcionalidades
+    adicionales, que mejoran la experiencia del usuario, y la
+    facilidad de uso. Por ejemplo existen varios métodos para recordar
+    o adivinar el IdP del usuario.
+
+    Un ejemplo de software que implementa este servicio se puede
+    encontrar:
+    
+    \begin{itemize}
+        \item \textbf{Switch} \href{http://www.switch.ch/aai/support/tools/wayf.html}http://www.switch.ch/aai/support/tools/wayf.html
+    \end{itemize}
+
+    El WAYF es una parte importante en el sistema de la federación,
+    puesto que es el elemento que conecta los Proveedores de
+    Servicio (SP) con los Proveedores de Identidad (IdP). Cuando un
+    usuario intenta acceder a una aplicación protegida tras un SP,
+    este será redirigido al WAYF, donde el usuario seleccionará cuál
+    es su organización, y en consecuencia el sistema WAYF redirigirá
+    al usuario al Proveedor de Identidad pertinente.
+
             \item \textbf{Servicio de directorio (LDAP)}
+
+    ``Un servicio de directorio (SD) es una aplicación o un conjunto
+    de aplicaciones que almacena y organiza la información sobre los
+    usuarios de una red de ordenadores, sobre recursos de red, y
+    permite a los administradores gestionar el acceso de usuarios a
+    los recursos sobre dicha red. Además, los servicios de directorio
+    actúan como una capa de abstracción entre los usuarios y los
+    recursos compartidos.''
+
+    Realmente no es imprescindible el servicio de directorio para
+    desplegar una arquitectura de identidad federada, pero normalmente
+    siempre va ligada a este tipo de aplicaciones. Esta estrecha
+    relación se debe a que últimamente se está imponiendo el uso de
+    esta tecnología para la gestión de identidad, de manera local. Por
+    lo tanto la gran mayoría de las organizaciones ya tendrán un
+    servicio de directorio para gestionar sus usuarios.
+
+    La mayoría de sistemas y aplicaciones para desplegar una
+    federación de identidad, están desarrollados pensando en este
+    hecho, por lo tanto facilita la tarea.
+
+    Sin embargo, es posible utilizar bases de datos, y otros tipos de
+    almacenamiento o gestión de usuarios, aunque la configuración será
+    más compleja, y tal vez no sea tan óptima.
 
 
             \end{itemize}

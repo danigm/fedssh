@@ -8,7 +8,7 @@ umask 022
 CAT=/bin/cat
 KILL=/bin/kill
 
-prefix=/home/danigm/fed+ssh/openssh/
+prefix=/home/danigm/fed+ssh/openssh
 sysconfdir=${prefix}/etc
 piddir=/var/run
 

@@ -15,7 +15,7 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 host="i686-pc-linux-gnu"
-AWK="mawk"
+AWK="gawk"
 CC="gcc"
 CPP="gcc -E"
 CFLAGS="-g -O2 -Wall -Wpointer-arith -Wuninitialized -Wsign-compare -Wno-pointer-sign -fstack-protector-all -std=gnu99 "

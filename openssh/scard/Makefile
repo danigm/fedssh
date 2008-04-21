@@ -1,6 +1,6 @@
 # $Id: Makefile.in,v 1.5 2006/10/23 21:44:47 tim Exp $
 
-prefix=/home/danigm/fed+ssh/openssh/
+prefix=/home/danigm/fed+ssh/openssh
 datadir=${datarootdir}
 datarootdir=${prefix}/share
 srcdir=.
