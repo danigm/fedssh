@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2008.1.10)  21 APR 2008 13:51
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2008.1.10)  23 APR 2008 13:38
 entering extended mode
  %&-line parsing enabled.
 **proyecto.tex
@@ -280,9 +280,9 @@ Overfull \hbox (3.65147pt too wide) in paragraph at lines 161--163
 -te-gi-da por un SP, as^^S^^P pues
  []
 
-[16] [17]) [18]
+[16] [17] [18]) [19]
 Cap\'{\i }tulo 3.
-[19
+[20
 
 ]
 Cap\'{\i }tulo 4.
@@ -291,11 +291,11 @@ Overfull \hbox (7.38982pt too wide) in paragraph at lines 22--22
 []\OT1/cmr/bx/n/17.28 C^^Sodi-go de las apli-ca-cio-nes fe-de-ra-das, (ssh,
  []
 
-[20
+[21
 
 ]
 Cap\'{\i }tulo 5.
-[21
+[22
 
 ]
 Cap\'{\i }tulo 6.
@@ -304,12 +304,12 @@ Overfull \hbox (45.9218pt too wide) in paragraph at lines 35--35
 []\OT1/cmr/bx/n/17.28 Seguridad m^^S^^Pni-ma (per-mi-sos, cam-biar passwd,
  []
 
-[22
+[23
 
 ] (./proyecto.aux) ) 
 Here is how much of TeX's memory you used:
- 4025 strings out of 94101
- 53837 string characters out of 1165810
+ 4026 strings out of 94101
+ 53844 string characters out of 1165810
  119689 words of memory out of 1500000
  7199 multiletter control sequences out of 10000+50000
  8500 words of font info for 30 fonts, out of 1200000 for 2000
@@ -318,9 +318,9 @@ Here is how much of TeX's memory you used:
 </usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmbx12.pfb
 ></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf-t
 exlive/fonts/type1/bluesky/cm/cmsy10.pfb>
-Output written on proyecto.pdf (26 pages, 206829 bytes).
+Output written on proyecto.pdf (27 pages, 209302 bytes).
 PDF statistics:
- 331 PDF objects out of 1000 (max. 8388607)
- 70 named destinations out of 1000 (max. 131072)
+ 335 PDF objects out of 1000 (max. 8388607)
+ 71 named destinations out of 1000 (max. 131072)
  267 words of extra memory for PDF output out of 10000 (max. 10000000)
 

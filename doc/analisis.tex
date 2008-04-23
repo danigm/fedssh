@@ -231,11 +231,57 @@
     almacenamiento o gestión de usuarios, aunque la configuración será
     más compleja, y tal vez no sea tan óptima.
 
-
             \end{itemize}
 
-
     \section{Uso de la federación fuera de la web}
+
+    Como hemos visto, el sistema de federación de identidad surge a partir
+    de un problema con el uso de aplicaciones externas por parte de
+    usuarios internos, o viceversa. Normalmente estas aplicaciones son
+    aplicaciones web, dada la proliferación de este tipo de aplicaciones.
+    Es por esta razón por la que, por diseño, el sistema de identidad
+    federada está pensado para aplicaciones web, es decir, para utilizarlo
+    desde un navegador.
+
+    Así pues los componentes de un sistema de federación de identidad,
+    tales como IdPs o SPs, son aplicaciones webs, y están fuertemente
+    ligados a servidores web tales como apache o tomcat.
+
+    El funcionamiento se basa en el paso de cookies al navegador, y
+    variables de servidor, por lo que claramente es necesario el uso de
+    navegadores modernos, y lenguajes en la parte del servidor preparados
+    para esta tarea.
+
+    Intentar federar aplicaciones que no son webs, es un trabajo difícil,
+    dado el terreno en el que nos movemos. Puesto que estas aplicaciones
+    tendrán que comunicarse de alguna forma con las aplicaciones que
+    conforman la federación, por ejemplo con el IdP para la autenticación
+    del usuario.
+
+    Por lo tanto para poder llevar el sistema de federación de identidad a
+    otro tipo de aplicaciones será necesario incluir interfaces y sistemas
+    intermedios, que hagan de puente o conexión entre el sistema web de la
+    federación, y la aplicación en cuestión. Es necesario idear algún
+    mecanismo para saber si un usuario está autenticado en la federación o
+    no.
+
+    El problema reside en que el sistema de federación de identidad conoce
+    quién es el usuario, y si está autenticado por una cookie que muestra
+    el navegador, pero en aplicaciones que no utilicen el navegador, esta
+    cookie no existe, por lo tanto hay que considerar algún otro sistema
+    alternativo, de tal forma que el usuario pueda mostrar al servidor
+    quién es de manera inequívoca, y sin posibilidad de suplantación de
+    identidad.
+
+    Otro problema es la autenticación, y es que todo usuario sólo escribe
+    su nombre de usuario y contraseña en el IdP conocido, en el de su
+    organización, por lo tanto siempre habrá una confianza en que esa
+    contraseña no está siendo dada a una organización externa. Esto
+    funciona a través de redirecciones del navegador, desde la aplicación
+    protegida tras un SP, a la que quiere acceder, hasta el IdP, pasando
+    por el sistema WAYF. En el caso de otro tipo de aplicaciones, crear un
+    sistema de autenticación diferente sería muy costoso, ya que habría que
+    implementar todos estos componentes pero para la nueva aplicación.
 
     \section{La importancia del ssh}
          (túneles, importación X ...)
