@@ -104,11 +104,13 @@
 
     Algunos ejemplos de software que puede servir como SSO:
     \begin{itemize}
-        \item \textbf{OpenID} \href{http://openid.net/}http://openid.net/
-        \item \textbf{PAPI} \href{http://papi.rediris.es}http://papi.rediris.es
+        \item \textbf{OpenID} \href{http://openid.net/}{http://openid.net/}
+        \item \textbf{PAPI}
+        \href{http://papi.rediris.es}{http://papi.rediris.es}
         \item \textbf{Sun Access Manager}
-        \href{http://www.sun.com/software/products/access_mgr/index.jsp}http://www.sun.com/software/products/access\_mgr/index.jsp
-        \item \textbf{OpenSSO} \href{https://opensso.dev.java.net/}https://opensso.dev.java.net/
+        \href{http://www.sun.com/software/products/access_mgr/index.jsp}{http://www.sun.com/software/products/access\_mgr/index.jsp}
+        \item \textbf{OpenSSO}
+        \href{https://opensso.dev.java.net/}{https://opensso.dev.java.net/}
     \end{itemize}
 
             \item \textbf{Proveedor de identidad (IdP)}
@@ -137,8 +139,10 @@
     Algunos ejemplos de software que pueden dar el servicio de Proveedor
     de Identidad:
     \begin{itemize}
-        \item \textbf{Shibboleth IdP} \href{http://shibboleth.internet2.edu/}http://shibboleth.internet2.edu/
-        \item \textbf{SimpleSAMLPHP} \href{http://code.google.com/p/simplesamlphp/}http://code.google.com/p/simplesamlphp/
+        \item \textbf{Shibboleth IdP}
+        \href{http://shibboleth.internet2.edu/}{http://shibboleth.internet2.edu/}
+        \item \textbf{SimpleSAMLPHP}
+        \href{http://code.google.com/p/simplesamlphp/}{http://code.google.com/p/simplesamlphp/}
     \end{itemize}
 
             \item \textbf{Proveedor de servicio (SP)}
@@ -167,8 +171,10 @@
     servicio de IdP, como el de SP:
 
     \begin{itemize}
-        \item \textbf{Shibboleth IdP} \href{http://shibboleth.internet2.edu/}http://shibboleth.internet2.edu/
-        \item \textbf{SimpleSAMLPHP} \href{http://code.google.com/p/simplesamlphp/}http://code.google.com/p/simplesamlphp/
+        \item \textbf{Shibboleth IdP}
+        \href{http://shibboleth.internet2.edu/}{http://shibboleth.internet2.edu/}
+        \item \textbf{SimpleSAMLPHP}
+        \href{http://code.google.com/p/simplesamlphp/}{http://code.google.com/p/simplesamlphp/}
     \end{itemize}
 
     En teoría es independiente el software que se utilice como IdP, o
@@ -194,7 +200,8 @@
     encontrar:
     
     \begin{itemize}
-        \item \textbf{Switch} \href{http://www.switch.ch/aai/support/tools/wayf.html}http://www.switch.ch/aai/support/tools/wayf.html
+        \item \textbf{Switch}
+        \href{http://www.switch.ch/aai/support/tools/wayf.html}{http://www.switch.ch/aai/support/tools/wayf.html}
     \end{itemize}
 
     El WAYF es una parte importante en el sistema de la federación,
@@ -283,5 +290,63 @@
     sistema de autenticación diferente sería muy costoso, ya que habría que
     implementar todos estos componentes pero para la nueva aplicación.
 
-    \section{La importancia del ssh}
-         (túneles, importación X ...)
+    \section{La importancia del SSH}
+
+    SSH (Secure SHell) es un protocolo que sirve para acceder a máquinas
+    remotas a través de la red. Permite el manejo de una máquina como si se
+    estuviera delante de ella, dando acceso a una línea de comandos. Así se
+    pueden utilizar recursos de diferentes máquinas, desde un mismo lugar,
+    utilizando este protocolo, además de administrar máquinas remotas.
+
+    Además de la línea de comandos, el protocolo SSH da otras
+    posibilidades, como la copia de ficheros entre máquinas, o la ejecución
+    de aplicaciones gráficas importando las X.
+
+    Con SSH se trabaja de forma similar a como se haría con el comando
+    telnet, junto con la posibilidad de copiar ficheros con el protocolo
+    ftp. Sin embargo, SSH es algo más que eso, y como su propio nombre
+    indica, es un protocolo seguro. Por lo tanto utiliza técnicas de
+    cifrado que hacen que la información, que viaja por el medio de
+    comunicación, vaya cifrada, y así proporcionar algo más de seguridad a
+    las operaciones realizadas en la red.
+
+    Hoy en día el protocolo SSH es muy utilizado en la administración de
+    máquinas en redes locales, así como a través de internet, puesto que
+    ofrece una manera sencilla y segura de conseguir acceso a estas
+    máquinas remotas.
+
+    Además en el ambiente académico, es utilizado para compartir un recurso
+    limitado. Como por ejemplo un supercomputador, puede ser utilizado por
+    diferentes estudiantes, profesores o investigadores utilizando este
+    protocolo, y consiguiendo así hacer uso de un hardware no disponible
+    físicamente, pero que a través de la red se presenta ante nosotros como
+    un recurso más.
+
+    Existe una tecnología libre que implementa este protocolo, con
+    diferentes funcionalidades, se trata de openssh (figura
+    \ref{fig:openssh}).
+
+    \begin{figure}[htp!]
+        \centering
+            \includegraphics[width=\textwidth]{img/openssh.png}
+            \caption{openssh}
+        \label{fig:openssh}
+    \end{figure}
+
+    Además de lo comentado anteriormente, openssh permite cosas muy
+    interesantes, como túneles seguros, diferentes métodos de
+    autenticación, y soporte para todas las versiones del protocolo SSH.
+
+    Además del método de acceso común, usuario y contraseña, openssh ofrece
+    la posibilidad de autenticar a través de un sistema de clave pública y
+    clave privada. Esta característica es muy interesante para nuestro
+    caso, ya que queremos evitar que el usuario escriba su contraseña, así
+    pues más adelante hablaremos sobre cómo utilizar este mecanismo de
+    clave pública y privada para la implementación de la solución.
+
+    Por todas estas razones, SSH es una opción interesante en la cual
+    utilizar federación de identidad. Puesto que es muy utilizado, y en
+    todos los casos se necesita comprobar la identidad del usuario.
+
+
+
