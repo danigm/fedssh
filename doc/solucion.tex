@@ -8,7 +8,7 @@
 
     La parte más importante de este proyecto es la conexión entre la
     federación de identidad, basada en aplicaciones web, y los servidores
-    ssh.
+    SSH.
 
     Para conseguir esta conexión, es casi imprescindible una pequeña
     aplicación web, que esté tras un proveedor de servicio, y la cual pueda
@@ -22,7 +22,7 @@
     \textbf{Servidor ssh}:
 
     Como primera opción se barajó la idea de utilizar un modulo PAM
-    (Plugable Authentication Method), ya que el servidor ssh permite este
+    (Plugable Authentication Method), ya que el servidor SSH permite este
     tipo de autenticación. Los módulos PAM son un método que permite al
     administrador controlar cómo se realiza el proceso de autenticación de
     los usuario para aplicaciones, a través de unas bibliotecas.
@@ -84,17 +84,17 @@
         usuario se ha autenticado en la federación, y hará las operaciones
         pertinentes para que se pueda acceder a los datos necesarios del
         usuario a través de un medio que no sea un navegador web, de tal
-        forma que el servidor ssh pueda autenticar.
+        forma que el servidor SSH pueda autenticar.
 
         \item El servidor de claves. Será un servidor que se encargará de
         almacenar los datos de los usuarios autenticados en la federación,
-        para facilitar el acceso a los mismos por parte del servidor ssh.
+        para facilitar el acceso a los mismos por parte del servidor SSH.
         Este servidor será el punto intermedio que enlace la federación
-        (web) con el servicio de ssh. También deberá ser un servidor
+        (web) con el servicio de SSH. También deberá ser un servidor
         global, no perteneciente a una organización en concreto.
 
-        \item Los servidores ssh. Todos los servidores que presten el
-        servicio de ssh sobre federación de identidad, deberán autenticar a
+        \item Los servidores SSH. Todos los servidores que presten el
+        servicio de SSH sobre federación de identidad, deberán autenticar a
         los usuarios en la federación de alguna que otra forma. Para
         conseguir esto está el servidor de claves, que facilitará la
         comunicación entre la federación y los servidores.
@@ -146,7 +146,60 @@
 
     \end{enumerate}
 
-    %TODO -> dónde entra nuestra autenticación.
+    En este esquema de funcionamiento, tenemos que encajar nuestro sistema
+    de autenticación de identidad federada. Buscamos la mayor comodidad
+    posible para el usuario, así pues, queremos que el usuario no tenga que
+    introducir ninguna contraseña en el servidor SSH.
+
+    Si llega al paso dos de la autenticación del SSH, el servidor pedirá
+    automáticamente una contraseña al usuario, y dado que queremos evitar
+    esta incomodidad, no es viable el crear un módulo PAM que autentique
+    en la federación de identidad.
+
+    Por esta razón es necesario tocar el código del servidor SSH. Más
+    concretamente la parte de autenticación por clave pública. Ya que
+    utilizaremos este sistema para identificar unívocamente al usuario que
+    quiere autenticarse. Ya que no se va a introducir ninguna contraseña,
+    será necesario que el usuario tenga algo que lo identifique. En el caso
+    de la federación de identidad por páginas web, se utiliza una cookie
+    que guarda el navegador. Para nuestro caso, la clave privada del
+    usuario servirá para identificarlo, teniendo acceso el servidor SSH a
+    la clave pública, una vez que el usuario esté autenticado en la
+    federación.
+
+    Por lo tanto la autenticación del servidor SSH parcheado quedaría así:
+
+    \begin{enumerate}
+
+    \item Intenta la autenticación por certificado de clave pública. Busca
+    en el fichero \$HOME/authorized\_keys, y prueba que el usuario que está
+    intentando autenticarse tiene la clave privada de alguna de las claves
+    que aparecen en este fichero.
+
+    \item \textbf{Si no consigue autenticar, pregunta al servidor de claves
+    de la federación por el usuario. Si el usuario está autenticado, el
+    servidor de claves le devolverá la clave pública del mismo. Con esta
+    clave pública intentará autenticar al usuario, que sólo tendrá acceso
+    si tiene la clave privada}
+
+    \item Si no consigue autenticar, y está activa la autenticación por
+    módulos PAM, el servidor pedirá una contraseña al usuario, y se
+    ejecutará la pila de módulos.
+
+    \item En otro caso, autenticará con los usuarios del sistema.
+
+    \end{enumerate}
+
+    Se puede ver el funcionamiento en el siguiente esquema
+    (\ref{fig:funcionamientossh}):
+
+    \begin{figure}[htp!]
+        \centering
+            \includegraphics[width=\textwidth]{img/funcionamientossh.png}
+            \caption{Funcionamiento SSH}
+        \label{fig:funcionamientossh}
+    \end{figure}
+
 
         \subsection{SSO para SSH, posibilidad}
     
