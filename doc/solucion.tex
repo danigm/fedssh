@@ -202,9 +202,189 @@
 
 
         \subsection{SSO para SSH, posibilidad}
+
+        Durante la realización de este proyecto han surgido algunos
+        detalles y funcionalidades que se podrían implementar para el
+        servidor SSH, y que se podrían utilizar de forma independiente al
+        proyecto aquí descrito.
+
+        Una de estas posibilidades, y quizás la de mayor interés, y que
+        tendría entidad propia fuera de este proyecto, es el Single Sing-On
+        para SSH.
+
+        Para realizar la tarea de SSO, es necesario que el cliente
+        autenticado tenga un "token" o algo que lo identifique
+        unívocamente, en nuestro caso sería la clave privada de SSH. Y el
+        servidor debería conocer quién está autenticado, en nuestro caso
+        preguntando al servidor de claves.
+
+        Para el caso de SSO únicamente, sin autenticación por federación,
+        sería necesario retocar el parche del servidor SSH para que al
+        acceder a un servidor a través de usuario y contraseña, este
+        servidor comunicara al servidor de claves que el usuario se ha
+        autenticado. Así cuando el mismo usuario vaya a acceder al mismo
+        servidor, o incluso a otro dentro del SSO, tendría acceso directo.
+
+        Este concepto lleva consigo un par de pequeños problemas, y es que
+        se ha de poder acceder a alguno de los servidores introduciendo la
+        clave, lo que implica que el usuario ha de tener al menos la clave
+        de uno de los servidores de SSH, o por lo menos debe conocer la
+        clave pública de este usuario de manera permanente.
+
+        El otro problema es que el servidor donde se autentique el usuario
+        por primera vez, ha de conocer la clave pública de este usuario
+        para informar al servidor de claves de quién se ha autenticado.
+        Otra alternativa sería que el servidor de claves tuviera a todos
+        los usuarios en un principio registrados, pero no activos, por lo
+        que decir que alguien se ha autenticado tan solo sería poner a este
+        usuario como activo.
     
-    \section{Servidor de claves, flexibilidad, LDAP, python...}
+    \section{Servidor de claves}
+
+    En principio la idea del servidor de claves era que fuera un servidor
+    independiente, con un protocolo simple, que solo permitiera preguntar
+    si un usuario está autenticado, y en caso afirmativo, ser recibiría la
+    clave del mismo.
+
+    La primera versión del protocolo simple sería:
+    \begin{itemize}
+    \item Peticiones al servidor:
+
+        \begin{verbatim}
+
+        USR:nombre
+        XIT
+
+        \end{verbatim}
+
+        La orden USR es la petición de la clave de un usuario, y la orden
+        XIT indica desconexión.
+
+    \item Respuestas del servidor:
+
+        El servidor responderá con la clave pública del usuario, o con la
+        cadena ``NOT FOUND'', si no lo ha encontrado.
+
+    \end{itemize}
+
+    Esta implementación facilitaría enormemente la parte del parche al
+    servidor SSH, puesto que tan solo se necesita hacer una conexión por
+    socket normal, sin necesidad de utilizar ninguna librería
+    complementaria.
+
+    Por otra parte, con esta implementación de un protocolo simple sería
+    muy fácil cambiar el almacenamiento de los usuarios, tan solo creando
+    una interfaz que convirtiera las consultas al sistema de almacenamiento
+    elegido a este protocolo. Así pues sería muy fácil almacenar los
+    usuarios con ficheros de texto plano, con un sistema de base de datos
+    relacional, con un servicio de directorio, etc.
     
+    Sin embargo, dificulta la parte del servidor de claves, que ya tiene
+    que ser una implementación propia, que utilice un almacenamiento de
+    usuarios y claves determinado.
+
+    Como esta fue la primera aproximación, se ha implementado un servidor
+    de claves, de ejemplo en python. En principio almacenaba los usuarios y
+    las claves en texto plano. Posteriormente se extendió para realizar el
+    almacenamiento en una base de datos MySQL. Y en realidad incorporar
+    nuevos sistemas de almacenamiento es algo tan simple como implementar
+    una clase con un metodo textit{get\_rsa(nombre\_de\_usuario)} que devuelva
+    la clave pública RSA del usuario si está autenticado, y en otro caso
+    que devuelva una cadena vacía.
+
+    Tratando de buscar el mínimo impacto en el código del servidor SSH, las
+    peticiones al servidor de claves se realizan en una función, que está
+    implementada en un fichero aparte, por lo que en el código del servidor
+    tan solo hay que incluir la llamada a esta función, y se puede variar
+    el modo de funcionamiento de la petición. De esta forma si se varía el
+    protocolo de comunicación entre el servidor SSH y el servidor de claves
+    no haría falta tocar el código real del servidor SSH, solamente la
+    función que es llamada desde el mismo, y que es de implementación
+    propia, por lo que no afectaría al funcionamiento normal del mismo.
+
+    Por otra parte, si el desarrollo habitual del servidor varía alguna
+    parte de la autenticación, el parche es fácilmente adaptable a futuras
+    versiones, puesto que del código original toca lo menos posible.
+
+    Tras esta primera implementación de prueba, y tras ver que todo era
+    correcto, y que funcionaba bien, decidimos incrementar la seguridad
+    entre las comunicaciones.
+
+    En un principio se optó por incrementar la seguridad del servidor de
+    claves utilizando sockets ssl, pero tras observar que esto complicaría
+    la solución de manera drástica, se optó por utilizar algo más simple.
+
+    Así pues se pensó en utilizar como servidor de claves un servicio de
+    directorio, y utilizar como protocolo de comunicaciones el propio
+    protocolo LDAP, que tiene una versión segura.
+
+    La opción de elegir un servicio de directorio no es algo casual, sino
+    que se eligió este sistema porque cumple los requisitos necesarios para
+    el servidor de claves, tal y como está definido, y además cuando se
+    habla de federación de identidad, es casi imposible no hablar de
+    servicios de directorio. Hoy en día la federación de identidad está muy
+    ligada a este tipo de almacenamiento de usuarios, por lo tanto es una
+    buena opción.
+
+    Al utilizar un servicio de directorio como servidor de claves públicas,
+    se simplifica la parte del servidor de claves, puesto que ya está
+    hecho, y es muy fácil desplegar uno. Pero por otra parte se complica un
+    poco la modificación al servidor SSH.
+
+    Puesto que estamos usando el servidor SSH que viene con la
+    implementación openssh, y este está en C, nuestro parche deberá hacer
+    peticiones a un servidor de claves a través del protocolo de
+    comunicación LDAP, desde el lenguaje C.
+
+    Por suerte las consultas a servicio de directorio desde C no son nada
+    complicadas, e implementando una simple función es posible modificar el
+    parche para que el servidor SSH ahora se comunique con un servidor de
+    claves a través de LDAP.
+
+    \subsection{Schemas LDAP}
+
+    Los sistemas de directorio utilizan diferentes campos para guardar los
+    datos pertenecientes a las diferentes entradas. Cada posible campo a
+    utilizar está definido en un ``Schema LDAP'', y se podrá utilizar
+    siempre que la entrada tenga el ``objectclass'' que define ese campo.
+
+    Existen muchos estándares de schemas LDAP, que suelen venir por defecto
+    en la mayoría de los servicios de directorio. Y cada schema tiene sus
+    campos destinados cada uno a almacenar un tipo de dato concreto.
+
+    Es posible utilizar un campo cualquiera, siempre que sea del mismo
+    tipo, para guardar cualquier información, pero esto no es recomendable,
+    puesto que esto complica la compresión de futuros usuarios y
+    administradores, dado que cada campo tiene una definición de para qué
+    se usa.
+
+    Por ejemplo se puede usar el campo ``mail'' para guardar el dni del
+    usuario. Pero no es correcto, ya que el campo mail está especificado
+    para almacenar la dirección de correo.
+
+    Así pues, hay que definir, o buscar unos Schemas que definan, los
+    campos que necesitamos para almacenar los usuarios junto a sus claves,
+    en el servidor de claves.
+
+    En principio los datos que ha de almacenar el servidor de claves para
+    este proyecto son:
+
+    \begin{itemize}
+
+    \item \textbf{uid} del usuario autenticado en la federación.
+    \item \textbf{clave pública} del usuario autenticado en la federación.
+    \item \textbf{timeout} tiempo de vencimiento de la sesión del usuario autenticado en la federación.
+
+    \end{itemize}
+
+    El primer campo, \textbf{uid}, está cubierto en los schemas que vienen
+    por defecto, en el schema \textbf{person}.
+
+    Para el segundo campo, en prinicipio se pensó en utilizar el campo
+    usercertificate, pero no es el más adecuado, ya que está pensado para
+    almacenar un certificado personal. Así pues buscando alternativas se ha
+    decidido utilizar el schema... %TODO seguir por aquí
+
     \section{Aplicación de login.}
      (posibilidad de mostrar los datos que se van a guardar en el servidor
      de claves, y pedir la autorización al usuario).
