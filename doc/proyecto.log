@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2008.1.10)  13 MAY 2008 13:55
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2008.5.14)  14 MAY 2008 13:49
 entering extended mode
  %&-line parsing enabled.
 **proyecto.tex
@@ -308,9 +308,13 @@ serStatus:us.es:timeout:1205274586\OT1/cmr/m/n/12 ,
 [31] [32] <img/sshApp.png, id=411, 870.25125pt x 733.74126pt>
 File: img/sshApp.png Graphic file (type png)
 
-<use img/sshApp.png> [33 <./img/sshApp.png>]) [34]
+<use img/sshApp.png> [33 <./img/sshApp.png>] [34] [35]
+<img/userAdd.png, id=425, 849.1725pt x 545.03625pt>
+File: img/userAdd.png Graphic file (type png)
+ <use img/userAdd.png>)
+[36 <./img/userAdd.png>] [37]
 Cap\'{\i }tulo 4.
-[35
+[38
 
 ]
 Cap\'{\i }tulo 5.
@@ -319,11 +323,11 @@ Overfull \hbox (7.38982pt too wide) in paragraph at lines 21--21
 []\OT1/cmr/bx/n/17.28 C^^Sodi-go de las apli-ca-cio-nes fe-de-ra-das, (ssh,
  []
 
-[36
+[39
 
 ]
 Cap\'{\i }tulo 6.
-[37
+[40
 
 ]
 Cap\'{\i }tulo 7.
@@ -332,14 +336,14 @@ Overfull \hbox (45.9218pt too wide) in paragraph at lines 34--34
 []\OT1/cmr/bx/n/17.28 Seguridad m^^S^^Pni-ma (per-mi-sos, cam-biar passwd,
  []
 
-[38
+[41
 
 ] (./proyecto.aux) ) 
 Here is how much of TeX's memory you used:
- 4091 strings out of 94101
- 54658 string characters out of 1165810
+ 4099 strings out of 94101
+ 54769 string characters out of 1165810
  119770 words of memory out of 1500000
- 7224 multiletter control sequences out of 10000+50000
+ 7228 multiletter control sequences out of 10000+50000
  9016 words of font info for 32 fonts, out of 1200000 for 2000
  637 hyphenation exceptions out of 8191
  31i,12n,45p,348b,902s stack positions out of 5000i,500n,6000p,200000b,5000s
@@ -348,9 +352,9 @@ Here is how much of TeX's memory you used:
 exlive/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/bl
 uesky/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmti12.pfb
 ></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmtt12.pfb>
-Output written on proyecto.pdf (43 pages, 499022 bytes).
+Output written on proyecto.pdf (46 pages, 566754 bytes).
 PDF statistics:
- 484 PDF objects out of 1000 (max. 8388607)
- 103 named destinations out of 1000 (max. 131072)
- 346 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 498 PDF objects out of 1000 (max. 8388607)
+ 106 named destinations out of 1000 (max. 131072)
+ 351 words of extra memory for PDF output out of 10000 (max. 10000000)
 

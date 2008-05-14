@@ -479,3 +479,95 @@
     usuario sobre los datos que se van a almacenar, y pidiera confirmación.
 
     \section{Ejemplo aplicación creación de cuentas.}
+
+    Un problema que hay que tener en cuenta en el despliegue de este
+    proyecto, es la necesidad de crear las cuentas de los usuarios de forma
+    dinámica en los servidores parcheados.
+
+    En principio, y según la implementación actual del proyecto, el
+    servidor SSH parcheado supone que la cuenta de usuario existe, y por
+    tanto cuando pida la clave pública al servidor de claves, generará un
+    fichero temporal con esa clave en el directorio HOME de ese usuario, y
+    utilizará ese fichero para hacer la autenticación por clave pública.
+
+    Dado que esta implementación delega el problema de la creación de
+    cuentas al administrador del sistema, es necesario que se creen y se
+    destruyan las cuentas de manera dinámica, en el servidor.
+
+    La delegación de la creación de cuentas en el administrador del
+    sistema, permite un mayor control sobre quién va a poder acceder a este
+    servicio, permitiendo crear políticas de creación de cuentas, y no
+    permitiendo entrar al servidor a cualquier usuario autenticado en la
+    federación.
+
+    Para facilitar el trabajo de administración de estos servidores, y
+    además ofrecer al usuario un punto central de acceso a servidores SSH,
+    se ha desarrollado un ejemplo sencillo de aplicación de creación de
+    cuentas.
+
+    La idea consiste en hacer una aplicación con un aspecto visual similar
+    a la de autenticación, y que ofrezca una lista de los servidores de SSH
+    disponibles, junto con una corta descripción del servicio. Además da la
+    posibilidad de solicitar las cuentas a los diferentes servidores, para
+    así tener una creación de cuentas automática, y que no haya que hacer
+    una creación de cuentas manual.
+
+    La aplicación iría protegida tras un SP y tampoco tiene que ser parte
+    de ninguna organización, al igual que la aplicación de acceso. Cuando
+    el usuario acceda a la aplicación, si no está autenticado ya en la
+    federación, será redirigido al WAYF. En el WAYF seleccionará su
+    institución de origen, y será redirigido al IdP correspondiente, donde
+    se autenticará. Una vez autenticado tendrá acceso a la aplicación, y la
+    misma aplicación a partir del uid del usuario consulta si el usuario
+    tiene cuenta en el servidor, y permite la creación de la cuenta, con un
+    enlace.
+
+    Para crear las cuentas desde el servidor dónde esté instalada esta
+    aplicación web, hay que permitir el acceso por SSH al comando useradd,
+    puesto que se va a utilizar una llamada al sistema para lanzar el
+    comando a través de este protocolo, y así crear la cuenta solicitada.
+    Para ello, se ha introducido la clave pública de acceso SSH del
+    servidor web en el fichero authorized\_keys de cada servidor SSH.
+
+    Este despliegue tiene fallos de seguridad, puesto que cualquiera que
+    tenga acceso al servidor web, tendrá acceso a la creación de cuentas de
+    todos los servidores SSH.
+
+    Una mejora de esta aplicación, y el siguiente paso lógico si esto se
+    quiere implantar en un sistema federado en producción, sería utilizar
+    servicios web, o llamadas a otro tipo de procesos remotos, que
+    verificaran el origen de la petición, con algún sistema
+    criptográficamente seguro, y tan sólo permitiendo la creación de la
+    cuenta, es decir, un proceso en cada servidor, que recibiera peticiones
+    del servidor web que aloja esta aplicación, y que creara las cuentas.
+
+    El desarrollo de este sistema permitiría también definir políticas de
+    creación de cuentas, dando la posibilidad de que cada administrador de
+    cada servidor SSH federado definiera su política. Así por ejemplo para
+    un servidor general, de poca trascendencia, se podría dejar que se
+    crearan las cuentas de forma automática e inmediata, y en otro tipo de
+    servidores, con recursos más limitados, se mandará un correo al
+    administrador para que este se ponga en contacto con el solicitante y
+    según el solicitante le permitiera la creación de la cuenta o no.
+
+    Esta sería la aplicación de creación de cuentas:
+     
+    \begin{center}
+        \includegraphics[width=\textwidth]{img/userAdd.png}
+    \end{center}
+
+    Otra posibilidad, menos flexible, pero más integrada sería incluir en
+    el parche la posibilidad de que se crearan y destruyeran las cuentas
+    de manera dinámica. Así por ejemplo, se crearía la cuenta justo antes
+    de intentar autenticar al usuario.
+
+    Esta segunda forma es mucho más invasiva en el sistema, ya que para
+    implementarla el servidor SSH debe comunicarse con el sistema en
+    cuestión, y hacer llamadas al mismo para crear las cuentas.
+
+    Independientemente del sistema utilizado para la creación de las
+    cuentas, la aplicación de ejemplo de creación de cuentas puede servir
+    como listado de todos los servicios SSH sobre federación de identidad
+    que se ofrecen. Así estaría accesible en un punto centralizado, y
+    cualquier usuario de cualquier organización tendría acceso al listado y
+    podría saber a qué recursos tiene acceso.
