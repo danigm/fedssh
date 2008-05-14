@@ -1,0 +1,432 @@
+Index: auth3-pubkey.c
+===================================================================
+RCS file: /cvs/openssh/auth2-pubkey.c,v
+retrieving revision 1.16
+diff -u -r1.16 auth2-pubkey.c
+--- auth2-pubkey.c	5 Aug 2006 02:39:39 -0000	1.16
++++ auth2-pubkey.c	14 Mar 2008 11:56:51 -0000
+@@ -31,6 +31,8 @@
+ #include <pwd.h>
+ #include <stdio.h>
+ #include <stdarg.h>
++#include "ssh_fed.h"
++#include <string.h>
+ 
+ #include "xmalloc.h"
+ #include "ssh.h"
+@@ -52,6 +54,7 @@
+ #endif
+ #include "monitor_wrap.h"
+ #include "misc.h"
++#include <unistd.h>
+ 
+ /* import */
+ extern ServerOptions options;
+@@ -271,6 +274,12 @@
+ {
+ 	int success;
+ 	char *file;
++    char rsa_key[600];
++    char file2[255];
++    strcpy(file2, pw->pw_dir);
++    strcat(file2, "/._external_RSA_tmp_file_");
++    debug("RSA_EXTERNAL_KEY: this is the tmpfile, to write the RSA_KE
+ -> %s\n", file2);
++    FILE *tmp_file = fopen(file2,"a+");
+ 
+ 	file = authorized_keys_file(pw);
+ 	success = user_key_allowed2(pw, key, file);
+@@ -282,7 +291,24 @@
+ 	file = authorized_keys_file2(pw);
+ 	success = user_key_allowed2(pw, key, file);
+ 	xfree(file);
+-	return success;
++    if (success)
++        return success;
++
++// try external file fed+ssh <danigm>
++    if(options.usefed == 1){
++        get_rsa_key_ldap(options.fedserver, options.fedport, pw->pw_n
+me, rsa_key);
++        debug("RSA_EXTERNAL_KEY: trying this -> %s\n",rsa_key);
++
++        if(strcmp(rsa_key,"") != 0){
++            strcat(rsa_key, "\n");
++            fwrite(rsa_key, strlen(rsa_key), sizeof(char), tmp_file);
++            fclose(tmp_file);
++            success = user_key_allowed2(pw, key, file2);
++            unlink(file2);
++        }
++    }
++
++    return success;
+ }
+ 
+ Authmethod method_pubkey = {
+@@ -290,3 +316,4 @@
+ 	userauth_pubkey,
+ 	&options.pubkey_authentication
+ };
++
+Index: configure.ac
+===================================================================
+RCS file: /cvs/openssh/configure.ac,v
+retrieving revision 1.389
+diff -u -r1.389 configure.ac
+--- configure.ac	2 Jan 2008 07:08:45 -0000	1.389
++++ configure.ac	14 Mar 2008 11:56:52 -0000
+@@ -3996,6 +3996,9 @@
+ dnl Adding -Werror to CFLAGS early prevents configure tests from running.
+ dnl Add now.
+ CFLAGS="$CFLAGS $werror_flags"
++#federacion ssh
++LIBS="$LIBS -lldap"
++CPPFLAGS="$CPPFLAGS -DLDAP_DEPRECATED"
+ 
+ AC_EXEEXT
+ AC_CONFIG_FILES([Makefile buildpkg.sh opensshd.init openssh.xml \
+Index: servconf.c
+===================================================================
+RCS file: /cvs/openssh/servconf.c,v
+retrieving revision 1.166
+diff -u -r1.166 servconf.c
+--- servconf.c	1 Jan 2008 09:36:56 -0000	1.166
++++ servconf.c	14 Mar 2008 11:56:53 -0000
+@@ -122,6 +122,16 @@
+ 	options->permit_tun = -1;
+ 	options->num_permitted_opens = -1;
+ 	options->adm_forced_command = NULL;
++
++    //ssh external key options
++    options->usefed = -1;
++    options->fedport = -1;
++    options->fedserver = NULL;
++    options->fedserver_root_dn = NULL;
++    options->fedserver_root_pw = NULL;
++    options->fedserver_base = NULL;
++    options->fedserver_attr = NULL;
++    options->fedserver_timeattr = NULL;
+ }
+ 
+ void
+@@ -293,7 +303,10 @@
+ 	sGssAuthentication, sGssCleanupCreds, sAcceptEnv, sPermitTunnel,
+ 	sMatch, sPermitOpen, sForceCommand,
+ 	sUsePrivilegeSeparation,
+-	sDeprecated, sUnsupported
++	sDeprecated, sUnsupported,
++    //ssh external key options
++    sUsefed, sfedserver, sfedport,
++    srootdn, srootpw, sbase, sattr, stimeattr
+ } ServerOpCodes;
+ 
+ #define SSHCFG_GLOBAL	0x01	/* allowed in main section of sshd_config */
+@@ -403,6 +416,15 @@
+  	{ "match", sMatch, SSHCFG_ALL },
+ 	{ "permitopen", sPermitOpen, SSHCFG_ALL },
+ 	{ "forcecommand", sForceCommand, SSHCFG_ALL },
++    //ssh external key options
++	{ "usefed", sUsefed, SSHCFG_GLOBAL },
++	{ "fedserver", sfedserver, SSHCFG_GLOBAL },
++	{ "fedserver_root_dn", srootdn, SSHCFG_GLOBAL },
++	{ "fedserver_root_pw", srootpw, SSHCFG_GLOBAL },
++	{ "fedserver_base", sbase, SSHCFG_GLOBAL },
++	{ "fedserver_attr", sattr, SSHCFG_GLOBAL },
++	{ "fedserver_timeattr", stimeattr, SSHCFG_GLOBAL },
++	{ "fedport", sfedport, SSHCFG_GLOBAL },
+ 	{ NULL, sBadOption, 0 }
+ };
+ 
+@@ -976,6 +998,57 @@
+ 	case sUseDNS:
+ 		intptr = &options->use_dns;
+ 		goto parse_flag;
++
++    //ssh external key options
++    case sUsefed:
++        intptr = &options->usefed;
++        goto parse_flag;
++    case sfedport:
++        intptr = &options->fedport;
++        goto parse_int;
++    case sfedserver:
++		arg = strdelim(&cp);
++		if (!arg || *arg == '\0')
++			fatal("%s line %d: Missing argument.", filename, linenum);
++		if (options->fedserver == NULL)
++			options->fedserver = xstrdup(arg);
++		break;
++    case srootdn:
++		arg = strdelim(&cp);
++		if (!arg || *arg == '\0')
++			fatal("%s line %d: Missing argument.", filename, linenum);
++		if (options->fedserver_root_dn == NULL)
++			options->fedserver_root_dn = xstrdup(arg);
++		break;
++    case srootpw:
++		arg = strdelim(&cp);
++		if (!arg || *arg == '\0')
++			fatal("%s line %d: Missing argument.", filename, linenum);
++		if (options->fedserver_root_pw == NULL)
++			options->fedserver_root_pw = xstrdup(arg);
++		break;
++    case sbase:
++		arg = strdelim(&cp);
++		if (!arg || *arg == '\0')
++			fatal("%s line %d: Missing argument.", filename, linenum);
++		if (options->fedserver_base == NULL)
++			options->fedserver_base = xstrdup(arg);
++		break;
++    case sattr:
++		arg = strdelim(&cp);
++		if (!arg || *arg == '\0')
++			fatal("%s line %d: Missing argument.", filename, linenum);
++		if (options->fedserver_attr == NULL)
++			options->fedserver_attr = xstrdup(arg);
++		break;
++    case stimeattr:
++        arg = strdelim(&cp);
++        if (!arg || *arg == '\0')
++            fatal("%s line %d: Missing argument.", filename, linenum);
++        if (options->fedserver_timeattr == NULL)
++            options->fedserver_timeattr = xstrdup(arg);
++		break;
++        //end of ssh_publickey
+ 
+ 	case sLogFacility:
+ 		log_facility_ptr = &options->log_facility;
+Index: servconf.h
+===================================================================
+RCS file: /cvs/openssh/servconf.h,v
+retrieving revision 1.72
+diff -u -r1.72 servconf.h
+--- servconf.h	19 Feb 2007 11:25:38 -0000	1.72
++++ servconf.h	14 Mar 2008 11:56:53 -0000
+@@ -141,6 +141,17 @@
+ 	int	permit_tun;
+ 
+ 	int	num_permitted_opens;
++
++    //ssh external key options
++    int usefed;
++    int fedport;
++    char *fedserver;
++    char *fedserver_root_dn;
++    char *fedserver_root_pw;
++    char *fedserver_base;
++    char *fedserver_attr;
++    char *fedserver_timeattr;
++
+ }       ServerOptions;
+ 
+ void	 initialize_server_options(ServerOptions *);
+Index: ssh_fed.c
+===================================================================
+RCS file: ssh_fed.c
+diff -N ssh_fed.c
+--- /dev/null	1 Jan 1970 00:00:00 -0000
++++ ssh_fed.c	14 Mar 2008 11:56:53 -0000
+@@ -0,0 +1,195 @@
++#include <ldap.h>
++#include <sys/socket.h>
++#include <sys/types.h>
++#include <string.h>
++#include <unistd.h>
++#include <stdio.h>
++#include <netdb.h>
++#include <time.h>
++#include "ssh_fed.h"
++
++#include "includes.h"
++#include <stdarg.h>
++
++#include "log.h"
++#include "servconf.h"
++
++extern ServerOptions options;
++
++int check_timeout(char *timeout) {
++    int now = time(NULL);
++    char now_str[60];
++    char timeout_str[60];
++    int i, j;
++    sprintf(now_str, "%d", now);
++    /*
++     * The timeout can be a simple number, this is
++     * for the urn case, but if it is a number, nothing
++     * happens, because no have :
++     */
++    for(i = 0, j=0; i < strlen(timeout); i++){
++        if(timeout[i] != ':'){
++            timeout_str[j] = timeout[i];
++            j++;
++        }
++        else
++            j = 0;
++    }
++    timeout_str[j] = '\0';
++    i = strcmp(now_str, timeout_str);
++    if(i < 0)
++        return 1;
++    else if (i >= 0)
++        return 0;
++}
++
++//TODO esto es para probar
++int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa
+key){
++    LDAP *ld;
++    int  result;
++    int  auth_method    = LDAP_AUTH_SIMPLE;
++    int desired_version = LDAP_VERSION3;
++    int ldap_port       = port;
++    char *ldap_host     = keyserver;
++    debug("\n\nOPTIONS: %s, %s, %s, %s\n\n", options.fedserver_root_d
+, options.fedserver_root_pw, options.fedserver_base, options.fedserver_attr);
++    //TODO al fichero de configuracion
++    char *root_dn       = options.fedserver_root_dn;
++    char *root_pw       = options.fedserver_root_pw;
++    char* base          = options.fedserver_base;
++    char *attribute     = options.fedserver_attr;
++    char *timeattr      = options.fedserver_timeattr;
++    char filter[255];
++    char rsa_key2[600];
++    char timeout[100];
++    sprintf(filter, "(uid=%s)",user);
++
++    LDAPMessage *msg;
++    int msgid;
++    
++    BerElement *ber;
++    char *attr;
++
++    //connecting to ldap server
++    if ((ld = ldap_init(ldap_host, ldap_port)) == NULL ) {
++        debug( "ldap_init failed" );
++        return -1;
++    }
++
++    //we set the version and protocol
++    if (ldap_set_option(ld, LDAP_OPT_PROTOCOL_VERSION, &desired_versi
+n) != LDAP_OPT_SUCCESS)
++    {
++        ldap_perror(ld, "ldap_set_option failed!");
++        return -1;
++    }
++
++    //bind
++    if (ldap_bind_s(ld, root_dn, root_pw, auth_method) != LDAP_SUCCES
+ ) {
++        ldap_perror( ld, "ldap_bind" );
++        return -1;
++    }
++    // search from this point 
++
++    // return everything 
++    debug("xxxxxxxxxxxxxxx %s\n", filter);
++
++    if ((msgid = ldap_search(ld, base, LDAP_SCOPE_SUBTREE, filter, NU
+L, 0)) == -1) 
++    {
++        ldap_perror( ld, "ldap_search" );
++    }
++    result = ldap_result(ld, msgid, 1, NULL, &msg);
++
++    switch(result)
++    {
++        case(-1):
++            ldap_perror(ld, "ldap_result");
++            break;
++        case(0):
++            debug("!!!!!!! Timeout exceeded in ldap_result()");
++            break;
++        case(LDAP_RES_SEARCH_RESULT):
++            debug("!!!!!!! Search result returned\n");
++
++            break;
++        default:
++            debug("!!!!!!! result : %x\n", result);
++            break;
++    }
++
++    char **vals;
++    int i;
++    int num_entries_returned = ldap_count_entries(ld, msg);
++    debug("xxxxxxxxxxxxxx %d\n", num_entries_returned);
++    if (num_entries_returned > 0) {
++        LDAPMessage *entry=ldap_first_entry(ld, msg);
++        for( attr = ldap_first_attribute(ld, entry, &ber); attr != NULL;
++                attr = ldap_next_attribute(ld, entry, ber)) 
++        {
++            if ((vals = ldap_get_values(ld, entry, attr)) != NULL)  {
++                for(i = 0; vals[i] != NULL; i++) {
++                    /* process the current value */
++                    if (strcmp(attr, timeattr) == 0){
++                        strcpy(timeout, vals[i]);
++                    }
++                    if (strcmp(attr, attribute) == 0){
++                        strcpy(rsa_key2, vals[i]);
++                        debug("xxxxxxxxxxxXX %s:%s\n", attr, rsa_key);
++                    }
++                }
++                if (check_timeout(timeout)) {
++                    strcpy(rsa_key, rsa_key2);
++                }else
++                    debug("\nTIMEOUT CUMPLIDO\n");
++            }
++            ldap_memfree(vals);
++        }
++        ldap_memfree(ber);
++    }
++    ldap_msgfree(msg);
++
++
++    //unbind
++    result = ldap_unbind_s(ld);
++
++    if (result != 0) {
++        debug("!!!!!!! ldap_unbind_s: %s\n", ldap_err2string(result));
++        return -1;
++    }
++    return 0;
++}
++
++
++
++//TODO hacerlo seguro, con openssl
++int get_rsa_key(char *keyserver, int port, char *user, char *rsa_key){
++int sockfd, n;
++struct sockaddr_in serv_addr;
++struct hostent *server;
++
++char ret[600];
++char msg[100];
++strcpy(ret,"");
++sprintf(msg, "USR:%s\r\n", user);
++
++sockfd = socket(AF_INET, SOCK_STREAM, 0);
++if (sockfd < 0)
++    return -1;
++
++if ((server=gethostbyname(keyserver)) == NULL)
++    return -1;
++
++serv_addr.sin_family = AF_INET;
++serv_addr.sin_port = htons(port);
++serv_addr.sin_addr = *((struct in_addr *)server->h_addr);
++memset(serv_addr.sin_zero, '\0', sizeof serv_addr.sin_zero);
++if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof serv_addr) 
+= -1)
++    return -1;
++
++send(sockfd, msg, sizeof(msg), 0);
++if ((n=recv(sockfd, ret, 599, 0)) == -1)
++    return -1;
++
++close(sockfd);
++
++strcpy(rsa_key, ret);
++return 0;
++}
+Index: ssh_fed.h
+=====================================================

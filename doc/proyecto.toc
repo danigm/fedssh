@@ -19,21 +19,20 @@
 \contentsline {subsection}{\numberline {3.4.1}Schemas LDAP}{30}{subsection.3.4.1}
 \contentsline {section}{\numberline {3.5}Aplicaci\IeC {\'o}n de login}{32}{section.3.5}
 \contentsline {section}{\numberline {3.6}Ejemplo aplicaci\IeC {\'o}n creaci\IeC {\'o}n de cuentas.}{34}{section.3.6}
-\contentsline {chapter}{\numberline {4}Despliegue de una maqueta en Conf\IeC {\'\i }a (Federaci\IeC {\'o}n de Identidad de las Universidades Andaluzas)}{38}{chapter.4}
-\contentsline {section}{\numberline {4.1}M\IeC {\'a}quinas involucradas}{38}{section.4.1}
-\contentsline {section}{\numberline {4.2}Servicio prestado, por parte de la Universidad de Sevilla}{38}{section.4.2}
-\contentsline {section}{\numberline {4.3}Pruebas}{38}{section.4.3}
-\contentsline {section}{\numberline {4.4}Futuros despliegues (infraestructura PASITO)}{38}{section.4.4}
-\contentsline {chapter}{\numberline {5}Implementaci\IeC {\'o}n y despliegue}{39}{chapter.5}
-\contentsline {section}{\numberline {5.1}C\IeC {\'o}digo del openssh, (m\IeC {\'\i }nimas variaciones)}{39}{section.5.1}
-\contentsline {section}{\numberline {5.2}C\IeC {\'o}digo de las aplicaciones federadas, (ssh, useradd)}{39}{section.5.2}
-\contentsline {section}{\numberline {5.3}Necesidades para montar la plataforma}{39}{section.5.3}
-\contentsline {subsection}{\numberline {5.3.1}C\IeC {\'o}mo aplicar el parche}{39}{subsection.5.3.1}
-\contentsline {subsection}{\numberline {5.3.2}C\IeC {\'o}mo montar el SP y la aplicaci\IeC {\'o}n web}{39}{subsection.5.3.2}
-\contentsline {subsection}{\numberline {5.3.3}C\IeC {\'o}mo instalar el servidor de claves (openldap)}{39}{subsection.5.3.3}
-\contentsline {chapter}{\numberline {6}Conclusiones}{40}{chapter.6}
-\contentsline {section}{\numberline {6.1}Por qu\IeC {\'e} es importante, y por qu\IeC {\'e} soy el mejor}{40}{section.6.1}
-\contentsline {chapter}{\numberline {7}Anexos}{41}{chapter.7}
-\contentsline {section}{\numberline {7.1}Seguridad m\IeC {\'\i }nima (permisos, cambiar passwd, etc)}{41}{section.7.1}
-\contentsline {section}{\numberline {7.2}Despliegue de la aplicaci\IeC {\'o}n federada}{41}{section.7.2}
-\contentsline {section}{\numberline {7.3}Schemas ldap utilizados, d\IeC {\'o}nde encontrarlos, c\IeC {\'o}mo instalarlos en openldap}{41}{section.7.3}
+\contentsline {chapter}{\numberline {4}Implementaci\IeC {\'o}n y despliegue}{38}{chapter.4}
+\contentsline {section}{\numberline {4.1}C\IeC {\'o}digo del openssh}{38}{section.4.1}
+\contentsline {section}{\numberline {4.2}C\IeC {\'o}digo de las aplicaciones federadas, (ssh, useradd)}{48}{section.4.2}
+\contentsline {section}{\numberline {4.3}Necesidades para montar la plataforma}{48}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}C\IeC {\'o}mo aplicar el parche}{48}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}C\IeC {\'o}mo montar el SP y la aplicaci\IeC {\'o}n web}{48}{subsection.4.3.2}
+\contentsline {subsection}{\numberline {4.3.3}C\IeC {\'o}mo instalar el servidor de claves (openldap)}{48}{subsection.4.3.3}
+\contentsline {chapter}{\numberline {5}Despliegue de una maqueta en Conf\IeC {\'\i }a (Federaci\IeC {\'o}n de Identidad de las Universidades Andaluzas)}{49}{chapter.5}
+\contentsline {section}{\numberline {5.1}M\IeC {\'a}quinas involucradas}{49}{section.5.1}
+\contentsline {section}{\numberline {5.2}Servicio prestado, por parte de la Universidad de Sevilla}{49}{section.5.2}
+\contentsline {section}{\numberline {5.3}Pruebas}{49}{section.5.3}
+\contentsline {section}{\numberline {5.4}Futuros despliegues (infraestructura PASITO)}{49}{section.5.4}
+\contentsline {chapter}{\numberline {6}Conclusiones}{50}{chapter.6}
+\contentsline {section}{\numberline {6.1}Por qu\IeC {\'e} es importante, y por qu\IeC {\'e} soy el mejor}{50}{section.6.1}
+\contentsline {chapter}{\numberline {7}Anexos}{51}{chapter.7}
+\contentsline {section}{\numberline {7.1}Seguridad m\IeC {\'\i }nima (permisos, cambiar passwd, etc)}{51}{section.7.1}
+\contentsline {section}{\numberline {7.2}Despliegue de la aplicaci\IeC {\'o}n federada}{51}{section.7.2}

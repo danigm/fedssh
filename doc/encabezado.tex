@@ -4,6 +4,8 @@
 \usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{listings}
+\usepackage[pdftex,usenames,dvipsnames]{color}
 \parindent 2em
 \parskip 2ex
 \pagestyle{fancy}
@@ -17,6 +19,18 @@
 \renewcommand{\headrulewidth}{0.6pt}
 \renewcommand{\footrulewidth}{0.6pt}
 \setlength{\headheight}{1.5\headheight}
+
+\definecolor{GrisClarito}{gray}{0.9}
+
+\lstset{% opciones
+        basicstyle=\ttfamily\scriptsize,
+        commentstyle=\color{blue},
+        identifierstyle=\bfseries,
+        backgroundcolor=\color{GrisClarito},rulecolor=\color{blue},
+        numbers=left,
+        numberstyle=\small\color{Gray},
+        showstringspaces=false
+}
 
 
 \begin{document}
