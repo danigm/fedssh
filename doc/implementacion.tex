@@ -29,7 +29,161 @@
 
     \end{verbatim}
 
+    Una vez conseguido el código, hubo un proceso de estudio del mismo,
+    para entender minimamente el funcionamiento de la aplicación, antes de
+    empezar a tocar nada.
 
+    Tras estudiar el código, y realizar varias pruebas, se localizó la zona
+    de código dónde se realiza la autenticación del usuario, y se comienza
+    a modificar este código para añadirle la funcionalidad que estamos
+    buscando.
+
+    El fichero fuente, dentro de openssh, que se encarga de la
+    autenticación SSH es el \texttt{auth2-pubkey.c}. Concretamente la
+    autenticación por clave pública se realiza en la función
+    \texttt{int user\_key\_allowed(struct passwd *pw, Key *key)}, por lo
+    tanto esta es la función que hay que modificar.
+
+    Concretamente este trozo de código es el encargado de comprobar que
+    en el servidor existe un fichero que contiene las claves públicas que
+    tienen acceso.
+
+    \begin{lstlisting}
+
+    file = authorized_keys_file(pw);
+    success = user_key_allowed2(pw, key, file);
+    xfree(file);
+    if (success)
+        return success;
+
+    try suffix "2" for backward compat, too */
+    file = authorized_keys_file2(pw);
+    success = user_key_allowed2(pw, key, file);
+    xfree(file);
+
+    return success;
+
+    \end{lstlisting}
+
+    La variable file tiene la ruta hacia el fichero dónde están las claves
+    públicas para acceder, así pues añadir a este código la idea de que si
+    un usuario no puede acceder por el método estandar, se compruebe si
+    está en la federación, es tan simple como:
+
+
+    \begin{lstlisting}
+
+    file = authorized_keys_file(pw);
+    success = user_key_allowed2(pw, key, file);
+    xfree(file);
+    if (success)
+        return success;
+
+    try suffix "2" for backward compat, too */
+    file = authorized_keys_file2(pw);
+    success = user_key_allowed2(pw, key, file);
+    xfree(file);
+
+    if (success)
+        return success;
+
+    // try external file fed+ssh <danigm>
+    if(options.usefed == 1){
+        get_rsa_key_ldap(options.fedserver, options.fedport,
+                pw->pw_name, rsa_key);
+        debug("RSA_EXTERNAL_KEY: trying this -> %s\n",rsa_key);
+
+        if(strcmp(rsa_key,"") != 0){
+            strcat(rsa_key, "\n");
+            fwrite(rsa_key, strlen(rsa_key), sizeof(char), tmp_file);
+            fclose(tmp_file);
+            success
+                =
+                user_key_allowed2(pw, key, file2);
+            unlink(file2);
+        }
+    }
+
+    return success;
+
+    \end{lstlisting}
+
+    De esta manera, si no se ha podido acceder de la manera convencional,
+    si está puesta la opción de usar el acceso federado, se hace una
+    llamada a la función \texttt{get\_rsa\_key\_ldap}, que devolverá una
+    cadena con la clave pública de este usuario si está autenticado, y en
+    tal caso se creará un fichero temporal que se usará para intentar
+    autenticar.
+
+    Este simple cambio, y alguno más para definir las posibles opciones
+    configurables con el fichero de configuración, es lo que se cambiaría
+    de verdad sobre el código del servidor ssh real, por lo que el riesgo
+    de introducir fallos adicionales al código se reduce considerablemente.
+
+    Por tanto se delega la responsabilidad de saber si el usuario está
+    autenticado o no a la función \texttt{get\_rsa\_key\_ldap}. Esta
+    función se puede modificar, y cambiar por cualquier otra que devuelva
+    una cadena con la clave pública del usuario que se le está pasando como
+    argumento. Por esto es fácil implementar la comunicación con otros
+    sistemas que no sean un servicio de directorio, o por alguna función
+    que haga alguna operación más.
+
+    Ya que la complejidad de la autenticación se ha delegado en esta
+    función, se ha implementado en un fichero aparte, que se introduce en
+    las herramientas de compilación, \texttt{automake}, y se enlaza para
+    que sea accesible desde el código anteriormente comentado.
+
+    Lo que hace la función básicamente es realizar una consulta al servidor
+    LDAP buscando al usuario en cuestión. Si existe este, se extraen los
+    datos de clave pública y timeout. Inmediatamente después se comprueba
+    que el timeout no esté cumplido, y en ese caso se devuelve la clave
+    pública del usuario, y se termina. En caso de que el timeout esté
+    cumplido, o que no se encuentre al usuario, se devuelve una cadena
+    vacía.
+
+    En realidad la función es bastante sencilla y simple, pues así lo hemos
+    requerido, y este era nuestro objetivo. Donde radica la mayor
+    complejidad es en el uso de las llamadas a LDAP en el lenguaje de
+    programación C, puesto que el acceso no es trivial, y durante el
+    desarrollo del proyecto, en la infraestructura de pruebas se ha
+    modificado la librería de acceso openldap, cambiando la forma de
+    acceso, y poniendo las funciones utilizadas en la primera versión como
+    \texttt{deprecated}, por lo tanto se ha tenido que reescribir el código
+    para utilizar las nuevas funciones.
+
+    Aquí está el código realmente relevante de esta función:
+
+    \begin{lstlisting}
+    
+    LDAPMessage *entry=ldap_first_entry(ld, msg);
+    for( attr = ldap_first_attribute(ld, entry, &ber);
+            attr != NULL; attr = ldap_next_attribute(ld, entry, ber))
+    {
+        vals = ldap_get_values_len(ld, entry, attr);
+        if (vals != NULL)  {
+            for(i = 0; vals[i] != NULL; i++) {
+                val = vals[i];
+                /* process the current value */
+                if (strcmp(attr, timeattr) == 0){
+                        strcpy(timeout, val->bv_val);
+                    }
+                if (strcmp(attr, attribute) == 0){
+                        strcpy(rsa_key2, val->bv_val);
+                        debug("1 %s:%s\n", %attr, %rsa_key2);
+                    }
+            }
+            if (check_timeout(timeout)) {
+                    strcpy(rsa_key, rsa_key2);
+                    debug("2 %s:%s\n", %attr, %rsa_key);
+                }else debug("\nTIMEOUT CUMPLIDO\n");
+        }
+        ldap_value_free_len(vals);
+    }
+
+
+    \end{lstlisting}
+
+    El código de parche completo a aplicar:
 
     \begin{lstlisting}
 
@@ -38,8 +192,8 @@ Index: auth3-pubkey.c
 RCS file: /cvs/openssh/auth2-pubkey.c,v
 retrieving revision 1.16
 diff -u -r1.16 auth2-pubkey.c
---- auth2-pubkey.c	5 Aug 2006 02:39:39 -0000	1.16
-+++ auth2-pubkey.c	14 Mar 2008 11:56:51 -0000
+--- auth2-pubkey.c  5 Aug 2006 02:39:39 -0000   1.16
++++ auth2-pubkey.c  14 Mar 2008 11:56:51 -0000
 @@ -31,6 +31,8 @@
  #include <pwd.h>
  #include <stdio.h>
@@ -59,8 +213,8 @@ diff -u -r1.16 auth2-pubkey.c
  extern ServerOptions options;
 @@ -271,6 +274,12 @@
  {
- 	int success;
- 	char *file;
+    int success;
+    char *file;
 +    char rsa_key[600];
 +    char file2[255];
 +    strcpy(file2, pw->pw_dir);
@@ -69,13 +223,13 @@ diff -u -r1.16 auth2-pubkey.c
  -> %s\n", file2);
 +    FILE *tmp_file = fopen(file2,"a+");
  
- 	file = authorized_keys_file(pw);
- 	success = user_key_allowed2(pw, key, file);
+    file = authorized_keys_file(pw);
+    success = user_key_allowed2(pw, key, file);
 @@ -282,7 +291,24 @@
- 	file = authorized_keys_file2(pw);
- 	success = user_key_allowed2(pw, key, file);
- 	xfree(file);
--	return success;
+    file = authorized_keys_file2(pw);
+    success = user_key_allowed2(pw, key, file);
+    xfree(file);
+-   return success;
 +    if (success)
 +        return success;
 +
@@ -99,8 +253,8 @@ me, rsa_key);
  
  Authmethod method_pubkey = {
 @@ -290,3 +316,4 @@
- 	userauth_pubkey,
- 	&options.pubkey_authentication
+    userauth_pubkey,
+    &options.pubkey_authentication
  };
 +
 Index: configure.ac
@@ -108,8 +262,8 @@ Index: configure.ac
 RCS file: /cvs/openssh/configure.ac,v
 retrieving revision 1.389
 diff -u -r1.389 configure.ac
---- configure.ac	2 Jan 2008 07:08:45 -0000	1.389
-+++ configure.ac	14 Mar 2008 11:56:52 -0000
+--- configure.ac    2 Jan 2008 07:08:45 -0000   1.389
++++ configure.ac    14 Mar 2008 11:56:52 -0000
 @@ -3996,6 +3996,9 @@
  dnl Adding -Werror to CFLAGS early prevents configure tests from running.
  dnl Add now.
@@ -125,12 +279,12 @@ Index: servconf.c
 RCS file: /cvs/openssh/servconf.c,v
 retrieving revision 1.166
 diff -u -r1.166 servconf.c
---- servconf.c	1 Jan 2008 09:36:56 -0000	1.166
-+++ servconf.c	14 Mar 2008 11:56:53 -0000
+--- servconf.c  1 Jan 2008 09:36:56 -0000   1.166
++++ servconf.c  14 Mar 2008 11:56:53 -0000
 @@ -122,6 +122,16 @@
- 	options->permit_tun = -1;
- 	options->num_permitted_opens = -1;
- 	options->adm_forced_command = NULL;
+    options->permit_tun = -1;
+    options->num_permitted_opens = -1;
+    options->adm_forced_command = NULL;
 +
 +    //ssh external key options
 +    options->usefed = -1;
@@ -145,37 +299,37 @@ diff -u -r1.166 servconf.c
  
  void
 @@ -293,7 +303,10 @@
- 	sGssAuthentication, sGssCleanupCreds, sAcceptEnv, sPermitTunnel,
- 	sMatch, sPermitOpen, sForceCommand,
- 	sUsePrivilegeSeparation,
--	sDeprecated, sUnsupported
-+	sDeprecated, sUnsupported,
+    sGssAuthentication, sGssCleanupCreds, sAcceptEnv, sPermitTunnel,
+    sMatch, sPermitOpen, sForceCommand,
+    sUsePrivilegeSeparation,
+-   sDeprecated, sUnsupported
++   sDeprecated, sUnsupported,
 +    //ssh external key options
 +    sUsefed, sfedserver, sfedport,
 +    srootdn, srootpw, sbase, sattr, stimeattr
  } ServerOpCodes;
  
- #define SSHCFG_GLOBAL	0x01	/* allowed in main section of sshd_config */
+ #define SSHCFG_GLOBAL  0x01    /* allowed in main section of sshd_config */
 @@ -403,6 +416,15 @@
-  	{ "match", sMatch, SSHCFG_ALL },
- 	{ "permitopen", sPermitOpen, SSHCFG_ALL },
- 	{ "forcecommand", sForceCommand, SSHCFG_ALL },
+    { "match", sMatch, SSHCFG_ALL },
+    { "permitopen", sPermitOpen, SSHCFG_ALL },
+    { "forcecommand", sForceCommand, SSHCFG_ALL },
 +    //ssh external key options
-+	{ "usefed", sUsefed, SSHCFG_GLOBAL },
-+	{ "fedserver", sfedserver, SSHCFG_GLOBAL },
-+	{ "fedserver_root_dn", srootdn, SSHCFG_GLOBAL },
-+	{ "fedserver_root_pw", srootpw, SSHCFG_GLOBAL },
-+	{ "fedserver_base", sbase, SSHCFG_GLOBAL },
-+	{ "fedserver_attr", sattr, SSHCFG_GLOBAL },
-+	{ "fedserver_timeattr", stimeattr, SSHCFG_GLOBAL },
-+	{ "fedport", sfedport, SSHCFG_GLOBAL },
- 	{ NULL, sBadOption, 0 }
++   { "usefed", sUsefed, SSHCFG_GLOBAL },
++   { "fedserver", sfedserver, SSHCFG_GLOBAL },
++   { "fedserver_root_dn", srootdn, SSHCFG_GLOBAL },
++   { "fedserver_root_pw", srootpw, SSHCFG_GLOBAL },
++   { "fedserver_base", sbase, SSHCFG_GLOBAL },
++   { "fedserver_attr", sattr, SSHCFG_GLOBAL },
++   { "fedserver_timeattr", stimeattr, SSHCFG_GLOBAL },
++   { "fedport", sfedport, SSHCFG_GLOBAL },
+    { NULL, sBadOption, 0 }
  };
  
 @@ -976,6 +998,57 @@
- 	case sUseDNS:
- 		intptr = &options->use_dns;
- 		goto parse_flag;
+    case sUseDNS:
+        intptr = &options->use_dns;
+        goto parse_flag;
 +
 +    //ssh external key options
 +    case sUsefed:
@@ -185,62 +339,62 @@ diff -u -r1.166 servconf.c
 +        intptr = &options->fedport;
 +        goto parse_int;
 +    case sfedserver:
-+		arg = strdelim(&cp);
-+		if (!arg || *arg == '\0')
-+			fatal("%s line %d: Missing argument.", filename, linenum);
-+		if (options->fedserver == NULL)
-+			options->fedserver = xstrdup(arg);
-+		break;
++       arg = strdelim(&cp);
++       if (!arg || *arg == '\0')
++           fatal("%s line %d: Missing argument.", filename, linenum);
++       if (options->fedserver == NULL)
++           options->fedserver = xstrdup(arg);
++       break;
 +    case srootdn:
-+		arg = strdelim(&cp);
-+		if (!arg || *arg == '\0')
-+			fatal("%s line %d: Missing argument.", filename, linenum);
-+		if (options->fedserver_root_dn == NULL)
-+			options->fedserver_root_dn = xstrdup(arg);
-+		break;
++       arg = strdelim(&cp);
++       if (!arg || *arg == '\0')
++           fatal("%s line %d: Missing argument.", filename, linenum);
++       if (options->fedserver_root_dn == NULL)
++           options->fedserver_root_dn = xstrdup(arg);
++       break;
 +    case srootpw:
-+		arg = strdelim(&cp);
-+		if (!arg || *arg == '\0')
-+			fatal("%s line %d: Missing argument.", filename, linenum);
-+		if (options->fedserver_root_pw == NULL)
-+			options->fedserver_root_pw = xstrdup(arg);
-+		break;
++       arg = strdelim(&cp);
++       if (!arg || *arg == '\0')
++           fatal("%s line %d: Missing argument.", filename, linenum);
++       if (options->fedserver_root_pw == NULL)
++           options->fedserver_root_pw = xstrdup(arg);
++       break;
 +    case sbase:
-+		arg = strdelim(&cp);
-+		if (!arg || *arg == '\0')
-+			fatal("%s line %d: Missing argument.", filename, linenum);
-+		if (options->fedserver_base == NULL)
-+			options->fedserver_base = xstrdup(arg);
-+		break;
++       arg = strdelim(&cp);
++       if (!arg || *arg == '\0')
++           fatal("%s line %d: Missing argument.", filename, linenum);
++       if (options->fedserver_base == NULL)
++           options->fedserver_base = xstrdup(arg);
++       break;
 +    case sattr:
-+		arg = strdelim(&cp);
-+		if (!arg || *arg == '\0')
-+			fatal("%s line %d: Missing argument.", filename, linenum);
-+		if (options->fedserver_attr == NULL)
-+			options->fedserver_attr = xstrdup(arg);
-+		break;
++       arg = strdelim(&cp);
++       if (!arg || *arg == '\0')
++           fatal("%s line %d: Missing argument.", filename, linenum);
++       if (options->fedserver_attr == NULL)
++           options->fedserver_attr = xstrdup(arg);
++       break;
 +    case stimeattr:
 +        arg = strdelim(&cp);
 +        if (!arg || *arg == '\0')
 +            fatal("%s line %d: Missing argument.", filename, linenum);
 +        if (options->fedserver_timeattr == NULL)
 +            options->fedserver_timeattr = xstrdup(arg);
-+		break;
++       break;
 +        //end of ssh_publickey
  
- 	case sLogFacility:
- 		log_facility_ptr = &options->log_facility;
+    case sLogFacility:
+        log_facility_ptr = &options->log_facility;
 Index: servconf.h
 ===================================================================
 RCS file: /cvs/openssh/servconf.h,v
 retrieving revision 1.72
 diff -u -r1.72 servconf.h
---- servconf.h	19 Feb 2007 11:25:38 -0000	1.72
-+++ servconf.h	14 Mar 2008 11:56:53 -0000
+--- servconf.h  19 Feb 2007 11:25:38 -0000  1.72
++++ servconf.h  14 Mar 2008 11:56:53 -0000
 @@ -141,6 +141,17 @@
- 	int	permit_tun;
+    int permit_tun;
  
- 	int	num_permitted_opens;
+    int num_permitted_opens;
 +
 +    //ssh external key options
 +    int usefed;
@@ -254,13 +408,13 @@ diff -u -r1.72 servconf.h
 +
  }       ServerOptions;
  
- void	 initialize_server_options(ServerOptions *);
+ void    initialize_server_options(ServerOptions *);
 Index: ssh_fed.c
 ===================================================================
 RCS file: ssh_fed.c
 diff -N ssh_fed.c
---- /dev/null	1 Jan 1970 00:00:00 -0000
-+++ ssh_fed.c	14 Mar 2008 11:56:53 -0000
+--- /dev/null   1 Jan 1970 00:00:00 -0000
++++ ssh_fed.c   14 Mar 2008 11:56:53 -0000
 @@ -0,0 +1,195 @@
 +#include <ldap.h>
 +#include <sys/socket.h>
@@ -470,6 +624,453 @@ Index: ssh_fed.h
     \end{lstlisting}
 
     \section{Código de las aplicaciones federadas, (ssh, useradd)}
+
+    Como se vió en \ref{login}, la aplicación de login tiene un cometido
+    específico, y una funcionalidad claramente definida. Por lo tanto la
+    implementación de la misma ha sido el objetivo más fácil dentro de este
+    proyecto.
+
+    Se ha elegido la tecnología PHP, por su rápidez para el desarrollo web,
+    además de por su simple integración con todo tipo de servidores web, y
+    en nuestro caso con apache2. Además, dado que se ha decidido utilizar
+    un servidor de claves basado en un servicio de directorio, se ha
+    buscado una tecnología que ofrezca simplicidad a la hora de realizar
+    estos accesos, y PHP cumple todos los requisitos.
+
+    Se ha descompuesto la aplicación en dos partes diferenciables, para
+    seguir un modelo vista controlador. De tal forma que las operaciones
+    con datos, y la lógica de la aplicación esté centralizada en
+    \texttt{ssh\_backend.php}, y que la parte de muestra de información, y
+    formateo de los datos con html esté en \texttt{ssh.php}.
+
+    Explicaré paso a paso las funciones que se pueden encontrar en
+    \texttt{ssh\_backend.php}.
+    
+    \begin{itemize}
+
+    \item En primer lugar hay una serie de variables que definen las opciones del
+    entorno dónde queramos desplegar la aplicación.
+
+    \begin{lstlisting}
+
+    $base_dn ='o=People,dc=us,dc=es';
+    $servidor_ldap = "goonie.us.es";
+    $puerto_ldap = 389;
+    $bn = 'cn=admin,dc=us,dc=es';
+    $pw = 'xxxxx';
+    $minutes_timeout = 30;
+    $shib_header = "HTTP_USERCERTIFICATE";
+    $rsa_server_key_attr = 'sshpublickey';
+    $rsa_server_timeout = 'schacuserstatus';
+
+    \end{lstlisting}
+
+    Están los datos para el acceso al servidor de claves, el tiempo valido
+    de sesión, el atributo de shibboleth dónde vendrá el certificado desde
+    el IdP, y los atributos en el servidor de claves, dónde se almacenarán
+    los datos.
+
+
+    \item función \texttt{modify}
+    
+    \begin{lstlisting}
+
+    function modify($ds, $uid, $pubkey){
+        global $base_dn;
+        global $minutes_timeout;
+        global $rsa_server_key_attr;
+        global $rsa_server_timeout;
+        // preparar los datos
+        $timeout = $minutes_timeout * 60; //5 minutos
+        $hoy = getdate();
+        $timeout = $hoy[0]+$timeout;
+        $dn = "uid=".  $uid .",".  $base_dn;
+        $info[$rsa_server_key_attr][0] = $pubkey;
+        $info[$rsa_server_timeout][0] = "schac:userStatus:us.es:timeout:" . $timeout;
+
+        // anadir la informacion al directorio
+        $r=ldap_modify($ds, $dn, $info);
+        $h = getdate($timeout);
+        
+        echo '<p class="info">'._('Esta sesion de ssh es valida 
+        hasta: ').$h["hours"].':'.$h["minutes"].':'.$h["seconds"].
+        ' - '.$h["mday"].' '.$h["month"].' '.$h["year"].'</p>';
+
+        return $r;
+    }
+
+    \end{lstlisting}
+
+    Esta función modifica una entrada ya existente en el directorio,
+    cambiando la clave pública y poniendo nuevamente el timeout.
+
+    \item función \texttt{add}
+
+    \begin{lstlisting}
+
+    function add($ds, $uid, $sn, $cn, $pubkey){
+            global $base_dn;
+            global $minutes_timeout;
+        global $rsa_server_key_attr;
+        global $rsa_server_timeout;
+            // preparar los datos
+            $timeout = $minutes_timeout * 60; //5 minutos
+            $hoy = getdate();
+            $timeout = $hoy[0]+$timeout;
+            $dn = "uid=". $uid .",". $base_dn;
+            $info["objectClass"][0] = "person";
+            $info["objectClass"][1] = "ldapPublicKey";
+            $info["objectClass"][2] = "schacUserEntitlements";
+            $info["uid"] = $uid;
+        if($sn == '')
+            $sn = $uid;
+        if($cn == '')
+            $cn = $uid;
+            $info["sn"] = $sn;
+            $info["cn"] = $cn;
+
+            $info[$rsa_server_key_attr] = $pubkey;
+            $info[$rsa_server_timeout] = "schac:userStatus:us.es:timeout:" . $timeout;
+
+            // anadir la informacion al directorio
+            $r=ldap_add($ds, $dn, $info);
+        $h = getdate($timeout);
+        echo '<p class="info">'._('Esta sesion de ssh es valida
+        hasta: ').$h["hours"].':'.$h["minutes"].':'.$h["seconds"].
+        ' - '.$h["mday"].' '.$h["month"].' '.$h["year"].'</p>';
+            return $r;
+    }
+
+    \end{lstlisting}
+
+    Añade una nueva entrada en el servidor de claves.
+
+    \item función \texttt{get\_remote\_user}
+
+    \begin{lstlisting}
+
+    function get_remote_user(){
+            $cad = $_SERVER["REMOTE_USER"];
+
+            //$cad = $_SERVER["REMOTE_USER"];
+            //partiendo el nombre, para crear danigm-us a partir de danigm@us.es
+            $cad = $_SESSION['user'];
+            $nado = explode('@', $cad);
+            $name = $nado[0];
+            $dominio = substr($nado[1], 0, stripos($nado[1], '.'));
+            $name = $name.'-'.$dominio;
+            return $name;
+    }
+
+    \end{lstlisting}
+
+    Devuelve el uid del usuario que se utilizará como nombre de usuario
+    para el acceso por SSH. Como cada uid no tiene por qué ser único, pues
+    to que en diferentes organizaciones pueden existir usuarios con el
+    mismo id, se concatena el dominio del mismo para poder diferenciar a
+    usuarios con el mismo uid, pero pertenecientes a diferentes
+    organizaciones. Se ha optado por utilizar el caracter '-' como
+    separador, puesto que si se utiliza la '@', complicaría un poco el
+    acceso por ssh.
+
+    \item función \texttt{get\_certificate}
+    \begin{lstlisting}
+    
+    function get_certificate(){
+        global $shib_header;
+            $certificate = "";
+        if (isset($_POST['key'])) {
+            // Public key was not received from IdP. First check if user is posting its public key
+            $certificate = $_POST['key'];
+            }
+            // Check if userCertificate attribute is set in SAML response
+            else if (isset($_SERVER[$shib_header])) {
+                    $certificate = $_SERVER[$shib_header];
+                    $certificate = base64_decode($certificate);
+            }
+            // Trim certificate string
+            $certificate = trim($certificate);
+            $certificate = str_replace("\r","",$certificate);
+            $certificate = str_replace("\n","",$certificate);
+
+            return $certificate;
+    }
+    \end{lstlisting}
+
+    Intenta conseguir la clave pública del usuario a través de las
+    cabeceras que introduce el SP de shibboleth, a través de los datos que
+    le manda el IdP.
+
+    \item función \texttt{check\_certificate}
+    \begin{lstlisting}
+
+    function check_certificate($certificate){
+        // Check if certificate syntax is correct
+        if (substr($certificate, 0, 7) == "ssh-rsa" ||
+           substr($certificate, 0, 7) == "ssh-dss")
+                return true;
+        else
+                return false;
+    }
+    \end{lstlisting}
+
+    Comprueba si un certificado es valido.
+
+    \item función \texttt{get\_certificate\_used}
+    \begin{lstlisting}
+
+    function get_certificate_used($uid){
+        global $rsa_server_key_attr;
+        $timestamp = get_attr($uid, $rsa_server_timeout);
+        $timestamp = split(":", $timestamp);
+        $timestamp = $timestamp[count($timestamp)-1];
+        $now = getdate();
+        if ($now > $timestamp)
+        return get_attr($uid, $rsa_server_key_attr);
+        else
+        return "";
+    }
+
+    \end{lstlisting}
+
+    Mira en el servicio de directorio, para un usuario ya existente cuál es
+    la última clave pública que se utilizó.
+
+    \item función \texttt{get\_attr}
+    \begin{lstlisting}
+
+    function get_attr($uid, $attr){
+            global $base_dn;
+            global $servidor_ldap;
+            global $puerto_ldap;
+            global $bn, $pw;
+
+            //Conectando con el ldap
+            $ds=ldap_connect($servidor_ldap, $puerto_ldap)
+                or die("No ha sido posible conectarse al servidor ".$servidor_ldap."");
+            //Version del protocolo que vamos a usar
+            ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+            //Bind como usuario, vamos a buscar, para ver si ya esta
+            ldap_bind($ds, $bn, $pw) or
+                die("No ha sido posible enlazar con el servidor".
+                $servidor_ldap." con el usuario ".$bn."");
+
+            //se guardan por uid, por lo que filtramos por este campo
+            $filter = '(uid='.$uid.')';
+            $resource = ldap_search($ds, $base_dn, $filter);
+            $info = ldap_get_entries($ds, $resource);
+        ldap_unbind($ds);
+        if ($info["count"] == 0){
+            return null;
+        }
+        else{
+            return $info[0][$attr][0];
+        }
+
+    }
+    \end{lstlisting}
+
+    Busca en el servicio de directorio, para un usuario existente un
+    atributo.
+
+    \item función \texttt{doit}
+    \begin{lstlisting}
+
+    /**
+     * Esta funcion mira en el servidor de claves, si este usuario esta ya
+     * si esta modifica la clave, y el timeout
+     * si no esta lo anade
+    **/
+    function doit($uid, $pubkey){
+            global $base_dn;
+            global $servidor_ldap;
+            global $puerto_ldap;
+            global $bn, $pw;
+
+            //Conectando con el ldap
+            $ds=ldap_connect($servidor_ldap, $puerto_ldap) or die("No ha sido posible conectarse al servidor ".$servidor_ldap."");
+            //Version del protocolo que vamos a usar
+            ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+            //Bind como usuario, vamos a buscar, para ver si ya esta
+            ldap_bind($ds, $bn, $pw) or die("No ha sido posible enlazar con el servidor ".$servidor_ldap." con el usuario ".$bn."");
+
+            //se guardan por uid, por lo que filtramos por este campo
+            $filter = '(uid='.$uid.')';
+            $resource = ldap_search($ds, $base_dn, $filter);
+            $info = ldap_get_entries($ds, $resource);
+
+            if ($info["count"] > 0){
+                    //solo hay que anadir un pubkey, si es distinto
+                    //y modificar el timeout.
+                    $response = modify($ds, $uid, $pubkey);
+            }else {
+                    //nueva entrada
+                    $cn = $_SERVER["HTTP_SHIB_PERSON_COMMONNAME"];
+                    $sn = $_SERVER["HTTP_SHIB_PERSON_SURNAME"];
+                    $response = add($ds, $uid, $sn, $cn, $pubkey);
+            }
+
+            ldap_unbind($ds);
+            return $response;
+    }
+    \end{lstlisting}
+
+
+     Mira en el servidor de claves, si este usuario está ya. Si está
+     modifica la clave, y el timeout. Si no está lo añade.
+
+    \item función \texttt{anadir\_usuario}
+    \begin{lstlisting}
+
+    /**
+     * Codigos de error:
+     * -1 certificado no valido
+     * -2 No se ha podido completar la operacion
+     * -3 El certificado esta en blanco, no lo ha establecido el idp
+     *  1 Todo bien 
+    **/
+    function anadir_usuario(){
+            // If $certificate is set, public key has been successfully received
+            $certificate = get_certificate();
+            if ($certificate != "") {
+                    // Check if certificate syntax is correct
+                    if(check_certificate($certificate)) {
+                            $name = get_remote_user();
+                            $response = doit($name, $certificate);
+                            // Check if command executed successfully
+                            if($response)
+                                    return 1;
+                            else 
+                                    return -2;
+                    } else {
+                            return -1;
+                    }
+            }
+            else return -3;
+    
+    \end{lstlisting}
+
+    Esta función intenta conseguir el certificado pasado por el formulario
+    de la página, si no lo consigue, intenta conseguirlo mirando los
+    atributos pasados por el IdP.
+
+    Una vez que tiene el certificado, comprueba su validez, y si es
+    correcto, añade al usuario en el servidor de claves.
+
+    \end{itemize}
+
+    Por otro lado está la parte que muestra la información,
+    \texttt{ssh.php}, cuyo funcionamiento es muy simple, y sólo hace
+    llamadas al \texttt{ssh\_backend.php}.
+
+    \begin{lstlisting}
+
+<?php 
+
+session_start();
+//soporte para traducciones
+$lang=$_GET['lang'];
+if($lang=='en')
+    $language="en_US.utf8";
+else
+    $language="es_ES.utf8";
+putenv("LC_ALL=$language");
+setlocale(LC_ALL, $language);
+bindtextdomain("ssh", "./locale");
+textdomain("ssh");
+
+require("ssh_backend.php");
+
+//Esta cosita sirve para poder cerrar una aplicacion, aunque
+//las lazy sessions del shibboleth permitan el acceso
+$GLOBALS['shib_Https'] = false;
+$GLOBALS['shib_AssertionConsumerServiceURL'] =
+"/federacion21.us.es/Shibboleth.sso";
+$GLOBALS['shib_WAYF'] = "federacion21.us.es";
+
+//si no esta autenticado, redirigimos al wayf
+if( $_SERVER['HTTP_SHIB_IDENTITY_PROVIDER'] != "") {
+        $_SESSION["user"] = $_SERVER['REMOTE_USER'];
+}
+else{
+        $pageurl = "http://federacion21.us.es/protegido/ssh/ssh.php";
+        $url = ($GLOBALS['shib_Https'] ? 'https' :  'http') .'://' .
+                $GLOBALS['shib_AssertionConsumerServiceURL'] . "/WAYF/" .
+                $GLOBALS['shib_WAYF'] .
+                '?target=' . $pageurl;
+        header("Location: ".$url);
+}
+?>
+
+<html>
+    <head>
+        <title>SSH por federacion</title>
+	<link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    </head>
+    <body>
+
+	<div id="head"></div>
+	<div id="main">
+        <h2> <?php echo _('Bienvenido ') .
+        htmlentities(get_remote_user()); ?></h2>
+        <?php
+            $var = anadir_usuario();
+            $name = htmlentities(get_remote_user());
+
+            if ($var == -1)
+                echo '<p class="warning">'.
+                _('No ha introducido un certificado valido.').'</p>';
+            else if($var == -2)
+                echo '<p class="warning">'.
+                _('La operaci&oacute;n no se ha completado.').'</p>';
+
+            else if($var == -3)
+                echo '<p class="warning">'.
+                _('No se ha facilitado un certificado, introduzcalo manualmente').'</p>';
+            else
+                echo '<p class="ok">'.
+                _('Ahora puedes entrar por ssh en los servidores de la
+                federaci&oacute;n, utilizando como nombre de usuario: 
+                ').'<span class="user">'. $name .'</span></p>';
+                
+            $certificate = get_certificate_used($name);
+            echo '<p>'._('Usando el certificado: ').'<br/>';
+            $cert = str_split($certificate, 50);
+	    echo '<div class="certificate">';
+            foreach ($cert as $line){
+                echo htmlentities($line)."<br/>";
+            }
+	    echo '</div>';
+            echo '</p>';
+        ?>
+
+	<div class="info">
+    <p>
+<?php
+            echo _('Si no est&aacute;s en tu puesto de trabajo,
+            o no se encuentra tu clave, puedes proporcionar una manualmente,
+            introducciendola en el siguiente campo. Mira en tu directorio
+            $HOME/.ssh/id_rsa.pub');
+?>
+        </p>
+        <p>
+<?php
+            echo _('Para utilizar el proceso autom&aacute;tico,
+            ponte en contacto con tu proveedor de identidad.');
+?>
+        </p>
+	</div>
+	<div class="form">
+            <?php display_form() ?>
+	</div>
+	</div>
+    </body>
+</html>
+
+    \end{lstlisting}
+    
+    %TODO internacionalizacion
+
     \section{Necesidades para montar la plataforma}
         \subsection{Cómo aplicar el parche}
         \subsection{Cómo montar el SP y la aplicación web}

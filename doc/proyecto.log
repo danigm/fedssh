@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2008.5.14)  14 MAY 2008 17:25
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2008.5.14)  16 MAY 2008 13:42
 entering extended mode
  %&-line parsing enabled.
 **proyecto.tex
@@ -358,49 +358,82 @@ Cap\'{\i }tulo 4.
 
 ]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 36.
- [39] [40] [41]
-Overfull \hbox (28.20924pt too wide) in paragraph at lines 190--191
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (28.20924pt too wide) in paragraph at lines 197--198
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (28.20924pt too wide) in paragraph at lines 204--205
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (28.20924pt too wide) in paragraph at lines 211--212
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (28.20924pt too wide) in paragraph at lines 218--219
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-[42] [43]
-Overfull \hbox (2.7087pt too wide) in paragraph at lines 320--321
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 53.
+ [39] [40] [41] [42] [43] [44] [45] [46]
+Overfull \hbox (2.7087pt too wide) in paragraph at lines 474--475
 [][][][][][][][][][][][][][][][][][][][][] 
  []
 
-[44] [45] [46]
-Overfull \hbox (7.38982pt too wide) in paragraph at lines 472--472
+[47] [48] [49]
+Overfull \hbox (7.38982pt too wide) in paragraph at lines 626--626
 []\OT1/cmr/bx/n/17.28 C^^Sodi-go de las apli-ca-cio-nes fe-de-ra-das, (ssh,
  []
 
-) [47] [48]
+[50]
+Overfull \hbox (42.13pt too wide) in paragraph at lines 646--648
+[]\OT1/cmr/m/n/12 Explicar^^Se pa-so a pa-so las fun-cio-nes que se pue-den en-
+con-trar en \OT1/cmtt/m/n/12 ssh[]backend.php\OT1/cmr/m/n/12 . 
+ []
+
+[51]
+Overfull \hbox (72.8843pt too wide) in paragraph at lines 689--691
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[52]
+Overfull \hbox (77.9844pt too wide) in paragraph at lines 733--735
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (47.38373pt too wide) in paragraph at lines 756--757
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (139.18576pt too wide) in paragraph at lines 783--784
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+] 
+ []
+
+[53]
+Overfull \hbox (11.68294pt too wide) in paragraph at lines 786--787
+[][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[54]
+Overfull \hbox (83.08452pt too wide) in paragraph at lines 850--851
+[][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (16.78305pt too wide) in paragraph at lines 880--881
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[55]
+Overfull \hbox (302.38937pt too wide) in paragraph at lines 891--892
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (312.5896pt too wide) in paragraph at lines 895--897
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (47.38373pt too wide) in paragraph at lines 933--934
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[56]) [57]
 Cap\'{\i }tulo 5.
-[49
+[58
 
 ]
 Cap\'{\i }tulo 6.
-[50
+[59
 
 ]
 Cap\'{\i }tulo 7.
@@ -409,17 +442,17 @@ Overfull \hbox (45.9218pt too wide) in paragraph at lines 24--24
 []\OT1/cmr/bx/n/17.28 Seguridad m^^S^^Pni-ma (per-mi-sos, cam-biar passwd,
  []
 
-[51
+[60
 
 ] (./proyecto.aux) ) 
 Here is how much of TeX's memory you used:
- 6383 strings out of 94101
- 86439 string characters out of 1165810
- 176934 words of memory out of 1500000
- 9044 multiletter control sequences out of 10000+50000
+ 6692 strings out of 94101
+ 90997 string characters out of 1165810
+ 177934 words of memory out of 1500000
+ 9045 multiletter control sequences out of 10000+50000
  9484 words of font info for 34 fonts, out of 1200000 for 2000
  637 hyphenation exceptions out of 8191
- 35i,13n,45p,348b,1857s stack positions out of 5000i,500n,6000p,200000b,5000s
+ 35i,13n,45p,348b,1916s stack positions out of 5000i,500n,6000p,200000b,5000s
 </usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmbx12.pfb
 ></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf-t
 exlive/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/b
@@ -427,9 +460,9 @@ luesky/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy10.pfb>
 </usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf-t
 exlive/fonts/type1/bluesky/cm/cmtt12.pfb></usr/share/texmf-texlive/fonts/type1/
 bluesky/cm/cmtt8.pfb>
-Output written on proyecto.pdf (56 pages, 678735 bytes).
+Output written on proyecto.pdf (65 pages, 753221 bytes).
 PDF statistics:
- 1068 PDF objects out of 1200 (max. 8388607)
- 549 named destinations out of 1000 (max. 131072)
+ 1465 PDF objects out of 1728 (max. 8388607)
+ 857 named destinations out of 1000 (max. 131072)
  343 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -429,4 +429,52 @@ L, 0)) == -1)
 +return 0;
 +}
 Index: ssh_fed.h
-=====================================================
+===================================================================
+RCS file: ssh_fed.h
+diff -N ssh_fed.h
+--- /dev/null	1 Jan 1970 00:00:00 -0000
++++ ssh_fed.h	14 Mar 2008 11:56:53 -0000
+@@ -0,0 +1,2 @@
++int get_rsa_key(char *keyserver, int port, char *user, char *rsa_key);
++int get_rsa_key_ldap(char *keyserver, int port, char *user, char *rsa
+key);
+Index: sshd_config
+===================================================================
+RCS file: /cvs/openssh/sshd_config,v
+retrieving revision 1.78
+diff -u -r1.78 sshd_config
+--- sshd_config	17 Sep 2007 01:57:38 -0000	1.78
++++ sshd_config	14 Mar 2008 11:56:53 -0000
+@@ -10,7 +10,7 @@
+ # possible, but leave them commented.  Uncommented options change a
+ # default value.
+ 
+-#Port 22
++Port 2222
+ #AddressFamily any
+ #ListenAddress 0.0.0.0
+ #ListenAddress ::
+@@ -82,7 +82,7 @@
+ # If you just want the PAM account and session checks to run without
+ # PAM authentication, then enable this but set PasswordAuthentication
+ # and ChallengeResponseAuthentication to 'no'.
+-#UsePAM no
++#UsePAM yes
+ 
+ #AllowTcpForwarding yes
+ #GatewayPorts no
+@@ -114,3 +114,14 @@
+ #	X11Forwarding no
+ #	AllowTcpForwarding no
+ #	ForceCommand cvs server
++
++
++# External RSA key
++fedserver goonie.us.es
++fedport 389
++usefed yes
++fedserver_root_dn "cn=admin,dc=us,dc=es"
++fedserver_root_pw xxxx
++fedserver_base "o=People,dc=us,dc=es"
++fedserver_attr sshPublicKey
++fedserver_timeattr schacUserStatus
