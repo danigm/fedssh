@@ -5,7 +5,7 @@ $base_dn ='o=People,dc=us,dc=es';
 $servidor_ldap = "goonie.us.es";
 $puerto_ldap = 389;
 $bn = 'cn=admin,dc=us,dc=es';
-$pw = 'fedssh';
+$pw = 'xxxx';
 $minutes_timeout = 30;
 $shib_header = "HTTP_USERCERTIFICATE";
 $rsa_server_key_attr = 'sshpublickey';

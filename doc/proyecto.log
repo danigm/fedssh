@@ -1,19 +1,18 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2008.5.14)  16 MAY 2008 13:42
+This is pdfTeX, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2008.3.26)  18 MAY 2008 23:48
 entering extended mode
- %&-line parsing enabled.
 **proyecto.tex
 (./proyecto.tex
 LaTeX2e <2005/12/01>
 Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, croatian, ukrainian, russian, bulgarian, czech, slovak, danish, dut
-ch, finnish, basque, french, german, ngerman, ibycus, greek, monogreek, ancient
-greek, hungarian, italian, latin, mongolian, norsk, icelandic, interlingua, tur
-kish, coptic, romanian, welsh, serbian, slovenian, estonian, esperanto, upperso
-rbian, indonesian, polish, portuguese, spanish, catalan, galician, swedish, loa
-ded.
-(./encabezado.tex (/usr/share/texmf-texlive/tex/latex/base/report.cls
+yphenation, arabic, basque, bulgarian, coptic, welsh, czech, slovak, german, ng
+erman, danish, esperanto, spanish, catalan, galician, estonian, farsi, finnish,
+ french, greek, monogreek, ancientgreek, croatian, hungarian, interlingua, ibyc
+us, indonesian, icelandic, italian, latin, mongolian, dutch, norsk, polish, por
+tuguese, pinyin, romanian, russian, slovenian, uppersorbian, serbian, swedish, 
+turkish, ukenglish, ukrainian, loaded.
+(./encabezado.tex (/opt/texlive/texmf-dist/tex/latex/base/report.cls
 Document Class: report 2005/09/16 v1.4f Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo
+(/opt/texlive/texmf-dist/tex/latex/base/size12.clo
 File: size12.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
 )
 \c@part=\count79
@@ -29,13 +28,13 @@ File: size12.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
-(/usr/share/texmf-texlive/tex/generic/babel/babel.sty
+(/opt/texlive/texmf-dist/tex/generic/babel/babel.sty
 Package: babel 2005/11/23 v3.8h The Babel package
 
-(/usr/share/texmf-texlive/tex/generic/babel/spanish.ldf
+(/opt/texlive/texmf-dist/tex/generic/babel/spanish.ldf
 Language: spanish.ldf 2005/03/31 v4.2b Spanish support from the babel system
 
-(/usr/share/texmf-texlive/tex/generic/babel/babel.def
+(/opt/texlive/texmf-dist/tex/generic/babel/babel.def
 File: babel.def 2005/11/23 v3.8h Babel common definitions
 \babel@savecnt=\count88
 \U@D=\dimen103
@@ -47,18 +46,18 @@ Package babel Info: Making " an active character on input line 540.
 Package babel Info: Making < an active character on input line 641.
 Package babel Info: Making > an active character on input line 642.
 ))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
+(/opt/texlive/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2006/05/05 v1.1b Input encoding file
 \inpenc@prehook=\toks15
 \inpenc@posthook=\toks16
 
-(/usr/share/texmf-texlive/tex/latex/ucs/utf8x.def
+(/opt/texlive/texmf-dist/tex/latex/ucs/utf8x.def
 File: utf8x.def 2004/10/17 UCS: Input encoding UTF-8
 ))
-(/usr/share/texmf-texlive/tex/latex/ucs/ucs.sty
+(/opt/texlive/texmf-dist/tex/latex/ucs/ucs.sty
 Package: ucs 2004/10/17 UCS: Unicode input support
 
-(/usr/share/texmf-texlive/tex/latex/ucs/data/uni-global.def
+(/opt/texlive/texmf-dist/tex/latex/ucs/data/uni-global.def
 File: uni-global.def 2004/10/17 UCS: Unicode global data
 )
 \uc@secondtry=\count90
@@ -66,7 +65,7 @@ File: uni-global.def 2004/10/17 UCS: Unicode global data
 \uc@combtoksb=\toks18
 \uc@temptokena=\toks19
 )
-(/usr/share/texmf-texlive/tex/latex/fancyhdr/fancyhdr.sty
+(/opt/texlive/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
 \fancy@headwidth=\skip43
 \f@ncyO@elh=\skip44
 \f@ncyO@erh=\skip45
@@ -77,44 +76,44 @@ File: uni-global.def 2004/10/17 UCS: Unicode global data
 \f@ncyO@olf=\skip50
 \f@ncyO@orf=\skip51
 )
-(/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
+(/opt/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texmf-texlive/tex/latex/graphics/keyval.sty
+(/opt/texlive/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks20
 )
-(/usr/share/texmf-texlive/tex/latex/graphics/graphics.sty
+(/opt/texlive/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texmf-texlive/tex/latex/graphics/trig.sty
+(/opt/texlive/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-(/etc/texmf/tex/latex/config/graphics.cfg
+(/opt/texlive/texmf/tex/latex/config/graphics.cfg
 File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
 Package graphics Info: Driver file: pdftex.def on input line 90.
 
-(/usr/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
+(/opt/texlive/texmf-dist/tex/latex/pdftex-def/pdftex.def
 File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
 \Gread@gobject=\count91
 ))
 \Gin@req@height=\dimen104
 \Gin@req@width=\dimen105
 )
-(/usr/share/texmf-texlive/tex/latex/hyperref/hyperref.sty
+(/opt/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2007/02/07 v6.75r Hypertext links for LaTeX
 \@linkdim=\dimen106
 \Hy@linkcounter=\count92
 \Hy@pagecounter=\count93
 
-(/usr/share/texmf-texlive/tex/latex/hyperref/pd1enc.def
+(/opt/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2007/02/07 v6.75r Hyperref: PDFDocEncoding definition (HO)
 )
-(/etc/texmf/tex/latex/config/hyperref.cfg
+(/opt/texlive/texmf/tex/latex/config/hyperref.cfg
 File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
 )
-(/usr/share/texmf-texlive/tex/latex/oberdiek/kvoptions.sty
+(/opt/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty
 Package: kvoptions 2006/08/22 v2.4 Connects package keyval with LaTeX options (
 HO)
 )
@@ -126,7 +125,7 @@ Package hyperref Info: Backreferencing OFF on input line 2308.
 
 Implicit mode ON; LaTeX internals redefined
 Package hyperref Info: Bookmarks ON on input line 2444.
-(/usr/share/texmf-texlive/tex/latex/ltxmisc/url.sty
+(/opt/texlive/texmf-dist/tex/latex/ltxmisc/url.sty
 \Urlmuskip=\muskip10
 Package: url 2005/06/27  ver 3.2  Verb mode for urls, etc.
 )
@@ -146,11 +145,11 @@ Package hyperref Info: Link coloring OFF on input line 3122.
 \c@Hfootnote=\count97
 )
 *hyperref using default driver hpdftex*
-(/usr/share/texmf-texlive/tex/latex/hyperref/hpdftex.def
+(/opt/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
 File: hpdftex.def 2007/02/07 v6.75r Hyperref driver for pdfTeX
 \Fld@listcount=\count98
 )
-(/usr/share/texmf-texlive/tex/latex/listings/listings.sty
+(/opt/texlive/texmf-dist/tex/latex/listings/listings.sty
 \lst@mode=\count99
 \lst@gtempboxa=\box26
 \lst@token=\toks23
@@ -165,29 +164,29 @@ File: hpdftex.def 2007/02/07 v6.75r Hyperref driver for pdfTeX
 \c@lstlisting=\count105
 \lst@maxwidth=\dimen112
 
-(/usr/share/texmf-texlive/tex/latex/listings/lstpatch.sty
+(/opt/texlive/texmf-dist/tex/latex/listings/lstpatch.sty
 File: lstpatch.sty 2004/10/17 1.3b (Carsten Heinz)
 )
-(/usr/share/texmf-texlive/tex/latex/listings/lstmisc.sty
+(/opt/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2004/09/07 1.3 (Carsten Heinz)
 \c@lstnumber=\count106
 \lst@skipnumbers=\count107
 \lst@framebox=\box27
 )
-(/usr/share/texmf-texlive/tex/latex/listings/listings.cfg
+(/opt/texlive/texmf-dist/tex/latex/listings/listings.cfg
 File: listings.cfg 2004/09/05 1.3 listings configuration
 ))
 Package: listings 2004/10/17 1.3b (Carsten Heinz)
 
-(/usr/share/texmf-texlive/tex/latex/graphics/color.sty
+(/opt/texlive/texmf-dist/tex/latex/graphics/color.sty
 Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
 
-(/etc/texmf/tex/latex/config/color.cfg
+(/opt/texlive/texmf/tex/latex/config/color.cfg
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: pdftex.def on input line 130.
 
-(/usr/share/texmf-texlive/tex/latex/graphics/dvipsnam.def
+(/opt/texlive/texmf-dist/tex/latex/graphics/dvipsnam.def
 File: dvipsnam.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
 ))
 
@@ -219,18 +218,29 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 36.
 LaTeX Font Info:    ... okay on input line 36.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 36.
 LaTeX Font Info:    ... okay on input line 36.
- (/usr/share/texmf-texlive/tex/latex/ucs/ucsencs.def
+ (/opt/texlive/texmf-dist/tex/latex/ucs/ucsencs.def
 File: ucsencs.def 2003/11/29 Fixes to fontencodings LGR, T3
 )
+(/opt/texlive/texmf-dist/tex/context/base/supp-pdf.tex
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count108
+\scratchdimen=\dimen113
+\scratchbox=\box28
+\nofMPsegments=\count109
+\nofMParguments=\count110
+\MPscratchCnt=\count111
+\MPscratchDim=\dimen114
+\MPnumerator=\count112
+\everyMPtoPDFconversion=\toks24
+)
 Package hyperref Info: Link coloring OFF on input line 36.
-
-(/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
+ (/opt/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
 
-(/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
+(/opt/texlive/texmf-dist/tex/latex/oberdiek/refcount.sty
 Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
 )
-\c@section@level=\count108
+\c@section@level=\count113
 )
 LaTeX Info: Redefining \ref on input line 36.
 LaTeX Info: Redefining \pageref on input line 36.
@@ -249,15 +259,15 @@ LaTeX Font Info:    External font `cmex10' loaded for size
  [1
 
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (/usr/share/texmf-texlive/
-tex/latex/ucs/data/uni-0.def
+{/opt/texlive/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (/opt/texlive/texm
+f-dist/tex/latex/ucs/data/uni-0.def
 File: uni-0.def 2004/10/17 UCS: Unicode data U+0000..U+00FF
-) [2])
+)
+[2])
 \tf@toc=\write4
 \openout4 = `proyecto.toc'.
 
-
-(./resumen.tex [3]
+ (./resumen.tex [3]
 Overfull \hbox (0.53667pt too wide) in paragraph at lines 20--28
 []\OT1/cmr/m/n/12 La fe-de-ra-ci^^Son de iden-ti-dad con-sis-te en que una se-r
 ie de en-ti-da-des \OT1/cmr/bx/n/12 conf^^S^^Pan
@@ -292,7 +302,7 @@ ame{page.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.122 
-       [3] [4] <img/casodeuso1.png, id=245, 545.3976pt x 731.3724pt>
+       [3] [4] <img/casodeuso1.png, id=252, 545.3976pt x 731.3724pt>
 File: img/casodeuso1.png Graphic file (type png)
 
 <use img/casodeuso1.png>
@@ -300,7 +310,7 @@ File: img/casodeuso1.png Graphic file (type png)
 LaTeX Warning: Float too large for page by 1.33875pt on input line 178.
 
 [5] [6 <./img/casodeuso1.png>] [7]
-<img/feide.jpg, id=262, 106.3975pt x 58.2175pt>
+<img/feide.jpg, id=269, 106.3975pt x 58.2175pt>
 File: img/feide.jpg Graphic file (type jpg)
  <use img/feide.jpg> [8 <./img/feide.jpg>] [9] [10] [11]) (./analisis.tex [12]
 Cap\'{\i }tulo 2.
@@ -309,7 +319,7 @@ Cap\'{\i }tulo 2.
 ] [14]
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 107.
 
- (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
+ (/opt/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
@@ -326,7 +336,7 @@ Overfull \hbox (3.65147pt too wide) in paragraph at lines 165--167
 -te-gi-da por un SP, as^^S^^P pues
  []
 
-[16] [17] [18] [19] <img/openssh.png, id=329, 580.1675pt x 191.71625pt>
+[16] [17] [18] [19] <img/openssh.png, id=337, 580.1675pt x 191.71625pt>
 File: img/openssh.png Graphic file (type png)
 
 <use img/openssh.png> [20 <./img/openssh.png (PNG copy)>]) (./solucion.tex
@@ -335,7 +345,7 @@ Cap\'{\i }tulo 3.
 [22
 
 ] [23] [24] [25]
-<img/funcionamientossh.png, id=362, 574.875pt x 270.19125pt>
+<img/funcionamientossh.png, id=370, 574.875pt x 270.19125pt>
 File: img/funcionamientossh.png Graphic file (type png)
 
 <use img/funcionamientossh.png> [26] [27 <./img/funcionamientossh.png>]
@@ -345,11 +355,11 @@ Overfull \hbox (33.61363pt too wide) in paragraph at lines 390--396
 serStatus:us.es:timeout:1205274586\OT1/cmr/m/n/12 ,
  []
 
-[31] [32] <img/sshApp.png, id=405, 870.25125pt x 733.74126pt>
+[31] [32] <img/sshApp.png, id=413, 870.25125pt x 733.74126pt>
 File: img/sshApp.png Graphic file (type png)
 
 <use img/sshApp.png> [33 <./img/sshApp.png>] [34] [35]
-<img/userAdd.png, id=419, 849.1725pt x 545.03625pt>
+<img/userAdd.png, id=427, 849.1725pt x 545.03625pt>
 File: img/userAdd.png Graphic file (type png)
  <use img/userAdd.png>
 [36 <./img/userAdd.png>]) (./implementacion.tex [37]
@@ -427,13 +437,135 @@ Overfull \hbox (47.38373pt too wide) in paragraph at lines 933--934
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-[56]) [57]
+[56] [57]
+Overfull \hbox (23.10915pt too wide) in paragraph at lines 1008--1009
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (63.91005pt too wide) in paragraph at lines 1029--1030
+[][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[58] [59]
+Overfull \hbox (230.9878pt too wide) in paragraph at lines 1120--1121
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][] 
+ []
+
+[60]
+Overfull \hbox (38.40948pt too wide) in paragraph at lines 1162--1163
+[][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (104.71095pt too wide) in paragraph at lines 1172--1173
+[][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (201.6131pt too wide) in paragraph at lines 1181--1182
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][] 
+ []
+
+[61]
+Overfull \hbox (63.91005pt too wide) in paragraph at lines 1210--1211
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (43.5096pt too wide) in paragraph at lines 1211--1212
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (114.91118pt too wide) in paragraph at lines 1219--1220
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (48.60971pt too wide) in paragraph at lines 1225--1226
+[][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (196.51299pt too wide) in paragraph at lines 1227--1228
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (28.20926pt too wide) in paragraph at lines 1229--1230
+[][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (28.20926pt too wide) in paragraph at lines 1233--1234
+[][][][][][][][][][][][][][][][][][][][][][][]
+ []
+
+
+Overfull \hbox (89.41061pt too wide) in paragraph at lines 1234--1235
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+ []
+
+
+Overfull \hbox (140.41174pt too wide) in paragraph at lines 1235--1236
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (135.31163pt too wide) in paragraph at lines 1238--1239
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[62]
+Overfull \hbox (58.80994pt too wide) in paragraph at lines 1251--1252
+[][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (109.81107pt too wide) in paragraph at lines 1252--1253
+[][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (339.31615pt too wide) in paragraph at lines 1254--1255
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+
+ []
+
+[63] [64] [65] [66]
+Overfull \hbox (153.40027pt too wide) in paragraph at lines 1453--1453
+[]        \OT1/cmtt/m/n/12 wget http://www.rediris.es/ldap/esquemas/schac/schac
+-20061017-1.3.0b2.schema.txt[] 
+ []
+
+
+Overfull \hbox (97.82524pt too wide) in paragraph at lines 1453--1453
+[]        \OT1/cmtt/m/n/12 wget http://dev.inversepath.com/openssh-lpk/openssh-
+lpk_openldap.schema[] 
+ []
+
+[67]
+Overfull \hbox (29.9002pt too wide) in paragraph at lines 1464--1464
+[]        \OT1/cmtt/m/n/12 include         /etc/ldap/schema/openssh-lpk_openlda
+p.schema[] 
+ []
+
+
+Overfull \hbox (42.25021pt too wide) in paragraph at lines 1464--1464
+[]        \OT1/cmtt/m/n/12 include         /etc/ldap/schema/schac-20061017-1.3.
+0b2.schema[] 
+ []
+
+) [68]
 Cap\'{\i }tulo 5.
-[58
+[69
 
 ]
 Cap\'{\i }tulo 6.
-[59
+[70
 
 ]
 Cap\'{\i }tulo 7.
@@ -442,27 +574,29 @@ Overfull \hbox (45.9218pt too wide) in paragraph at lines 24--24
 []\OT1/cmr/bx/n/17.28 Seguridad m^^S^^Pni-ma (per-mi-sos, cam-biar passwd,
  []
 
-[60
+[71
 
 ] (./proyecto.aux) ) 
 Here is how much of TeX's memory you used:
- 6692 strings out of 94101
- 90997 string characters out of 1165810
- 177934 words of memory out of 1500000
- 9045 multiletter control sequences out of 10000+50000
+ 7256 strings out of 94086
+ 99059 string characters out of 1165929
+ 178504 words of memory out of 1500000
+ 9346 multiletter control sequences out of 10000+50000
  9484 words of font info for 34 fonts, out of 1200000 for 2000
- 637 hyphenation exceptions out of 8191
+ 632 hyphenation exceptions out of 8191
  35i,13n,45p,348b,1916s stack positions out of 5000i,500n,6000p,200000b,5000s
-</usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmbx12.pfb
-></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf-t
-exlive/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/b
-luesky/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy10.pfb>
-</usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf-t
-exlive/fonts/type1/bluesky/cm/cmtt12.pfb></usr/share/texmf-texlive/fonts/type1/
-bluesky/cm/cmtt8.pfb>
-Output written on proyecto.pdf (65 pages, 753221 bytes).
+ </var/tmp/texfonts/pk/ljfour/public/cm/cmtt8.600pk> </var/
+tmp/texfonts/pk/ljfour/public/cm/cmr10.657pk> </var/tmp/texfonts/pk/ljfour/publ
+ic/cm/cmti12.600pk> </var/tmp/texfonts/pk/ljfour/public/cm/cmtt12.600pk> </opt/
+texlive/texmf-dist/fonts/pk/ljfour/public/cm/dpi600/cmr8.pk> </var/tmp/texfonts
+/pk/ljfour/public/cm/cmsy10.720pk> </opt/texlive/texmf-dist/fonts/pk/ljfour/pub
+lic/cm/dpi720/cmbx12.pk> </var/tmp/texfonts/pk/ljfour/public/cm/cmbx12.864pk> <
+/opt/texlive/texmf-dist/fonts/pk/ljfour/public/cm/dpi600/cmr12.pk> </var/tmp/te
+xfonts/pk/ljfour/public/cm/cmbx12.600pk> </var/tmp/texfonts/pk/ljfour/public/cm
+/cmbx12.1244pk>
+Output written on proyecto.pdf (76 pages, 916564 bytes).
 PDF statistics:
- 1465 PDF objects out of 1728 (max. 8388607)
- 857 named destinations out of 1000 (max. 131072)
- 343 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2302 PDF objects out of 2487 (max. 8388607)
+ 1124 named destinations out of 1200 (max. 131072)
+ 351 words of extra memory for PDF output out of 10000 (max. 10000000)
 

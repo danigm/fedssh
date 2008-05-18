@@ -1068,10 +1068,394 @@ else{
 </html>
 
     \end{lstlisting}
+
+    La aplicación de ejemplo de creación de cuentas, es una simple
+    aplicación en php, que está basada en la anterior, por lo tanto
+    comparte la mayor parte del estilo, y algo del código.
+
+    Sin embargo, dado que es una aplicación de ejemplo, y su
+    funcionamiento en teoría es muy simple, no se ha separado en
+    varios ficheros, sino toda la aplicación está sobre un único
+    fichero \texttt{useradd.php}.
+
+    Esta aplicación hace uso de llamadas al sistema, para realizar
+    comandos remotos en los servidores SSH registrados. Para que esto
+    funcione, es necesario que el servidor donde se ejecute esta
+    aplicación tenga las claves públicas de los demás servidores,
+    puesto que se van a hacer llamadas a comandos remotos a través de
+    SSH, y esto debería hacerse de manera automática.
+
+    Veamos con más detalle cada una de las funciones que componen la
+    pequeña aplicación de ejemplo.
+
+    \begin{itemize}
+
+    \item función \texttt{check\_user}
+
+    \begin{lstlisting}
+
+function check_user($uid, $servidor){
+        if ($servidor == '')
+                $servidor = "federacion21.us.es";
+
+	exec("sudo ssh root@".$servidor." id ".$uid, $array, $retval);
+	return $retval == 0;
+}
+
+    \end{lstlisting}
+
+    Comprueba si un usuario tiene una cuenta ya creada en un servidor
+    determinado. Para ello utiliza una llamada al sistema con el
+    comando \texttt{ssh} hacia el servidor remoto, para ejecutar el comando
+    \texttt{id}.
+
+    \item función \texttt{useradd}
+
+    \begin{lstlisting}
+
+function useradd($uid, $servidor){
+        if ($servidor == '')
+                $servidor = "federacion21.us.es";
+
+	$val = system("sudo ssh root@".$servidor." useradd -m -s /bin/bash -p xx -d /home/".$uid." ".$uid, $retval);
+	return $retval;
+}
+
+    \end{lstlisting}
+
+    Crea una cuenta para un usuario en un servidor remoto. Para ello,
+    al igual que la función anterior utiliza el comando \texttt{ssh}
+    para ejecutar el comando \texttt{useradd} en el servidor remoto.
+
+    \end{itemize}
     
-    %TODO internacionalizacion
+    El resto de la aplicación es trivial, y no tiene importancia
+    comentarlo. Aquí se puede ver el código completo:
+
+    \begin{lstlisting}
+
+<?php 
+
+$servers[0] = 'federacion21.us.es';
+$desc[0] = "servidor1";
+$servers[1] = 'federacion22.us.es';
+$desc[1] = "servidor2";
+$error = '';
+$info = 'En esta p&aacute;gina podr&aacute;s solicitar la creaci&oacute;n
+para el acceso ssh a los servidores';
+
+session_start();
+//soporte para traducciones
+$lang=$_GET['lang'];
+if($lang=='en')
+$language="en_US.utf8";
+else
+$language="es_ES.utf8";
+putenv("LC_ALL=$language");
+setlocale(LC_ALL, $language);
+bindtextdomain("ssh", "./locale");
+textdomain("ssh");
+
+//Esta cosita sirve para poder cerrar una aplicacion, aunque
+//las lazy sessions del shibboleth permitan el acceso
+$GLOBALS['shib_Https'] = false;
+$GLOBALS['shib_AssertionConsumerServiceURL'] = "/federacion21.us.es/Shibboleth.sso";
+$GLOBALS['shib_WAYF'] = "federacion21.us.es";
+
+//si no esta autenticado, redirigimos al wayf
+if( $_SERVER['HTTP_SHIB_IDENTITY_PROVIDER'] != "") {
+        $_SESSION["user"] = $_SERVER['REMOTE_USER'];
+}
+else{
+        $pageurl = "http://federacion21.us.es/protegido/ssh/useradd/";
+        $url = ($GLOBALS['shib_Https'] ? 'https' :  'http') .'://' .
+                $GLOBALS['shib_AssertionConsumerServiceURL'] . "/WAYF/" . $GLOBALS['shib_WAYF'] .
+                '?target=' . $pageurl;
+        header("Location: ".$url);
+}
+
+function useradd($uid, $servidor){
+        if ($servidor == '')
+                $servidor = "federacion21.us.es";
+
+    $val = system("sudo ssh root@".$servidor." useradd -m -s /bin/bash -p xx -d /home/".$uid." ".$uid, $retval);
+    return $retval;
+}
+
+function check_user($uid, $servidor){
+        if ($servidor == '')
+                $servidor = "federacion21.us.es";
+
+    exec("sudo ssh root@".$servidor." id ".$uid, $array, $retval);
+    return $retval == 0;
+}
+
+function get_remote_user(){
+        $cad = $_SERVER["REMOTE_USER"];
+
+        //$cad = $_SERVER["REMOTE_USER"];
+        //partiendo el nombre, para crear danigm-us a partir de danigm@us.es
+        $cad = $_SESSION['user'];
+        $nado = explode('@', $cad);
+        $name = $nado[0];
+        $dominio = substr($nado[1], 0, stripos($nado[1], '.'));
+        $name = $name.'-'.$dominio;
+        return $name;
+}
+?>
+
+<html>
+    <head>
+            <title>SSH por federacion</title>
+            <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <script type="text/javascript" src="js/jquery-1.2.1.min.js"></script>
+    <script type="text/javascript" src="js/useradd.js"></script>
+
+    </head>
+    <body>
+
+        <div id="head"></div>
+        <div id="main">
+            <h2> <?php echo _('Bienvenido ') . htmlentities(get_remote_user()); ?></h2>
+            <?php
+            if(isset($_GET['server'])){
+                $s = $servers[$_GET['server']];
+                $var = useradd(get_remote_user(), $s);
+                if ($var != 0 && $var != 9)
+                        $error = 'No ha sido posible crear la cuenta';
+                else
+                        $info = '<p>Se ha creado la cuenta correctamente en el servidor'.$s.'</p>';
+            }
+            //$var = useradd(get_remote_user(), 'federacion22.us.es');
+            else{
+                /*
+                Mostrar lista de servidores
+                disponibles, junto con enlace para crear cuenta.  Se crean por ssh, estando
+                este servidor autorizado para entrar como root en los demas.  Quizas es
+                mejor no hacerlo con usuario root, sino con un usuario que tenga permiso
+                solo para el useradd.
+                */
+                echo "<h3>Servidores ssh ofrecidos por la Universidad de Sevilla</h3>";
+                ?>
+                <table>
+                        <tr>
+                                <th>Nombre</th>
+                                <th>Descripci&oacute;n</th>
+                                <th></th>
+                        </tr>
+                <?php
+                for($i = 0; $i<count($servers); $i++){
+                        echo '<tr>';
+                        echo '<td>'.$servers[$i].'</td>';
+                        echo '<td>'.$desc[$i].'</td>';
+        if (check_user(get_remote_user(), $servers[$i]))
+            echo '<td>Ya tienes cuenta en este servidor</td>';
+        else
+            echo '<td><a href="?server='.$uid.'" class="solicitar" id="'.$i.'" >solicitar cuenta</a></td>';
+                        echo '</tr>';
+                }
+                echo "</table>";
+        }
+            ?>
+            <div class="info">
+                    <p class="warning">
+                            <?php echo $error;?>
+                    </p>
+                    <?php echo $info ?>
+            </div>
+        </div>
+    </body>
+</html>
+
+    \end{lstlisting}
+
+    \subsection{Internazionalización}
+
+    Puesto que estas aplicaciones son la parte que va a ver el
+    usuario, se ha utilizado un sistema de internacionalización,
+    \texttt{gettext}, para facilitar la traducción de las mismas. Así
+    pues sería muy simple traducir estas aplicaciones y ofrecerlas en
+    diferentes idiomas, según el idioma en el que esté configurado el
+    navegador del usuario.
+
+    De momento, y para este proyecto se ha realizado la versión en
+    castellano, y una traducción al inglés.
 
     \section{Necesidades para montar la plataforma}
+
+    Este proyecto se ha realizado con un software base determinado,
+    puesto que depende de muchos componentes. En este apartado
+    explicaremos cómo montar el proyecto desde cero, y tener una
+    versión funcional.
+
+    Como este proyecto depende de una federación de identidad,
+    supondremos que pertenecemos a una organización de una federación,
+    y por lo tanto tendremos diferentes SPs montados.
+
+    Todo el código, el parche, y las dos aplicaciones en php, se
+    pueden conseguir en la forja de rediris, en el proyecto AUPAAI 
+    \url{https://forja.rediris.es/projects/aupaai/}.
+
+    \begin{verbatim}
+
+    svn checkout https://forja.rediris.es/svn/aupaai   
+    cd aupaai/fed+ssh/
+
+    \end{verbatim}
+
         \subsection{Cómo aplicar el parche}
+
+        Para poder aplicar el parche, es necesario bajarse el código
+        fuente de openssh, \url{http://www.openssh.org/portable.html}
+
+        \begin{verbatim}
+
+        export CVSROOT=anoncvs@anoncvs.mindrot.org:/cvs
+        export CVS_RSH=/usr/bin/ssh
+        cvs get openssh
+
+        \end{verbatim}
+
+        Una vez hecho esto, el siguiente paso es copiar el fichero
+        .patch dentro del directio donde vayamos a compilar el
+        servidor SSH, y aplicarlo.
+
+        \begin{verbatim}
+        
+        cd openssh
+        cp ../aupaai/fed+ssh/parche-openssh.patch .
+        patch -p0 < parche-openssh.patch
+
+        \end{verbatim}
+
+        Por otra parte, para simplificar la instalación, y dado que la
+        licencia BSD lo permite, está disponible el código parcheado,
+        junto con las aplicaciones en la forja de rediris
+        \url{http://forja.rediris.es/frs/download.php/775/openssh-federado.tar.gz}.
+
+        Si todo ha ido bien, es hora de compilar, antes de nada, es
+        necesario tener instalado el compilador, y todas las
+        dependencias de openssh, además de las librerías openldap, ya
+        que el parche hace uso de las mismas para comunicarse con el
+        servidor de claves. Así pues se deben ejecutar los siguientes
+        comandos.
+
+        \begin{verbatim}
+
+        ./configure --prefix=/ruta/de/instalacion
+        make
+        make install
+
+        \end{verbatim}
+
+        Una vez compilado, es hora de configurarlo para que funcione
+        con nuestro sistema, cambiando el fichero \texttt{sshd\_config}
+
+        \begin{verbatim}
+
+        # External RSA key
+        fedserver host.servidorclaves.com
+        fedport 389
+        usefed yes
+        fedserver_root_dn "cn=admin,dc=us,dc=es"
+        fedserver_root_pw password
+        fedserver_base "o=People,dc=us,dc=es"
+        fedserver_attr sshPublicKey
+        fedserver_timeattr schacUserStatus
+
+        \end{verbatim}
+
+        Y con esto, ya estaría el servidor SSH parcheado, listo para
+        funcionar de manera federada. Ahora sólo sería necesario crear
+        las cuentas de los usuarios, que se puede hacer de forma
+        dinámica, o estática, y sólo tendrán acceso cuando se
+        autentiquen frente a la federación.
+
         \subsection{Cómo montar el SP y la aplicación web}
+
+        La aplicación web de autenticación está hecha pensando en el
+        SP de shibboleth 1.3. Por lo tanto será necesario tener un SP
+        de shibboleth sobre un servidor web apache.
+
+        Para funcionar, la aplicación requiere que estén instaladas
+        las librerias de acceso a LDAP, para php, puesto que se va a
+        comunicar con el servidor de claves, que en este caso será un
+        servicio de directorio.
+        
+        Sobre un directorio protegido se despliega el directorio
+        \texttt{ssh}, y ya estaría la aplicación de autenticación
+        instalada en la federación.
+
+        Cualquier usuario que quisiera acceder a algún servidor SSH
+        federado, tendrá que entrar en esta página, de tal forma que
+        escriba el registro correspondiente en el servidor de claves,
+        y así el usuario tenga acceso a todos los servidores SSH
+        federados.
+
+        La aplicación es configurable, así que habrá que cambiar unas
+        variables en el fichero \texttt{ssh\_backend.php}
+
+        \begin{verbatim}
+
+        $base_dn ='o=People,dc=us,dc=es';
+        $servidor_ldap = "goonie.us.es";
+        $puerto_ldap = 389;
+        $bn = 'cn=admin,dc=us,dc=es';
+        $pw = 'xxxx';
+        $minutes_timeout = 30;
+        $shib_header = "HTTP_USERCERTIFICATE";
+        $rsa_server_key_attr = 'sshpublickey';
+        $rsa_server_timeout = 'schacuserstatus';
+
+        \end{verbatim}
+
+        Con estas opciones se pueden configurar, el servidor de
+        claves, el tiempo en minutos que va a durar una sesión de un
+        usuario autenticado, la cabecera de shibboleth que mirará la
+        aplicación para intentar conseguir la clave pública y los
+        campos en el servidor de claves para almacenar la clave
+        pública y el tiempo de sesión.
+
         \subsection{Cómo instalar el servidor de claves (openldap)}
+
+        La última parte que hace falta para tener montado todo el
+        proyecto, es el servidor de claves.
+
+        Puesto que nos hemos decidido por un servicio de directorio,
+        aquí es muy fácil la instalación, es más, hay diferentes
+        opciones, comerciales, y no comerciales. Y dado que los
+        campos a utilizar para almacenar los datos son variables,
+        tanto en el servidor SSH parcheado, como en la aplicación de
+        autenticación, no es obligatorio instalar ningún schema,
+        aunque sí recomendable.
+
+        Explicaremos aquí cómo instalar un servidor de claves, en una
+        distribución tipo debian, y aplicarle los schemas usados.
+
+        Lo primero es instalar el servicio de directorio.
+
+        \begin{verbatim}
+
+        apt-get install slapd
+
+        \end{verbatim}
+
+        La configuración está en el directorio /etc/ldap/, y los
+        schemas para openldap hay que meterlos en /etc/ldap/schemas/.
+
+        Descarga de los schemas necesarios:
+
+        \url{http://www.rediris.es/ldap/esquemas/schac/schac-20061017-1.3.0b2.schema.txt}
+        \url{http://dev.inversepath.com/openssh-lpk/openssh-lpk\_openldap.schema}
+
+
+        Se ha de mover los schemas al directorio /etc/ldap/schemas/ y
+        posteriormente modificar el fichero
+        \texttt{/etc/ldap/slapd.conf} añadiendole las lineas
+
+        \begin{verbatim}
+
+        include         /etc/ldap/schema/openssh-lpk_openldap.schema
+        include         /etc/ldap/schema/schac-20061017-1.3.0b2.schema
+
+        \end{verbatim}
