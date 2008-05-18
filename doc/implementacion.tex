@@ -1269,7 +1269,7 @@ function get_remote_user(){
 
     \end{lstlisting}
 
-    \subsection{Internazionalización}
+    \subsection{Internacionalización}
 
     Puesto que estas aplicaciones son la parte que va a ver el
     usuario, se ha utilizado un sistema de internacionalización,
@@ -1445,7 +1445,10 @@ function get_remote_user(){
 
         Descarga de los schemas necesarios:
 
+        Schema schac: 
         \url{http://www.rediris.es/ldap/esquemas/schac/schac-20061017-1.3.0b2.schema.txt}
+
+        Schema openssh-lpk:
         \url{http://dev.inversepath.com/openssh-lpk/openssh-lpk\_openldap.schema}
 
 
@@ -1459,3 +1462,12 @@ function get_remote_user(){
         include         /etc/ldap/schema/schac-20061017-1.3.0b2.schema
 
         \end{verbatim}
+
+        
+        \subsection{Todo en conjunto}
+
+        Una vez que ya están todas las partes instaladas, hay que
+        configurar tanto los servidores ssh parcheados, como la
+        aplicación de autenticación para que se comuniquen con el
+        servidor de claves públicas.
+
