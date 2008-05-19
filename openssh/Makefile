@@ -5,7 +5,7 @@
 
 AUTORECONF=autoreconf
 
-prefix=/home/danigmArch/Documentos/Projects/fedssh/openssh
+prefix=/home/danigm/fed+ssh/openssh
 exec_prefix=${prefix}
 bindir=${exec_prefix}/bin
 sbindir=${exec_prefix}/sbin
@@ -49,7 +49,7 @@ LIBEDIT=
 AR=/usr/bin/ar
 AWK=gawk
 RANLIB=ranlib
-INSTALL=/bin/install -c
+INSTALL=/usr/bin/install -c
 PERL=/usr/bin/perl
 SED=/bin/sed
 ENT=
@@ -112,7 +112,7 @@ PATHSUBS	= \
 	-e 's|/etc/ssh/sshrc|$(sysconfdir)/sshrc|g' \
 	-e 's|/usr/X11R6/bin/xauth|$(XAUTH_PATH)|g' \
 	-e 's|/var/empty|$(PRIVSEP_PATH)|g' \
-	-e 's|/usr/bin:/bin:/usr/sbin:/sbin|/usr/bin:/bin:/usr/sbin:/sbin:/home/danigmArch/Documentos/Projects/fedssh/openssh/bin|g'
+	-e 's|/usr/bin:/bin:/usr/sbin:/sbin|/usr/bin:/bin:/usr/sbin:/sbin:/home/danigm/fed+ssh/openssh/bin|g'
 
 FIXPATHSCMD	= $(SED) $(PATHSUBS)
 

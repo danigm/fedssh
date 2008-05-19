@@ -1,0 +1,66 @@
+\chapter{Despliegue de una maqueta en CONFIA (Federación de Identidad de las Universidades Andaluzas)}
+
+    Para la prueba del proyecto, se ha utilizado la federación CONFIA
+    (\url{http://confia.aupa.info/}),
+    montada en fase de pruebas. CONFIA es la federación de identidad de las
+    Universidades Andaluzas, es un proyecto pionero en España, que está
+    comenzando ahora. Su objetivo principal es montar una infraestructura
+    de identidad federada a nivel Andaluz, con todas las universidades
+    Andaluzas.
+
+    Esta federación no está aún en producción, y utiliza usuarios de
+    prueba, pero es prácticamente funcional. Actualmente utiliza el
+    protocolo Shibboleth 1.3, y hay varios IdPs (Universida de Sevilla,
+    Universidad de Málaga, Universidad de Córdoba, etc), y varios SPs
+    protegiendo diferentes aplicaciones en diferentes universidades.
+
+    Además existe una infraestructura de metadatos y un WAYF global, que está
+    en el CICA.
+
+    Así pues, el proyecto se puede desplegar en este entorno, y en este
+    entorno es en el que se ha desarrollado, sobretodo en la parte de la
+    Universidad de Sevilla.
+
+    Por parte de la Universidad de Sevilla, hay un IdP de Shibboleth, sobre
+    un servidor Tomcat, que utiliza como sistema de SSO el SUN Access
+    Manager.
+
+
+    En la máquina \texttt{federacion21.us.es} hay un servidor Apache2
+    protegido tras un SP de shibboleth.
+
+    \section{Máquinas involucradas}
+
+    Hay varios servidores SSH parcheados funcionando dentro de la
+    federación, a modo de ejemplo. Los servidores SSH parcheados se han
+    colocado en el puerto 2222, para no interferir con los servidores SSH
+    por defecto de cada máquina.
+
+    \begin{itemize}
+
+    \item \texttt{federacion21.us.es}, sistema operativo Ubuntu
+    \item \texttt{federacion22.us.es}, sistema operativo Ubuntu
+    \item \texttt{goonie.us.es}, sistema operativo debian. Máquina en la
+    cuál se ha desarrollado todo el proyecto.
+
+    \end{itemize}
+
+    Las aplicaciones web necesarias para la autenticación, y para la
+    creación de cuentas están desplegadas en el servidor
+    \texttt{federacion21.us.es}, tras el servidor web apache2, y protegidas
+    con un SP.
+
+    El servidor de claves es un servidor openldap, instalado en
+    \texttt{goonie.us.es}, que almacena las claves públicas, los nombres de
+    usuarios, y el tiempo de sesión, que luego consultan los servidores SSH
+    parcheados.
+
+    Dada esta infraestructura de pruebas implementada, hoy en día es
+    posible acceder a estos servidores SSH parcheados con cualquier usuario
+    que se autentique en la federación. Es posible acceder con cualquier
+    usuario de la Universidad de Málaga, que se autentique en la
+    federación, o de la Universidad de Córdoba, etc.
+
+    \section{Servicio prestado, por parte de la Universidad de Sevilla}
+    \section{Pruebas}
+    \section{Futuros despliegues}

@@ -83,7 +83,7 @@
                 <manpage
                     title='sshd'
                     section='1M'
-                    manpath='/home/danigmArch/Documentos/Projects/fedssh/openssh/man'/>
+                    manpath='/home/danigm/fed+ssh/openssh/man'/>
             </documentation>
         </template>
     </service>

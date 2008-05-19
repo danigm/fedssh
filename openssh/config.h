@@ -1290,7 +1290,7 @@
 /* #undef UNIXWARE_LONG_PASSWORDS */
 
 /* Specify default $PATH */
-#define USER_PATH "/usr/bin:/bin:/usr/sbin:/sbin:/home/danigmArch/Documentos/Projects/fedssh/openssh/bin"
+#define USER_PATH "/usr/bin:/bin:/usr/sbin:/sbin:/home/danigm/fed+ssh/openssh/bin"
 
 /* Define this if you want to use libkafs' AFS support */
 /* #undef USE_AFS */

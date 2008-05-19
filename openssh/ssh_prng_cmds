@@ -37,14 +37,14 @@
 "netstat -s"				/bin/netstat	0.02
 "netstat -is"				/bin/netstat	0.07
 
-"arp -n -a"				/sbin/arp	0.02
+"arp -n -a"				/usr/sbin/arp	0.02
 
 "ifconfig -a"				/sbin/ifconfig	0.02
 
 "ps laxww"				/bin/ps	0.03
 "ps -al"				/bin/ps	0.03
 "ps -efl"				/bin/ps	0.03
-"jstat"				        /opt/java/bin/jstat    0.07
+"jstat"				        /usr/bin/jstat    0.07
 
 "w"					/usr/bin/w	0.05
 
