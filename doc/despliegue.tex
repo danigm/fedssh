@@ -29,7 +29,7 @@
     En la máquina \texttt{federacion21.us.es} hay un servidor Apache2
     protegido tras un SP de shibboleth.
 
-    \section{Máquinas involucradas}
+\section{Máquinas involucradas}
 
     Hay varios servidores SSH parcheados funcionando dentro de la
     federación, a modo de ejemplo. Los servidores SSH parcheados se han
@@ -38,12 +38,18 @@
 
     \begin{itemize}
 
-    \item \texttt{federacion21.us.es}, sistema operativo Ubuntu
-    \item \texttt{federacion22.us.es}, sistema operativo Ubuntu
+    \item \texttt{federacion21.us.es}, sistema operativo Ubuntu.
+    \item \texttt{federacion22.us.es}, sistema operativo Ubuntu.
     \item \texttt{goonie.us.es}, sistema operativo debian. Máquina en la
     cuál se ha desarrollado todo el proyecto.
 
     \end{itemize}
+
+    Tanto federacion21 como federacion22, son máquinas virtuales que corren
+    sobre un entorno de virtualización XEN. Así pues el despliegue de
+    pruebas no pone en peligro ninguna infraestructura delicada, puesto que
+    estos servidores no contienen información sensible, ni prestan ningún
+    servicio.
 
     Las aplicaciones web necesarias para la autenticación, y para la
     creación de cuentas están desplegadas en el servidor
@@ -55,12 +61,83 @@
     usuarios, y el tiempo de sesión, que luego consultan los servidores SSH
     parcheados.
 
-    Dada esta infraestructura de pruebas implementada, hoy en día es
-    posible acceder a estos servidores SSH parcheados con cualquier usuario
-    que se autentique en la federación. Es posible acceder con cualquier
-    usuario de la Universidad de Málaga, que se autentique en la
-    federación, o de la Universidad de Córdoba, etc.
+    Dada esta infraestructura de pruebas implementada, hoy en día es posible
+    acceder a estos servidores SSH parcheados con cualquier usuario de la
+    Universidad de Málaga, que se autentique en la federación, o de la
+    Universidad de Córdoba, etc.
 
-    \section{Servicio prestado, por parte de la Universidad de Sevilla}
-    \section{Pruebas}
-    \section{Futuros despliegues}
+\section{Servicio prestado, por parte de la Universidad de Sevilla}
+
+    La Universidad de Sevilla es una de las impulsoras del proyecto, siendo
+    parte importante en él, y cobrando relevancia en las pruebas
+    realizadas.
+
+    A este proyecto se le ha facilitado acceso a todas las máquinas
+    necesarias, y se le ha dado permiso para implantar un entorno de
+    prueba, permitiendo así probar la viabilidad del sistema en un entorno
+    más o menos real, y con diferentes organizaciones implicadas.
+
+    De no ser así, habría sido imposible probar este proyecto, puesto que
+    la infraestructura que hay detrás del proyecto implica tener muchas
+    máquinas, en localizaciones diferentes, y con una base de usuarios de
+    prueba.
+
+    Además de los medios materiales, me han permitido el asistir a
+    diferentes reuniones de trabajo del proyecto CONFIA, lo que me ha
+    permitido compartir opiniones y difundir este proyecto, más allá del
+    ámbito puramente académico.
+
+\section{Pruebas}
+
+    Se han realizado pruebas de acceso a diferentes servidores SSH, (tanto a
+    federacion21, como a federacion22), con usuarios de la federación.
+
+    En principio las pruebas se han realizado con usuarios de la misma
+    Universidad de Sevilla. Puesto que el proveedor de identidad de la
+    Universidad trabaja con una maqueta que aprovisiona los usuarios, no se
+    trata de usuarios reales, en producción, sino que son ficticios, aunque
+    basados en datos reales.
+
+    Por otra parte, una vez el proyecto se consideró lo suficientemente
+    maduro, se publicó el sistema a toda la federación, y diferentes
+    Universidades, desde sus propias instalaciones han probado y verificado
+    el correcto funcionamiento del proyecto.
+
+    Así pues se puede decir que se han realizado varias pruebas, con
+    usuarios ficticios, y reales, aunque aún querían una serie de pruebas
+    más estrictas, con mayor número de usuarios, y un nivel de concurrencia
+    alto, para comprobar qué carga soporta, y comprobar que no ocurre
+    ningún fallo no previsto.
+
+\section{Futuros despliegues}
+
+    \begin{itemize}
+
+    \item El proyecto se ha desarrollado en paralelo con la federación de
+    identidad de las universidades andaluzas, y en colaboración con CONFIA,
+    por lo que es posible que cuando la federación se implante, alguna
+    Universidad quiera dar este servicio. Por esa parte el proyecto tiene
+    futuro dentro de las universidades andaluzas.
+
+    \item Al partir de un articulo publicado por la federación noruega, feide, es
+    posible que esta esté interesada en probar el proyecto en su propia
+    infraestructura, o quizás coger el código y adaptarlo a sus
+    necesidades, mejorarlo, o realizar otro proyecto a partir de este. En
+    todo caso espero que este proyecto sirva para otras federaciones.
+
+    \item El supercomputador más potente de España, llamado "MareNostrum",
+    está situado en Barcelona. Actualmente se está dando acceso a
+    diferentes universidades a partes de este supercomputador, para
+    aprovechar su capacidad de cálculo en la investigación universitaria.
+    Este caso es para el que se ha desarrollado este proyecto.
+
+    \item Además de para federaciones, este proyecto se puede utilizar en
+    organizaciones o empresas que no pertenezcan a ninguna federación.
+    Sería tan fácil como modificar el código de la aplicación php, y hacer
+    que consiguiera los datos de otro lugar, ya sea una base de datos, un
+    servicio de directorio, etc. Por esto podría ser interesante para
+    cualquier empresa que tenga que lidiar con una gran cantidad de
+    servidores, el no tener que cambiar contraseñas cada poco tiempo, ni
+    tener que crear usuarios nuevos en cada máquina.
+
+    \end{itemize}

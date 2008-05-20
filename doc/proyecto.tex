@@ -13,12 +13,312 @@
 
 \input{despliegue.tex}
 
-\chapter{Conclusiones}
-    \section{Por qué es importante, y por qué soy el mejor}
+\input{conclusiones.tex}
 
 \chapter{Anexos}
-    \section{Seguridad mínima (permisos, cambiar passwd, etc)}
-    \section{Despliegue de la aplicación federada}
+    \section{Descripción enviada a un grupo de trabajo}
+
+    Tratando de que el proyecto se conozca fuera de la federación andaluza,
+    se ha redactado una pequeña descripción del proyecto en inglés, para
+    enviarla a un grupo de trabajo, que trata sobre estos temas.
+
+\begin{quote}
+
+Using Federation credentials to SSH login
+
+This project is based in the paper of Feide:
+\url{http://rnd.feide.no/content/feide-and-ssh-secure-shell}
+
+Problem:
+
+    When we have lots of SSH accounts, we need to remember lots of
+    passwords and it is in all SSH servers.
+
+    Because that, if we want to change the password, it is needed to
+    change it in all servers.  Furthermore, if one of that SSH servers
+    is hacked, our password could be known by other person.
+
+    Other problem related to password and SSH could be when you want
+    to give a SSH service to many users, and you don't manage that
+    users accounts. 
+
+    Identity federation solve that problems, but it is designer only
+    for web. This document describe how we use identity federation
+    credentials to solve that problems in SSH services.
+
+Objective:
+
+    The objective of this project is use identity federation
+    credentials to authenticate in SSH. We try to make easiest for
+    user and for the administer of the service.
+
+    We want the user could access to the service without write his own
+    password. And could access to others federated servers
+    automatically.
+
+Solution:
+
+    To make this, we use the ssh public key system that could be used
+    with SSH servers. With that, there is not needed to write the
+    password.
+
+    The SSH server need to get the user public key from the federation
+    system, but it work only in web applications. For that we put a
+    global LDAP server. In that LDAP server we put an entry when the
+    user login in the federation, and then from the SSH server we can
+    look up if the user is authenticated.
+
+    Our solution has two parts:
+    
+    1.- SP application
+
+    One is an SP application made in php.  That is a global
+    application, only one it's needed for all entities. The user enter
+    in that web application, and it's redirected to his own IdP. Then
+    when the user is authenticated, it's redirected to that
+    application.
+
+    That application receive the user name and ssh public
+    key from the IdP, and write an entry in the global LDAP server.
+
+    Furthermore in that application it is possible to write your
+    ssh public key manually, if your IdP don't have it, or if your
+    aren't in your own machine.
+
+    The application make an entry in the LDAP server with the name of
+    the user, concatenated with his entity name, some like
+    username-entity (danigm-us), with the ssh public key, and with an
+    timeout number.
+
+    Since the login in that web application, the user can login in all
+    the SSH servers automatically, without write any password.
+
+    The look of that application is like that [1]
+
+    2.- Openssh path
+    
+    The ssh server work this way:
+        First try to authenticate the user with ssh public key,
+        looking for keys in \$HOME/.ssh/authorized\_keys. If that works,
+        login without ask for password.
+
+        Second try to authenticate with PAM modules if that it's
+        activated.
+
+    At first, we think in a PAM module, but because of the ssh
+    working, that method require that the user write a password or
+    something similar.
+
+    The way that we take is to modify the openssh server, that it's
+    free software.
+
+    To make that we write a patch to that ssh server. The objective of
+    that patch is to touch only the needed files to make it strong to
+    the variation of the openssh code.
+
+    This patch touch the authenticate method of the server,
+    introducing a subroutine exact after the server look for the
+    public key in the local filesystem. 
+
+    If the server don't find the user public key, that subroutine it's
+    called. That asks for the user to the LDAP server, that we mentioned
+    before. If the user is authenticated, the patched ssh server
+    receive the public key, and the timestamp, that indicate the
+    timeout of the login.
+
+    The subroutine check if the time is correct, and then create a
+    temp file in the local filesystem with that rsa public key. After
+    that, check again the user identity, but now with the new temp
+    file. If all is well, the user is authenticated directly. Else,
+    the ssh server authentication method continue asking for the user
+    password.
+
+    All the parameters needed by that patch could be sets in the
+    sshd.conf file.
+
+    Now we use like public ssh key server a LDAP server, but the patch
+    it's implemented to support others servers easily. You only need
+    to write a function that ask for the user to the server, and
+    return the ssh public key if it exist.
+
+Problems:
+    
+    One problem for that solution is that the ssh server needs that
+    the user has an account in that machine.
+
+    For this problem we write a simple solution, it's a web
+    application that is protected by an SP, and when the user login in
+    the application, he can create an account in all machines that
+    has the patched ssh server, and looks like this [2].
+
+    Other problem is that the user could change the password, and if
+    the user change the password, or write a file in the directory
+    .ssh, he can login after without authenticate in the federation
+    system, and we don't want that.
+
+All the code could be found in the rediris forge [3].
+
+Images:
+    [1] sshApp.png
+        \begin{center}
+            \includegraphics[width=\textwidth]{img/sshApp.png}
+        \end{center}
+    [2] userAdd.png
+        \begin{center}
+            \includegraphics[width=\textwidth]{img/userAdd.png}
+        \end{center}
+Links:
+    [3] \url{https://forja.rediris.es/projects/aupaai/}
+
+    \end{quote}
+
+\section{Sobre el despliegue de la aplicación}
+
+
+    Para una posible implantación del proyecto en un proyecto de rediris,
+    se redactó una pequeña guia que facilita el despliegue del mismo.
+
+    \begin{quote}
+El despliegue completo consta de tres partes:
+
+1.- Aplicación web php. Solo hace falta desplegarla en una máquina, que
+esté protegida por un SP, un SSO o algo así. Esta aplicación escribirá
+en el LDAP cada vez que un usuario se autentique.
+
+Hay que configurar las siguientes variables en el fichero
+ssh\_backend.php:
+
+//base para la busqueda e introduccion de usuarios logueados en el LDAP
+\$base\_dn ='o=People,dc=us,dc=es';
+\$servidor\_ldap = "goonie.us.es";
+\$puerto\_ldap = 389;
+\$bn = 'cn=admin,dc=us,dc=es';
+\$pw = 'xxxx';
+
+//tiempo de sesion valido
+\$minutes\_timeout = 30;
+
+//El atributo de shibboleth que mira para coger el certificado
+\$shib\_header = "HTTP\_USERCERTIFICATE";
+
+//atributo del LDAP para almacenar la clave
+\$rsa\_server\_key\_attr = 'sshpublickey';
+
+//atributo del LDAP para el timeout, se guarda como un timestamp
+\$rsa\_server\_timeout = 'schacuserstatus';
+
+De momento está pensada para mirar los atributos de shibboleth, pero si
+no los recibe, creo que también funciona, solo que el certificado hay
+que meterlo a mano.
+
+Mira el nombre de usuario de la variable \$\_SERVER["REMOTE\_USER"] y
+debería ser un nombre@dominio.loquesea
+
+2.- LDAP para las claves públicas de los usuarios que se han
+autenticado:
+
+Un simple openldap bastaría. Hay que añadirle los esquemas
+openssh-lpk\_openldap, para el campo "sshpublickey" y el schac para el
+campo "schacuserstatus", que lleva el timeout.
+
+En este LDAP es dónde va a escribir la aplicación php, y de donde van a
+leer los diferentes servidores ssh parcheados.
+
+3.- Servidor ssh parcheado:
+
+Lo mando como adjunto, y solo haría falta compilarlo y cambiar la
+configuración del fichero sshd\_config
+
+Si se quiere compilar sobre el mismo directorio, si ya hay algún otro
+servidor ssh (lo más normal), se recomienda así.
+./configure --prefix=\$PWD \&\& make
+y se lanzaría:
+\$PWD/sshd -f sshd\_config
+
+Si se quiere compilar para el sistema:
+./configure \&\& make \&\& make install
+y se lanzaría según el sistema.
+
+Configuracion: el fichero sshd\_config
+Para la federación se le han añadido una serie de opciones adicionales:
+
+\# Opcion para activar el acceso federado
+usefed yes
+
+\# Servidor de claves RSA, el LDAP
+fedserver goonie.us.es
+fedserver\_root\_dn "cn=admin,dc=us,dc=es"
+fedserver\_root\_pw xxxxxx
+fedport 389
+
+\# base de busqueda para usuarios en el LDAP
+fedserver\_base "o=People,dc=us,dc=es"
+
+\# Atributos de clave, y de timeout
+fedserver\_attr sshPublicKey
+fedserver\_timeattr schacUserStatus
+
+Si hay otro servidor corriendo, también se puede cambiar el puerto con
+Port 2222
+
+-----
+
+Con esto ya habría una versión funcional. Ahora hay que tener unas
+consideraciones previas.
+
+1.- Creación de cuentas:
+Para que un usuario pueda acceder, además de autenticarse tiene que
+tener una cuenta creada en el sistema. Para eso hay otra aplicación,
+useradd.php, desde la cual podría hacerse de manera centralizada. Es
+decir, esta aplicación muestra una lista de los servidores ssh
+disponibles, y si tienes cuenta o no, además se puede solicitar una
+cuenta, y se crearía de manera inmediata.
+
+La instalación sería igual que la de ssh, y habría que configurar los
+servidores en el index.php:
+
+Por cada servidor una entrada en el array, direccion del servidor, y
+descripcion:
+\$servers[0] = 'federacion21.us.es';
+\$desc[0] = "servidor1";
+
+Para que esta aplicación funcione bien, el servidor donde esté debe
+tener acceso por ssh a todos los servidores con cuenta de root. Para
+ello hay que añadir en el \$HOME/.ssh/authorized\_keys de cada servidor la
+clave pública de este servidor (ssh-keygen, \$HOME/.ssh/id\_rsa.pub) donde
+está la aplicación.
+Además para que tenga acceso la aplicación, si se está ejecutando con el
+usuario www-data, este usuario debería tener acceso a sudo para el
+comando ssh.
+
+\#visudo
+www-data ALL=NOPASSWD: /usr/bin/ssh
+
+----
+
+Detalles a tener en cuenta:
+
+Se debería bloquear la posibilidad del cambio de password de los
+usuarios, ya que si un usuario ejecuta passwd, podrá entrar en un futuro
+sin loguearse.
+También sería necesario impedir que los usuarios escriban en el
+directorio \$HOME/.ssh/ para evitar que metan alguna clave rsa, y poder
+tener acceso sin pasar por la federación.
+
+Cómo solucionar esto:
+Para bloquear el cambio de password, basta con chmod
+554 /usr/bin/passwd.
+Para impedir la escritura se puede poner una tara cron que elimine de
+cada usuario ese directorio cada cierto tiempo, o se le puede quitar el
+acceso al mismo con chmod 000 .ssh/ para cada usuario
+
+
+Nada más. Pienso que el despliegue, aunque pueda parecer complejo no
+debería serlo tanto, por lo menos en debian y en ubuntu a mí no me ha
+costado casi nada.
+
+
+    \end{quote}
 
 \newpage
 
