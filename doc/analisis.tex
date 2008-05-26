@@ -2,6 +2,8 @@
     \section{Necesidad de federación de identidad}
         \subsection{¿Qué es la federación de identidad?}
 
+    %TODO repaso, quitar un poco
+
     La gestión de identidad centralizada fue creada para ayudar con el
     trato de usuarios y seguridad de datos, cuando el usuario accede
     desde dentro de la misma red, o al menos desde dentro del mismo
@@ -14,7 +16,7 @@
     interoperabilidad entre diferentes entidades que gestionan
     diferentes grupos de usuarios de maneras totalmente diferente.
 
-    Mediante soluciones de Identidad Federada los individuos pueden
+    Mediante soluciones de identidad federada los individuos pueden
     emplear la misma identificación personal (típicamente usuario y
     contraseña) para identificarse en redes de diferentes
     departamentos, empresas o entidades. De este modo las empresas o
@@ -50,12 +52,6 @@
     la necesidad de registrar una cuenta nueva, o la necesidad de
     tener que hacer login de manera redundante.
 
-    Empresas líderes en todo el mundo han desplegado la federación de
-    identidad para acercarse a sus socios, mejorar el servicio de
-    compra, acelerar la ejecución de negocios, recortar costes y
-    complejidad de integración con otros servicios, y liberarse a sí
-    mismos de la autenticación.
-
         \subsection{Partes en la federación de identidad}
 
     Un sistema de federación de identidad está formado por diferentes
@@ -66,9 +62,9 @@
 
             \begin{itemize}
 
-            \item \textbf{Single Sing On (SSO)}
+            \item \textbf{Single Sign On (SSO)}
 
-    Un sistema Single Sing On, es un sistema que permite simplificar
+    Un sistema Single Sign On es un sistema que permite simplificar
     el acceso por parte del usuario, y de las aplicaciones, a
     diferentes aplicaciones, que comparten los mismos usuarios, y por
     tanto el mismo sistema de autenticación.
@@ -82,7 +78,7 @@
     independientemente de la aplicación, y además la sesión permanece
     entre diferentes aplicaciones. Por parte de las aplicaciones que
     utilizan este sistema, evita la necesidad de tratar con la
-    identidad de estos usuarios, ya que el sistema de Single Sing On
+    identidad de estos usuarios, ya que el sistema de Single Sign On
     es el que los autentica.
 
     SSO es un método de control de acceso que permite autenticar al
@@ -94,7 +90,7 @@
     de datos centralizada de usuarios, el sistema SSO es una gran
     ventaja.
 
-    En la federación de identidad, el Sigle Sing On no es algo
+    En la federación de identidad, el Sigle Sign On no es algo
     necesario, pero sí recomendable. No es un requisito indispensable
     para montar un sistema de gestión de identidad federada, pero sí
     que facilita mucho el acceso por parte del usuario.
@@ -139,6 +135,8 @@
     Algunos ejemplos de software que pueden dar el servicio de Proveedor
     de Identidad:
     \begin{itemize}
+        \item \textbf{PAPI}
+        \href{http://papi.rediris.es}{http://papi.rediris.es}
         \item \textbf{Shibboleth IdP}
         \href{http://shibboleth.internet2.edu/}{http://shibboleth.internet2.edu/}
         \item \textbf{SimpleSAMLPHP}
@@ -160,7 +158,7 @@
     Un SP está estrechamente relacionado con un servidor web, y se
     comunica con los diferentes IdPs de la federación. Esta es la
     forma que tiene el sistema de pasar los datos de identidad de una
-    organización a otra, de forma segura, a través del protocolo SAML.
+    organización a otra, de forma segura.
 
     Cada aplicación web federada debería estar protegida por un SP,
     así pues puede haber más de un SP por cada organización.
@@ -171,6 +169,8 @@
     servicio de IdP, como el de SP:
 
     \begin{itemize}
+        \item \textbf{PAPI}
+        \href{http://papi.rediris.es}{http://papi.rediris.es}
         \item \textbf{Shibboleth IdP}
         \href{http://shibboleth.internet2.edu/}{http://shibboleth.internet2.edu/}
         \item \textbf{SimpleSAMLPHP}
@@ -179,7 +179,7 @@
 
     En teoría es independiente el software que se utilice como IdP, o
     como SP por las diferentes organizaciones, ya que todos deberían
-    compartir el mismo protocolo, SAML.
+    compartir el mismo protocolo.
 
             \item \textbf{Where are you from (WAYF)}
 
@@ -251,7 +251,7 @@
     desde un navegador.
 
     Así pues los componentes de un sistema de federación de identidad,
-    tales como IdPs o SPs, son aplicaciones webs, y están fuertemente
+    tales como IdPs o SPs, son aplicaciones web, y están fuertemente
     ligados a servidores web tales como apache o tomcat.
 
     El funcionamiento se basa en el paso de cookies al navegador, y
@@ -259,7 +259,7 @@
     navegadores modernos, y lenguajes en la parte del servidor preparados
     para esta tarea.
 
-    Intentar federar aplicaciones que no son webs, es un trabajo difícil,
+    Intentar federar aplicaciones que no son web, es un trabajo difícil,
     dado el terreno en el que nos movemos. Puesto que estas aplicaciones
     tendrán que comunicarse de alguna forma con las aplicaciones que
     conforman la federación, por ejemplo con el IdP para la autenticación
@@ -280,6 +280,8 @@
     quién es de manera inequívoca, y sin posibilidad de suplantación de
     identidad.
 
+
+    % TODO usuario y contraseña por credenciales
     Otro problema es la autenticación, y es que todo usuario sólo escribe
     su nombre de usuario y contraseña en el IdP conocido, en el de su
     organización, por lo tanto siempre habrá una confianza en que esa
@@ -300,7 +302,8 @@
 
     Además de la línea de comandos, el protocolo SSH da otras
     posibilidades, como la copia de ficheros entre máquinas, o la ejecución
-    de aplicaciones gráficas importando las X.
+    de aplicaciones gráficas importando el protocolo de comunicación
+    gráfico.
 
     Con SSH se trabaja de forma similar a como se haría con el comando
     telnet, junto con la posibilidad de copiar ficheros con el protocolo
@@ -323,15 +326,7 @@
     un recurso más.
 
     Existe una tecnología libre que implementa este protocolo, con
-    diferentes funcionalidades, se trata de openssh (figura
-    \ref{fig:openssh}).
-
-    \begin{figure}[htp!]
-        \centering
-            \includegraphics[width=\textwidth]{img/openssh.png}
-            \caption{openssh}
-        \label{fig:openssh}
-    \end{figure}
+    diferentes funcionalidades, se trata de openssh.
 
     Además de lo comentado anteriormente, openssh permite cosas muy
     interesantes, como túneles seguros, diferentes métodos de

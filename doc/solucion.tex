@@ -1,3 +1,5 @@
+% TODO revisar comas
+% TODO Schema
 \chapter{Solución propuesta}
 
     En este cápitulo, comentaremos la solución que hemos propuesto, y que
@@ -53,13 +55,13 @@
     servidor SSH, sin cambiar su funcionamiento normal, pero añadiendo la
     opción de pedir claves públicas a un servidor externo.
 
-    Cómo hemos optado por la opción de pedir la clave pública del usuario
+    Como hemos optado por la opción de pedir la clave pública del usuario
     desde el servidor SSH a un servido externo, se nos presenta un abanico
     de posibilidades para guardar las claves.
 
     \begin{itemize}
     
-    \item fichero
+    \item Fichero
     \item Base de datos
     \item Directorio
 
@@ -73,7 +75,8 @@
 
     \section{Solución elegida}
 
-    La solución propuesta, consta de varias partes, como se puede apreciar
+    %TODO considerar repetir la figura
+    La solución propuesta consta de varias partes, como se puede apreciar
     en la figura \ref{fig:casodeuso}. Las partes que incumben a este
     proyecto son:
 
@@ -90,12 +93,11 @@
         almacenar los datos de los usuarios autenticados en la federación,
         para facilitar el acceso a los mismos por parte del servidor SSH.
         Este servidor será el punto intermedio que enlace la federación
-        (web) con el servicio de SSH. También deberá ser un servidor
-        global, no perteneciente a una organización en concreto.
+        (web) con el servicio de SSH.
 
         \item Los servidores SSH. Todos los servidores que presten el
         servicio de SSH sobre federación de identidad, deberán autenticar a
-        los usuarios en la federación de alguna que otra forma. Para
+        los usuarios en la federación de alguna otra forma. Para
         conseguir esto está el servidor de claves, que facilitará la
         comunicación entre la federación y los servidores.
 
@@ -201,7 +203,7 @@
     \end{figure}
 
 
-        \subsection{SSO para SSH, posibilidad}
+        \subsection{Posibles soluciones al SSO para SSH}
 
         Durante la realización de este proyecto han surgido algunos
         detalles y funcionalidades que se podrían implementar para el
@@ -212,8 +214,9 @@
         tendría entidad propia fuera de este proyecto, es el Single Sing-On
         para SSH.
 
+        %TODO mirar comillas
         Para realizar la tarea de SSO, es necesario que el cliente
-        autenticado tenga un "token" o algo que lo identifique
+        autenticado tenga un ``token'' o algo que lo identifique
         unívocamente, en nuestro caso sería la clave privada de SSH. Y el
         servidor debería conocer quién está autenticado, en nuestro caso
         preguntando al servidor de claves.
@@ -288,7 +291,7 @@
     las claves en texto plano. Posteriormente se extendió para realizar el
     almacenamiento en una base de datos MySQL. Y en realidad incorporar
     nuevos sistemas de almacenamiento es algo tan simple como implementar
-    una clase con un metodo textit{get\_rsa(nombre\_de\_usuario)} que devuelva
+    una clase con un metodo \textit{get\_rsa(nombre\_de\_usuario)} que devuelva
     la clave pública RSA del usuario si está autenticado, y en otro caso
     que devuelva una cadena vacía.
 
@@ -336,21 +339,23 @@
     peticiones a un servidor de claves a través del protocolo de
     comunicación LDAP, desde el lenguaje C.
 
-    Por suerte las consultas a servicio de directorio desde C no son nada
+    Por suerte las consultas al servicio de directorio desde C no son nada
     complicadas, e implementando una simple función es posible modificar el
     parche para que el servidor SSH ahora se comunique con un servidor de
     claves a través de LDAP.
 
-    \subsection{Schemas LDAP}
+    \subsection{Esquemas LDAP}
 
-    Los sistemas de directorio utilizan diferentes campos para guardar los
+    % TODO campos son atributos
+    % entradas son objetos
+    Los sistemas de directorio utilizan diferentes atributos para guardar los
     datos pertenecientes a las diferentes entradas. Cada posible campo a
     utilizar está definido en un ``Schema LDAP'', y se podrá utilizar
     siempre que la entrada tenga el ``objectclass'' que define ese campo.
 
     Existen muchos estándares de schemas LDAP, que suelen venir por defecto
     en la mayoría de los servicios de directorio. Y cada schema tiene sus
-    campos destinados cada uno a almacenar un tipo de dato concreto.
+    atributos destinados cada uno a almacenar un tipo de dato concreto.
 
     Es posible utilizar un campo cualquiera, siempre que sea del mismo
     tipo, para guardar cualquier información, pero esto no es recomendable,
@@ -417,7 +422,7 @@
     usuarios de todas las organizaciones implicadas en la federación.
 
     Se ha buscado que la interfaz de la aplicación sea lo más simple y
-    aclaratoria posible. Al estar protegida tras un SP, todo usuario que
+    clara posible. Al estar protegida tras un SP, todo usuario que
     intente acceder a esta página será redirigido al WAYF de la federación
     si no está autenticado aún. En el WAYF seleccionará su organización de
     origen, y será redirigido a la página de login de su IdP.
@@ -443,6 +448,7 @@
     clave pública correcta, y la introduce en el servidor de claves,
     actualizando el timeout.
 
+    %TODO comentar esto como posibilidad opcional
     Cada vez que se refresque esta página, la aplicación actualiza el
     timeout, como si el usuario acabara de acceder por primera vez.
 
@@ -453,7 +459,7 @@
     \end{center}
      
     Por facilidad de desarrollo, e integración con distintos servidores
-    web, se ha elegido utilizar la tecnología php para el desarrollo de
+    web, se ha elegido utilizar la tecnología PHP para el desarrollo de
     esta aplicación.
 
     La aplicación está separada en un frontend y un backend. El frontend se
@@ -468,7 +474,7 @@
 
     Puesto que hemos decidido utilizar un servidor de claves basado en un
     servicio de directorio se han tenido que utilizar las bibliotecas
-    pertinentes del lenguaje php para LDAP.
+    pertinentes del lenguaje PHP para LDAP.
 
     Toda la información sobre atributos a consultar, y atributos necesarios
     para guardar la información está especificada en forma de variables,
@@ -479,7 +485,7 @@
     almacenar los datos del usuario en el servidor de claves, informara al
     usuario sobre los datos que se van a almacenar, y pidiera confirmación.
 
-    \section{Ejemplo aplicación creación de cuentas.}
+    \section{Ejemplo aplicación creación de cuentas}
 
     Un problema que hay que tener en cuenta en el despliegue de este
     proyecto, es la necesidad de crear las cuentas de los usuarios de forma

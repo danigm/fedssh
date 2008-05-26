@@ -1,3 +1,5 @@
+%TODO quitar schema por esquema
+
 \chapter{Introducción}
 \section{Objetivos}
 
@@ -38,6 +40,7 @@ nos serán útiles en el SSH son:
     servicios, sino estando en tu propia entidad, incrementando así la
     seguridad de la misma, y la comodidad a la hora de cambiar de
     contraseña, o de nombre de usuario.
+    %TODO problemas de las contraseñas únicas
 
     \item \textbf{Login único}: También se busca implementar el Single
     Sing On(SSO) para el SSH sobre federación, de tal forma que un
@@ -57,8 +60,12 @@ acceso a un servidor SSH a todos los alumnos de Informática, bien sea
 para que utilicen un supercomputador, o para que tengan una cuenta
 dónde hacer las practicas. Dentro del objetivo de este proyecto
 entraría delegar la gestión de estos usuarios a la federación,
-facilitar así el proceso, así como por parte del alumno, como por
+facilitar así el proceso, 
+
+% TODO revisar esto
+así como por parte del alumno, como por
 parte del administrador de las máquinas.
+
 \newpage
 \section{Caso de uso}
 
@@ -67,16 +74,17 @@ parte del administrador de las máquinas.
     detalladamente en la sección ``Implementación y despliegue''
     [\ref{implementacion}].
 
-    \textbf{Caso de uso del proyecto SSH sobre federación de identidad}:
+    %\textbf{Caso de uso del proyecto SSH sobre federación de identidad}:
 
     \begin{itemize}
 
     \item \textbf{Descripción}:
     
-    La federación está pensada para aplicaciones webs, pero sería
+    La federación está pensada para aplicaciones web, pero sería
     interesante poder utilizar estos mecanismos para aplicaciones que
     autentican de otra manera diferente.
 
+    %TODO revisar los tu
     En el caso del ssh federado intentamos llevar el concepto de hacer
     login una sola vez, y en tu entidad, al acceso por ssh. Buscando poder
     acceder por ssh a diferentes máquinas sin tener que escribir usuario y
@@ -126,6 +134,7 @@ parte del administrador de las máquinas.
 
     \end{enumerate}
 
+    %TODO quitar del caso de uso
     \item \textbf{Implementación}:
     Para la implementación se ha optado por utilizar el mecanismo de acceso
     por clave publica-privada que nos ofrece el mismo protocolo ssh.
@@ -156,10 +165,11 @@ parte del administrador de las máquinas.
     conveniente no permitir la creación, o borrar, los ficheros dentro de
     .ssh del home del usuario, por la misma razón que lo anterior.
 
-    También será necesario definir un schema para la federación, que añada
+    También será necesario definir un esquema para la federación, que añada
     el campo ssh\_rsa\_public\_key, si queremos que el acceso sea lo más
     automatizado posible.
 
+    %TODO quitar del caso de uso
     \item \textbf{Temas a discutir}:
 
     \begin{enumerate}
@@ -188,6 +198,8 @@ parte del administrador de las máquinas.
         Por tanto el usuario intentará acceder a una aplicación web,
         protegida tras un Service Provider (SP) de la federación de
         identidad.
+
+        %TODO quitar esto, puede haber tantos SP como se quiera
         Este SP no tiene por qué pertenecer a ninguna de las entidades
         que forman la federación, sino que será un único servidor
         central.
@@ -225,7 +237,7 @@ parte del administrador de las máquinas.
         \item{Paso 5:} El usuario ya está autenticado, y ahora puede
         entrar en uno o varios servidores ssh federados sin necesidad de
         escribir su contraseña. Por supuesto tendrá un tiempo límite,
-        la sesión cumplirá dado un cierto tiempo.
+        la sesión expirará dado un cierto tiempo.
 
         \item{Paso 6:} El servidor ssh tiene que saber si el usuario
         que intenta acceder está autenticado en la federación, por lo
@@ -248,15 +260,7 @@ parte del administrador de las máquinas.
 
     Una de las federaciones más activas en lo que se refiere a
     investigación y desarrollo de aplicaciones para la federación de
-    identidad es la federación noruega, \textbf{feide} (figura
-    \ref{fig:feide}).
-
-    \begin{figure}[htp]
-        \centering
-            \includegraphics{img/feide.jpg}
-            \caption{Caso de Uso}
-        \label{fig:feide}
-    \end{figure}
+    identidad es la federación noruega, \textbf{feide}.
 
     El proyecto de SSH sobre federación de identidad nace a partir de
     un documento publicado el 20 de agosto de 2007 por la federación
@@ -291,9 +295,8 @@ parte del administrador de las máquinas.
 
     En este documento se propone colocar una página web, tras un SP,
     por cada servidor SSH federado que se ofrezca. En nuestro caso no
-    hemos mantenido esta idea, puesto que complicaría un poco el
-    despliegue del servicio, y además para nuestra implementación sólo
-    es necesaria una página central para la autenticación.
+    hemos mantenido esta idea, puesto que complicaría el
+    despliegue del servicio.
 
     A continuación vamos a detallar las diferentes propuestas que se
     pueden encontrar en este documento, además comentaremos los pros y
@@ -388,7 +391,7 @@ parte del administrador de las máquinas.
         en el proyecto, pero con similar resultado. En un principio
         queremos llevar los beneficios de la federación de identidad
         fuera del ámbito web, pero buscando este objetivo hacemos lo
-        opuesto, y es llevar otro ámbito, como es el del SSH a la web,
+        opuesto, y es llevar otro ámbito, como es el del SSH a la Web,
         mediante el uso de un applet de Java.
 
         Lo bueno de este método es que tiene acceso a cuentas SSH de
@@ -397,6 +400,8 @@ parte del administrador de las máquinas.
         posibilidad de entrar en diferentes servicios SSH, habiendo
         realizado la autenticación una sola vez.
 
+
+        %TODO segunda persona
         Lo malo es que no te da un acceso SSH completo, sino que te
         ofrece una shell, pero siempre a través del navegador, con las
         limitaciones que esto conlleva. Además de que no aporta nada a
@@ -409,9 +414,10 @@ parte del administrador de las máquinas.
     que la idea de realizar este proyecto nace, en gran medida, a
     partir del documento publicado por la federación noruega.
     
+    %TODO revisar esto
     Por supuesto nuestro proyecto no se queda en una prueba de
     concepto, como es el caso del documento comentado, sino que se a
-    partir de estas pruebas de concepto se implementa un sistema algo
+    partir de estas pruebas de concepto se implementa un sistema
     más completo y funcional, el cuál utiliza y mejora las ideas
     propuestas, dando así un nuevo punto de vista a la idea principal.
 
