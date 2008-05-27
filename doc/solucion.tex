@@ -1,8 +1,6 @@
-% TODO revisar comas
-% TODO Schema
 \chapter{Solución propuesta}
 
-    En este cápitulo, comentaremos la solución que hemos propuesto, y que
+    En este capítulo comentaremos la solución que hemos propuesto y que
     hemos llevado a cabo para conseguir una autenticación a través de la
     federación de identidad para SSH.
 
@@ -12,47 +10,47 @@
     federación de identidad, basada en aplicaciones web, y los servidores
     SSH.
 
-    Para conseguir esta conexión, es casi imprescindible una pequeña
-    aplicación web, que esté tras un proveedor de servicio, y la cual pueda
-    acceder a los atributos del usuario, una vez este se haya autenticado
+    Para conseguir esta conexión es casi imprescindible una pequeña
+    aplicación web que esté tras un proveedor de servicio y la cual pueda
+    acceder a los atributos del usuario una vez este se haya autenticado
     en el IdP de su organización.
 
-    Esta aplicación web, será la que diga si un usuario está
-    autenticado en la federación o no, y su funcionamiento variará
-    ligeramente, según la implementación concreta de la solución.
+    Esta aplicación web será la que diga si un usuario está
+    autenticado en la federación o no y su funcionamiento variará
+    ligeramente según la implementación concreta de la solución.
 
     \textbf{Servidor ssh}:
 
     Como primera opción se barajó la idea de utilizar un modulo PAM
-    (Plugable Authentication Method), ya que el servidor SSH permite este
+    (Plugable Authentication Method) ya que el servidor SSH permite este
     tipo de autenticación. Los módulos PAM son un método que permite al
     administrador controlar cómo se realiza el proceso de autenticación de
-    los usuario para aplicaciones, a través de unas bibliotecas.
+    los usuario para aplicaciones a través de unas bibliotecas.
 
     La opción de los módulos PAM permitiría el acceso sin tener que tocar
-    el servidor SSH, sino simplemente añadiendo un módulo al sistema, y
+    el servidor SSH, simplemente añadiendo un módulo al sistema, y
     cambiando una línea en un fichero de configuración.
 
     Pero como inconveniente tiene que estos módulos autentican con usuario
     y contraseña, por lo que o se le pasa el usuario y contraseña al
-    servidor SSH (cosa que no queremos), o se crea una cuenta de un solo
+    servidor SSH (cosa que no queremos) o se crea una cuenta de un solo
     uso.
 
     Otra posible solución es utilizar el método de autenticación por clave
     pública que proporciona el servidor openssh. Este método permite
-    autenticar a un usuario sin que este tenga que introducir su
-    contraseña, y sería lo más automático posible.
+    autenticar a un usuario sin que éste tenga que introducir su
+    contraseña y sería lo más automático posible.
 
-    Este método funciona buscando la clave pública del usuario en un
+    Éste método funciona buscando la clave pública del usuario en un
     fichero del sistema local. Pero nosotros no tenemos un fichero en cada
-    servidor SSH con las claves de los usuarios autenticados. Además esta
+    servidor SSH con las claves de los usuarios autenticados. Además ésta
     lista de usuarios será dinámica.
 
     La solución que hemos elegido para solventar el problema es la segunda,
-    pero es necesario que además de mirar en los ficheros locales, pregunte
-    a un servidor intermedio, para saber qué usuarios están autenticados en
+    pero es necesario que además de mirar en los ficheros locales pregunte
+    a un servidor intermedio para saber qué usuarios están autenticados en
     la federación. Para esto es necesario tocar un poco el código del
-    servidor SSH, sin cambiar su funcionamiento normal, pero añadiendo la
+    servidor SSH sin cambiar su funcionamiento normal pero añadiendo la
     opción de pedir claves públicas a un servidor externo.
 
     Como hemos optado por la opción de pedir la clave pública del usuario
@@ -67,30 +65,34 @@
 
     \end{itemize}
 
-    En nuestro caso hemos optado por utilizar un directorio, puesto que la
+    En nuestro caso hemos optado por utilizar un servicio de directorio puesto que la
     federación de identidad está muy ligada al uso de esta tecnología para
-    almacenamiento de usuarios, y lo que vamos a almacenar es un conjunto
+    almacenamiento de usuarios y lo que vamos a almacenar es un conjunto
     de usuarios y sus claves públicas para que el servidor SSH pueda
     acceder a ellas.
 
     \section{Solución elegida}
 
-    %TODO considerar repetir la figura
     La solución propuesta consta de varias partes, como se puede apreciar
-    en la figura \ref{fig:casodeuso}. Las partes que incumben a este
-    proyecto son:
+    en la figura:
+
+    \begin{center}
+        \includegraphics[width=\textwidth]{img/casodeuso1.png}
+    \end{center}
+    
+    Las partes que incumben a este proyecto son:
 
     \begin{itemize}
         
         \item La aplicación web protegida tras el SP global de la
         federación. Esta aplicación será la encargada de verificar que el
-        usuario se ha autenticado en la federación, y hará las operaciones
+        usuario se ha autenticado en la federación y hará las operaciones
         pertinentes para que se pueda acceder a los datos necesarios del
         usuario a través de un medio que no sea un navegador web, de tal
         forma que el servidor SSH pueda autenticar.
 
         \item El servidor de claves. Será un servidor que se encargará de
-        almacenar los datos de los usuarios autenticados en la federación,
+        almacenar los datos de los usuarios autenticados en la federación
         para facilitar el acceso a los mismos por parte del servidor SSH.
         Este servidor será el punto intermedio que enlace la federación
         (web) con el servicio de SSH.
@@ -103,19 +105,19 @@
 
     \end{itemize}
 
-    \section{Parche para openssh (proceso de autenticación sshd)}
+    \section{Parche para openssh (proceso de autenticación de sshd)}
     \label{openssh}
 
-    Para implementar la solución elegida, es necesario tocar algo del
+    Para implementar la solución elegida es necesario tocar algo del
     código del servidor de SSH de openssh, sshd.
 
     Una de las grandes ventajas del software libre es que si una aplicación
-    no cumple los requisitos que necesitamos, pero está cerca de
+    no cumple los requisitos que necesitamos pero está cerca de
     conseguirlo, siempre se puede coger el código del proyecto, estudiarlo,
     y si es viable, mejorarlo o adaptarlo para que pueda cumplir nuestras
     necesidades.
 
-    En nuestro caso, el servidor SSH hace casi todo lo que queremos que
+    En nuestro caso el servidor SSH hace casi todo lo que queremos que
     haga. Pero no autentica frente a una federación. Una posible solución
     sería implementar un servidor SSH que sí hiciera la autenticación de
     esta manera, pero sería tremendamente costoso. Por esta razón es mucho
@@ -126,34 +128,34 @@
     posible acceder a todo el código, se puede estudiar, modificar, y
     distribuir de forma libre, por lo que nuestro proyecto es viable.
 
-    Por lo tanto nos hemos basado en este proyecto, cogiendo su código y
+    Por lo tanto nos hemos basado en este proyecto cogiendo su código y
     desarrollando un parche que permita la autenticación a través de
     certificado de clave pública, pero situado este certificado en un
-    servidor de claves, en lugar de en un fichero local del sistema.
+    servidor de claves en lugar de en un fichero local del sistema.
 
     La autenticación del servidor SSH funciona de la siguiente manera:
 
     \begin{enumerate}
 
     \item Intenta la autenticación por certificado de clave pública. Busca
-    en el fichero \$HOME/authorized\_keys, y prueba que el usuario que está
+    en el fichero \$HOME/authorized\_keys y prueba que el usuario que está
     intentando autenticarse tiene la clave privada de alguna de las claves
     que aparecen en este fichero.
 
-    \item Si no consigue autenticar, y está activa la autenticación por
-    módulos PAM, el servidor pedirá una contraseña al usuario, y se
+    \item Si no consigue autenticar y está activa la autenticación por
+    módulos PAM, el servidor pedirá una contraseña al usuario y se
     ejecutará la pila de módulos.
 
-    \item En otro caso, autenticará con los usuarios del sistema.
+    \item En otro caso autenticará con los usuarios del sistema.
 
     \end{enumerate}
 
-    En este esquema de funcionamiento, tenemos que encajar nuestro sistema
+    En este esquema de funcionamiento tenemos que encajar nuestro sistema
     de autenticación de identidad federada. Buscamos la mayor comodidad
     posible para el usuario, así pues, queremos que el usuario no tenga que
     introducir ninguna contraseña en el servidor SSH.
 
-    Si llega al paso dos de la autenticación del SSH, el servidor pedirá
+    Si llega al paso dos de la autenticación del SSH el servidor pedirá
     automáticamente una contraseña al usuario, y dado que queremos evitar
     esta incomodidad, no es viable el crear un módulo PAM que autentique
     en la federación de identidad.
@@ -161,12 +163,12 @@
     Por esta razón es necesario tocar el código del servidor SSH. Más
     concretamente la parte de autenticación por clave pública. Ya que
     utilizaremos este sistema para identificar unívocamente al usuario que
-    quiere autenticarse. Ya que no se va a introducir ninguna contraseña,
+    quiere autenticarse. Puesto que no se va a introducir ninguna contraseña
     será necesario que el usuario tenga algo que lo identifique. En el caso
-    de la federación de identidad por páginas web, se utiliza una cookie
+    de la federación de identidad por páginas web se utiliza una cookie
     que guarda el navegador. Para nuestro caso, la clave privada del
     usuario servirá para identificarlo, teniendo acceso el servidor SSH a
-    la clave pública, una vez que el usuario esté autenticado en la
+    la clave pública una vez que el usuario esté autenticado en la
     federación.
 
     Por lo tanto la autenticación del servidor SSH parcheado quedaría así:
@@ -178,44 +180,39 @@
     intentando autenticarse tiene la clave privada de alguna de las claves
     que aparecen en este fichero.
 
-    \item \textbf{Si no consigue autenticar, pregunta al servidor de claves
-    de la federación por el usuario. Si el usuario está autenticado, el
+    \item \textbf{Si no consigue autenticar pregunta al servidor de claves
+    de la federación por el usuario. Si el usuario está autenticado el
     servidor de claves le devolverá la clave pública del mismo. Con esta
-    clave pública intentará autenticar al usuario, que sólo tendrá acceso
+    clave pública intentará autenticar al usuario que sólo tendrá acceso
     si tiene la clave privada}
 
-    \item Si no consigue autenticar, y está activa la autenticación por
-    módulos PAM, el servidor pedirá una contraseña al usuario, y se
+    \item Si no consigue autenticar y está activa la autenticación por
+    módulos PAM, el servidor pedirá una contraseña al usuario y se
     ejecutará la pila de módulos.
 
-    \item En otro caso, autenticará con los usuarios del sistema.
+    \item En otro caso autenticará con los usuarios del sistema.
 
     \end{enumerate}
 
-    Se puede ver el funcionamiento en el siguiente esquema
-    (\ref{fig:funcionamientossh}):
+    Se puede ver el funcionamiento en el siguiente esquema:
 
-    \begin{figure}[htp!]
-        \centering
-            \includegraphics[width=\textwidth]{img/funcionamientossh.png}
-            \caption{Funcionamiento SSH}
-        \label{fig:funcionamientossh}
-    \end{figure}
+    \begin{center}
+        \includegraphics[width=\textwidth]{img/funcionamientossh.png}
+    \end{center}
 
 
         \subsection{Posibles soluciones al SSO para SSH}
 
         Durante la realización de este proyecto han surgido algunos
         detalles y funcionalidades que se podrían implementar para el
-        servidor SSH, y que se podrían utilizar de forma independiente al
+        servidor SSH y que se podrían utilizar de forma independiente al
         proyecto aquí descrito.
 
-        Una de estas posibilidades, y quizás la de mayor interés, y que
+        Una de estas posibilidades, y quizás la de mayor interés y que
         tendría entidad propia fuera de este proyecto, es el Single Sing-On
         para SSH.
 
-        %TODO mirar comillas
-        Para realizar la tarea de SSO, es necesario que el cliente
+        Para realizar la tarea de SSO es necesario que el cliente
         autenticado tenga un ``token'' o algo que lo identifique
         unívocamente, en nuestro caso sería la clave privada de SSH. Y el
         servidor debería conocer quién está autenticado, en nuestro caso
@@ -223,19 +220,19 @@
 
         Para el caso de SSO únicamente, sin autenticación por federación,
         sería necesario retocar el parche del servidor SSH para que al
-        acceder a un servidor a través de usuario y contraseña, este
+        acceder a un servidor a través de usuario y contraseña éste
         servidor comunicara al servidor de claves que el usuario se ha
         autenticado. Así cuando el mismo usuario vaya a acceder al mismo
         servidor, o incluso a otro dentro del SSO, tendría acceso directo.
 
-        Este concepto lleva consigo un par de pequeños problemas, y es que
+        Este concepto lleva consigo un par de pequeños problemas y es que
         se ha de poder acceder a alguno de los servidores introduciendo la
-        clave, lo que implica que el usuario ha de tener al menos la clave
-        de uno de los servidores de SSH, o por lo menos debe conocer la
+        clave lo que implica que el usuario ha de tener al menos la clave
+        de uno de los servidores de SSH o por lo menos debe conocer la
         clave pública de este usuario de manera permanente.
 
         El otro problema es que el servidor donde se autentique el usuario
-        por primera vez, ha de conocer la clave pública de este usuario
+        por primera vez ha de conocer la clave pública de este usuario
         para informar al servidor de claves de quién se ha autenticado.
         Otra alternativa sería que el servidor de claves tuviera a todos
         los usuarios en un principio registrados, pero no activos, por lo
@@ -245,9 +242,9 @@
     \section{Servidor de claves}
 
     En principio la idea del servidor de claves era que fuera un servidor
-    independiente, con un protocolo simple, que solo permitiera preguntar
-    si un usuario está autenticado, y en caso afirmativo, ser recibiría la
-    clave del mismo.
+    independiente con un protocolo simple que solo permitiera preguntar
+    si un usuario está autenticado, y en caso afirmativo, se recibiría la
+    clave pública del mismo.
 
     La primera versión del protocolo simple sería:
     \begin{itemize}
@@ -260,18 +257,18 @@
 
         \end{verbatim}
 
-        La orden USR es la petición de la clave de un usuario, y la orden
+        La orden USR es la petición de la clave de un usuario y la orden
         XIT indica desconexión.
 
     \item Respuestas del servidor:
 
-        El servidor responderá con la clave pública del usuario, o con la
-        cadena ``NOT FOUND'', si no lo ha encontrado.
+        El servidor responderá con la clave pública del usuario o con la
+        cadena ``NOT FOUND'' si no lo ha encontrado.
 
     \end{itemize}
 
     Esta implementación facilitaría enormemente la parte del parche al
-    servidor SSH, puesto que tan solo se necesita hacer una conexión por
+    servidor SSH puesto que tan solo se necesita hacer una conexión por
     socket normal, sin necesidad de utilizar ninguna librería
     complementaria.
 
@@ -282,12 +279,12 @@
     usuarios con ficheros de texto plano, con un sistema de base de datos
     relacional, con un servicio de directorio, etc.
     
-    Sin embargo, dificulta la parte del servidor de claves, que ya tiene
+    Sin embargo, dificulta la parte del servidor de claves que ya tiene
     que ser una implementación propia, que utilice un almacenamiento de
     usuarios y claves determinado.
 
     Como esta fue la primera aproximación, se ha implementado un servidor
-    de claves, de ejemplo en python. En principio almacenaba los usuarios y
+    de claves de ejemplo en python. En principio almacenaba los usuarios y
     las claves en texto plano. Posteriormente se extendió para realizar el
     almacenamiento en una base de datos MySQL. Y en realidad incorporar
     nuevos sistemas de almacenamiento es algo tan simple como implementar
@@ -295,41 +292,41 @@
     la clave pública RSA del usuario si está autenticado, y en otro caso
     que devuelva una cadena vacía.
 
-    Tratando de buscar el mínimo impacto en el código del servidor SSH, las
-    peticiones al servidor de claves se realizan en una función, que está
+    Tratando de buscar el mínimo impacto en el código del servidor SSH las
+    peticiones al servidor de claves se realizan en una función que está
     implementada en un fichero aparte, por lo que en el código del servidor
-    tan solo hay que incluir la llamada a esta función, y se puede variar
+    tan solo hay que incluir la llamada a esta función y se puede variar
     el modo de funcionamiento de la petición. De esta forma si se varía el
     protocolo de comunicación entre el servidor SSH y el servidor de claves
     no haría falta tocar el código real del servidor SSH, solamente la
-    función que es llamada desde el mismo, y que es de implementación
-    propia, por lo que no afectaría al funcionamiento normal del mismo.
+    función que es llamada desde el mismo y que es de implementación
+    propia por lo que no afectaría al funcionamiento normal del mismo.
 
     Por otra parte, si el desarrollo habitual del servidor varía alguna
-    parte de la autenticación, el parche es fácilmente adaptable a futuras
-    versiones, puesto que del código original toca lo menos posible.
+    parte de la autenticación el parche es fácilmente adaptable a futuras
+    versiones puesto que del código original toca lo menos posible.
 
-    Tras esta primera implementación de prueba, y tras ver que todo era
-    correcto, y que funcionaba bien, decidimos incrementar la seguridad
+    Tras esta primera implementación de prueba y tras ver que todo era
+    correcto, y que funcionaba bien, se decidió incrementar la seguridad
     entre las comunicaciones.
 
     En un principio se optó por incrementar la seguridad del servidor de
     claves utilizando sockets ssl, pero tras observar que esto complicaría
-    la solución de manera drástica, se optó por utilizar algo más simple.
+    la solución de manera drástica se optó por utilizar algo más simple.
 
     Así pues se pensó en utilizar como servidor de claves un servicio de
-    directorio, y utilizar como protocolo de comunicaciones el propio
-    protocolo LDAP, que tiene una versión segura.
+    directorio y utilizar como protocolo de comunicaciones el propio
+    protocolo LDAP que tiene una versión segura.
 
-    La opción de elegir un servicio de directorio no es algo casual, sino
+    La opción de elegir un servicio de directorio no es algo casual sino
     que se eligió este sistema porque cumple los requisitos necesarios para
     el servidor de claves, tal y como está definido, y además cuando se
-    habla de federación de identidad, es casi imposible no hablar de
+    habla de federación de identidad es casi imposible no hablar de
     servicios de directorio. Hoy en día la federación de identidad está muy
-    ligada a este tipo de almacenamiento de usuarios, por lo tanto es una
+    ligada a este tipo de almacenamiento de usuarios por lo tanto es una
     buena opción.
 
-    Al utilizar un servicio de directorio como servidor de claves públicas,
+    Al utilizar un servicio de directorio como servidor de claves públicas
     se simplifica la parte del servidor de claves, puesto que ya está
     hecho, y es muy fácil desplegar uno. Pero por otra parte se complica un
     poco la modificación al servidor SSH.
@@ -340,37 +337,37 @@
     comunicación LDAP, desde el lenguaje C.
 
     Por suerte las consultas al servicio de directorio desde C no son nada
-    complicadas, e implementando una simple función es posible modificar el
+    complicadas e implementando una simple función es posible modificar el
     parche para que el servidor SSH ahora se comunique con un servidor de
     claves a través de LDAP.
 
     \subsection{Esquemas LDAP}
 
-    % TODO campos son atributos
-    % entradas son objetos
     Los sistemas de directorio utilizan diferentes atributos para guardar los
-    datos pertenecientes a las diferentes entradas. Cada posible campo a
-    utilizar está definido en un ``Schema LDAP'', y se podrá utilizar
-    siempre que la entrada tenga el ``objectclass'' que define ese campo.
+    datos pertenecientes a los diferentes objetos. Cada posible campo a
+    utilizar está definido en un ``Esquema LDAP'', y se podrá utilizar
+    siempre que la entrada tenga el ``objectclass'' que define ese atributo.
 
-    Existen muchos estándares de schemas LDAP, que suelen venir por defecto
-    en la mayoría de los servicios de directorio. Y cada schema tiene sus
+    Existen muchos estándares de esquemas LDAP, que suelen venir por defecto
+    en la mayoría de los servicios de directorio. Y cada esquema tiene sus
     atributos destinados cada uno a almacenar un tipo de dato concreto.
 
-    Es posible utilizar un campo cualquiera, siempre que sea del mismo
+    Es posible utilizar un atributo cualquiera, siempre que sea del mismo
     tipo, para guardar cualquier información, pero esto no es recomendable,
-    puesto que esto complica la compresión de futuros usuarios y
-    administradores, dado que cada campo tiene una definición de para qué
+    puesto que complica la compresión de futuros usuarios y
+    administradores, dado que cada atributo tiene una definición de para qué
     se usa.
 
-    Por ejemplo se puede usar el campo ``mail'' para guardar el dni del
-    usuario. Pero no es correcto, ya que el campo mail está especificado
+    Por ejemplo se puede usar el atributo ``mail'' para guardar el dni del
+    usuario. Pero no es correcto, ya que el atributo mail está especificado
     para almacenar la dirección de correo.
 
-    Así pues, hay que definir, o buscar unos Schemas que definan, los
-    campos que necesitamos para almacenar los usuarios junto a sus claves,
+    Así pues, hay que definir o buscar unos esquemas que definan los
+    atributos que necesitamos para almacenar los usuarios junto a sus claves
     en el servidor de claves.
 
+
+    %FIX por aquí
     En principio los datos que ha de almacenar el servidor de claves para
     este proyecto son:
 
@@ -382,18 +379,18 @@
 
     \end{itemize}
 
-    El primer campo, \textbf{uid}, está cubierto en los schemas que vienen
-    por defecto, en el schema \textbf{person}.
+    El primer campo, \textbf{uid}, está cubierto en los esquemas que vienen
+    por defecto, en el esquema \textbf{person}.
 
     Para el segundo campo, en principio se pensó en utilizar el campo
     usercertificate, pero no es el más adecuado, ya que está pensado para
     almacenar un certificado personal. Así pues buscando alternativas se ha
-    decidido utilizar el schema \textit{openssh-lpk}
+    decidido utilizar el esquema \textit{openssh-lpk}
     \url{http://dev.inversepath.com/openssh-lpk} que ofrece un atributo
     sshPublicKey, destinado para este propósito.
 
     Y por último, para cubrir las necesidades del segundo campo se ha
-    optado por utilizar el schema \textit{schac}
+    optado por utilizar el esquema \textit{schac}
     \url{http://www.terena.org/activities/tf-emc2/schac.html}, y utilizar
     el atributo schacUserStatus para guardar el timeout con el siguiente
     formato: \texttt{schac:userStatus:us.es:timeout:1205274586}, donde el

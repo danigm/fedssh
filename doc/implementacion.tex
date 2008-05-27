@@ -991,7 +991,7 @@ function get_remote_user(){
         opciones, comerciales, y no comerciales. Y dado que los
         campos a utilizar para almacenar los datos son variables,
         tanto en el servidor SSH parcheado, como en la aplicación de
-        autenticación, no es obligatorio instalar ningún schema,
+        autenticación, no es obligatorio instalar ningún esquema,
         aunque sí recomendable.
 
         Explicaremos aquí cómo instalar un servidor de claves, en una
@@ -1006,9 +1006,9 @@ function get_remote_user(){
         \end{verbatim}
 
         La configuración está en el directorio /etc/ldap/, y los
-        schemas para openldap hay que meterlos en /etc/ldap/schemas/.
+        esquemas para openldap hay que meterlos en /etc/ldap/schemas/.
 
-        Descarga de los schemas necesarios:
+        Descarga de los esquemas necesarios:
 
         Schema schac: 
         \url{http://www.rediris.es/ldap/esquemas/schac/schac-20061017-1.3.0b2.schema.txt}
@@ -1017,7 +1017,7 @@ function get_remote_user(){
         \url{http://dev.inversepath.com/openssh-lpk/openssh-lpk\_openldap.schema}
 
 
-        Se ha de mover los schemas al directorio /etc/ldap/schemas/ y
+        Se ha de mover los esquemas al directorio /etc/ldap/schemas/ y
         posteriormente modificar el fichero
         \texttt{/etc/ldap/slapd.conf} añadiendole las lineas
 

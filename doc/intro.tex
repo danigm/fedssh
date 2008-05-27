@@ -1,21 +1,19 @@
-%TODO quitar schema por esquema
-
 \chapter{Introducción}
 \section{Objetivos}
 
 Las facilidades que ofrece la federación de identidad son más que
-evidentes, y podría ser interesante en muchos casos, tener estas
+evidentes y podría ser interesante en muchos casos tener estas
 facilidades para otros servicios que requieran autenticación.
 
 El principal objetivo de este proyecto es llevar las facilidades de la
-gestión de identidad del ámbito de la web a otros servicios, como por
-ejemplo el SSH. En este proyecto nos hemos centrado en integrar la
-federación de identidad con el acceso por SSH, y puede servir como
+gestión de identidad del ámbito de la Web a otros servicios, como por
+ejemplo el SSH. Este proyecto se centra en integrar la
+federación de identidad con el acceso por SSH y puede servir como
 prueba de concepto a la hora de llevar la autenticación por federación
 de identidad a servicios diferentes de la web.
 
-Las características más importantes de la federación de identidad, que
-nos serán útiles en el SSH son:
+Las características más importantes de la federación de identidad que
+serán útiles en el SSH son:
 \begin{enumerate}
 
     \item \textbf{Acceso a recursos de otras entidades}: La base de la
@@ -24,54 +22,53 @@ nos serán útiles en el SSH son:
     servicios de tu propia entidad.
 
     \item \textbf{Gestión de identidad distribuida}: Al encargarse
-    cada entidad de la federación de sus propios usuarios, y
+    cada entidad de la federación de sus propios usuarios y
     basándonos en las relaciones de confianza de la federación, se
     puede dar servicio a un mayor número de usuarios gestionando tan
     solo una pequeña cantidad de ellos. Esto puede crear algún tipo de
-    duda, puesto que se pierde el control sobre los usuarios, pero no
-    hay que olvidar que la federación es una red de confianza, donde
-    cada entidad debe confiar en las demás, y para ello hay mecanismos
+    duda puesto que se pierde el control sobre los usuarios, pero no
+    hay que olvidar que la federación es una red de confianza donde
+    cada entidad debe confiar en las demás y para ello hay mecanismos
     seguros, como por ejemplo los certificados.
 
     \item \textbf{Unicidad de contraseña}: La federación de identidad
-    nos brinda la posibilidad de acceder a diferentes servicios, que
+    brinda la posibilidad de acceder a diferentes servicios, que
     requieren autenticación, con la misma cuenta y la misma
-    contraseña, y sin necesidad de replicar esta en los diferentes
-    servicios, sino estando en tu propia entidad, incrementando así la
-    seguridad de la misma, y la comodidad a la hora de cambiar de
-    contraseña, o de nombre de usuario.
-    %TODO problemas de las contraseñas únicas
+    contraseña y sin necesidad de replicar esta en los diferentes
+    servicios sino estando en la propia entidad del usuario, incrementando así la
+    seguridad de la misma y la comodidad a la hora de cambiar de
+    contraseña, o de nombre de usuario. Esto tiene un inconveniente, y es
+    que si las contraseñas son vulnerables hay un mayor número de recursos
+    a disposición de un posible intruso. Por lo tanto es recomendable tener
+    contraseñas más fuertes cuando se trabaja con contraseñas únicas.
 
     \item \textbf{Login único}: También se busca implementar el Single
-    Sing On(SSO) para el SSH sobre federación, de tal forma que un
+    Sing On(SSO) para el SSH sobre federación de tal forma que un
     usuario sólo tenga que autenticarse una vez, y a partir de ahí,
-    tener acceso, sin necesidad de introducir ningún tipo de
-    contraseña, a todos los servidores SSH disponibles.
+    tener acceso sin necesidad de introducir ningún tipo de
+    contraseña a todos los servidores SSH disponibles.
 
 \end{enumerate}
 
-Por otra parte, hemos elegido llevar la federación al servicio SSH
-porque es ampliamente utilizado, además de que ofrece una gran
+Por otra parte se ha elegido llevar la federación al servicio SSH
+porque es ampliamente utilizado, además de ofrecer una gran
 potencia y versatilidad, abriendo así la puerta a la utilización de
 otros servicios de forma fácil.
 
 Por ejemplo, en el ambiente académico, puede ser interesante dar
 acceso a un servidor SSH a todos los alumnos de Informática, bien sea
-para que utilicen un supercomputador, o para que tengan una cuenta
-dónde hacer las practicas. Dentro del objetivo de este proyecto
+para que utilicen un supercomputador o para que tengan una cuenta
+donde hacer las practicas. Dentro del objetivo de este proyecto
 entraría delegar la gestión de estos usuarios a la federación,
-facilitar así el proceso, 
-
-% TODO revisar esto
-así como por parte del alumno, como por
-parte del administrador de las máquinas.
+facilitando así el proceso, tanto por parte del alumno como por parte del
+administrador de las máquinas.
 
 \newpage
 \section{Caso de uso}
 
     En el siguiente caso de uso se muestra el funcionamiento básico del
-    sistema, así como una serie de detalles que serán explicados
-    detalladamente en la sección ``Implementación y despliegue''
+    sistema así como una serie de detalles que serán explicados
+    en la sección ``Implementación y despliegue''
     [\ref{implementacion}].
 
     %\textbf{Caso de uso del proyecto SSH sobre federación de identidad}:
@@ -80,15 +77,14 @@ parte del administrador de las máquinas.
 
     \item \textbf{Descripción}:
     
-    La federación está pensada para aplicaciones web, pero sería
+    La federación está pensada para aplicaciones web pero sería
     interesante poder utilizar estos mecanismos para aplicaciones que
     autentican de otra manera diferente.
 
-    %TODO revisar los tu
-    En el caso del ssh federado intentamos llevar el concepto de hacer
-    login una sola vez, y en tu entidad, al acceso por ssh. Buscando poder
-    acceder por ssh a diferentes máquinas sin tener que escribir usuario y
-    contraseña, una vez nos hayamos autenticado.  A través de ssh se pueden
+    En el caso del SSH federado se intenta llevar el concepto de hacer
+    login una sola vez, y en la entidad de origen del usuario, al acceso por SSH. Buscando poder
+    acceder por SSH a diferentes máquinas sin tener que escribir usuario y
+    contraseña, una vez se haya autenticado el usuario.  A través de SSH se pueden
     hacer muchas más cosas, como por ejemplo túneles ssh, port-forwarding,
     etc.
 
@@ -107,7 +103,7 @@ parte del administrador de las máquinas.
 
         \item Una vez autenticado en esa aplicación web, el usuario puede
         acceder a las cuentas ssh federadas de las que disponga sin tener
-        que introducir password.
+        que introducir su contraseña.
 
     \end{enumerate}
 
@@ -129,54 +125,54 @@ parte del administrador de las máquinas.
         para esta sesión.
 
         \item Una vez autenticado en esa aplicación web, el usuario puede
-        acceder a las cuentas ssh federadas de las que disponga sin tener que
-        introducir password.
+        acceder a las cuentas SSH federadas de las que disponga sin tener que
+        introducir su contraseña.
 
     \end{enumerate}
 
     %TODO quitar del caso de uso
-    \item \textbf{Implementación}:
-    Para la implementación se ha optado por utilizar el mecanismo de acceso
-    por clave publica-privada que nos ofrece el mismo protocolo ssh.
-    Este mecanismo es el siguiente:
-    El usuario crea un par de claves, para la máquina en la que se
-    encuentra (ssh-keygen).
+    %\item \textbf{Implementación}:
+    %Para la implementación se ha optado por utilizar el mecanismo de acceso
+    %por clave publica-privada que nos ofrece el mismo protocolo ssh.
+    %Este mecanismo es el siguiente:
+    %El usuario crea un par de claves, para la máquina en la que se
+    %encuentra (ssh-keygen).
 
-    Para dar acceso remoto sólo necesitamos conocer la clave publica
-    (\$HOME/.ssh/id\_rsa.pub).
-    
-    Para poder acceder es necesario que el usuario disponga de su par
-    privado.
-    
-    El servidor openssh, mira en el directorio personal del usuario, y
-    busca en el archivo authorized\_keys (\$HOME/.ssh/authorized\_keys), antes
-    de pedir password. Si encuentra alguna clave, intenta la autenticación
-    por RSA, que es automática, sin petición de password. Por lo tanto
-    nuestro objetivo es utilizar este servicio, pero en lugar de mirar en
-    un archivo local, preguntaremos a un servidor remoto.
+    %Para dar acceso remoto sólo necesitamos conocer la clave publica
+    %(\$HOME/.ssh/id\_rsa.pub).
+    %
+    %Para poder acceder es necesario que el usuario disponga de su par
+    %privado.
+    %
+    %El servidor openssh, mira en el directorio personal del usuario, y
+    %busca en el archivo authorized\_keys (\$HOME/.ssh/authorized\_keys), antes
+    %de pedir password. Si encuentra alguna clave, intenta la autenticación
+    %por RSA, que es automática, sin petición de password. Por lo tanto
+    %nuestro objetivo es utilizar este servicio, pero en lugar de mirar en
+    %un archivo local, preguntaremos a un servidor remoto.
     
     \item \textbf{Requisitos}:
 
-    Para poder acceder a cualquier máquina remota por ssh, en el servidor
-    se debe poner el sshd parcheado. Además se debe crear una cuenta de
-    usuario. Es recomendable el deshabilitar la posibilidad de cambiar el
-    password, puesto que si se puede cambiar el password de la cuenta, es
+    Para poder acceder a cualquier máquina remota por SSH en el servidor
+    se debe poner el servidor SSH parcheado. Además se debe crear una cuenta de
+    usuario. Es recomendable el deshabilitar la posibilidad de cambiar
+    la contraseña, puesto que si se puede cambiar es
     posible acceder a esta sin pasar por la federación. También es
-    conveniente no permitir la creación, o borrar, los ficheros dentro de
-    .ssh del home del usuario, por la misma razón que lo anterior.
+    conveniente no permitir la creación, o el borrado de los ficheros
+    dentro del directorio .ssh del usuario, por la misma razón que lo anterior.
 
     También será necesario definir un esquema para la federación, que añada
-    el campo ssh\_rsa\_public\_key, si queremos que el acceso sea lo más
+    el atributo ssh\_rsa\_public\_key, si queremos que el acceso sea lo más
     automatizado posible.
 
     %TODO quitar del caso de uso
-    \item \textbf{Temas a discutir}:
+    %\item \textbf{Temas a discutir}:
 
-    \begin{enumerate}
-        \item Tipo del servidor de claves, LDAP, base de datos, etc
+    %\begin{enumerate}
+    %    \item Tipo del servidor de claves, LDAP, base de datos, etc
 
-        \item Posibilidad de cambiar password, y permisos en la cuenta previamente creada.
-    \end{enumerate}
+    %    \item Posibilidad de cambiar password, y permisos en la cuenta previamente creada.
+    %\end{enumerate}
 
     \end{itemize}
 
@@ -188,79 +184,72 @@ parte del administrador de las máquinas.
     \end{figure}
 
     Para una mayor compresión de la figura \ref{fig:casodeuso} vamos a
-    explicar cada paso de manera un poco más exaustiva:
+    explicar cada paso de manera un poco más exhaustiva:
 
     \begin{itemize}
         
         \item{Paso 1:} Antes de poder acceder a cualquier servicio de
-        ssh federado, el usuario tendrá que autenticarse. Para ello se
+        SSH federado el usuario tendrá que autenticarse. Para ello se
         utilizan los mecanismos que ofrece la federación de identidad.
-        Por tanto el usuario intentará acceder a una aplicación web,
+        Por tanto el usuario intentará acceder a una aplicación web
         protegida tras un Service Provider (SP) de la federación de
         identidad.
 
-        %TODO quitar esto, puede haber tantos SP como se quiera
-        Este SP no tiene por qué pertenecer a ninguna de las entidades
-        que forman la federación, sino que será un único servidor
-        central.
-
-        \item{Paso 2:} Según el funcionamiento de la federación, si el
-        usuario no está aún autenticado en la federación de identidad,
-        el SP, redireccionará al usuario hacia una aplicación WAYF
-        (where are you from), dónde seleccionará su entidad de origen,
+        \item{Paso 2:} Según el funcionamiento de la federación si el
+        usuario no está aún autenticado en la federación de identidad
+        el SP redireccionará al usuario hacia una aplicación WAYF
+        (where are you from) dónde seleccionará su entidad de origen,
         y tras esto será redirigido al Proveedor de Identidad (IdP) de
         su entidad. En esta aplicación web será donde el usuario
-        proporciona sus credenciales, siendo esta una operación
-        segura, puesto que el IdP está gestionado por nuestra propia
+        proporcione sus credenciales, siendo esta una operación
+        segura puesto que el IdP está gestionado por nuestra propia
         entidad, y por lo tanto, no estamos proporcionando nuestra
-        contraseña a ninguna otra entidad.
+        contraseña a ninguna otra entidad desconocida.
 
         \item{Paso 3:} Una vez autenticado en la federación de
-        identidad, el sistema redirigirá al usuario al SP al cuál
+        identidad el sistema redirigirá al usuario al SP al cuál
         quería entrar en un principio, pasándole a este los datos
         necesarios para asegurar la identidad del usuario.
         Aunque este proceso pueda parecer largo, para el usuario son
-        un simple par de clicks, puesto que todo el trabajo se realiza
+        un simple par de clicks puesto que todo el trabajo se realiza
         automáticamente por la federación.
 
         \item{Paso 4:} La aplicación principal, tras el SP, recibirá
-        entonces los datos necesarios del usuario, que le serán
+        entonces los datos necesarios del usuario que le serán
         proporcionados por el IdP de la entidad de este. Y con estos
         datos creará una entrada en el servidor de claves, el cuál
-        será consultado por los servidores ssh para verificar que el
+        será consultado por los servidores SSH para verificar que el
         usuario esté autenticado en la federación.
         En este paso es donde se comienza a sacar la federación de
-        identidad del ámbito web, teniendo un lugar dónde se
-        almacenarían los usuario autenticados, con un sistema
-        diferente al de cookies.
+        identidad del ámbito Web teniendo un lugar dónde se
+        almacenarían los usuario autenticados con un sistema
+        diferente al de ``cookies''.
 
-        \item{Paso 5:} El usuario ya está autenticado, y ahora puede
-        entrar en uno o varios servidores ssh federados sin necesidad de
+        \item{Paso 5:} El usuario ya está autenticado y ahora puede
+        entrar en uno o varios servidores SSH federados sin necesidad de
         escribir su contraseña. Por supuesto tendrá un tiempo límite,
         la sesión expirará dado un cierto tiempo.
 
-        \item{Paso 6:} El servidor ssh tiene que saber si el usuario
-        que intenta acceder está autenticado en la federación, por lo
-        que consultará el servidor de claves, para confirmar que dicho
-        usuario está autenticado, y además es quien dice ser.
+        \item{Paso 6:} El servidor SSH tiene que saber si el usuario
+        que intenta acceder está autenticado en la federación por lo
+        que consultará el servidor de claves para confirmar que dicho
+        usuario está autenticado y además es quien dice ser.
 
     \end{itemize}
-
-%TODO importancia del SSH, túneles, importación X
 
 \newpage
 \section{Antecedentes}
 
-    La federación de identidad es un concepto relativamente nuevo, y
+    La federación de identidad es un concepto relativamente nuevo y
     por tanto hoy en día hay pocas federaciones funcionando.
 
     La federación de identidad de universidades andaluzas está
-    naciendo ahora mismo, por lo tanto se está nutriendo de la
+    naciendo ahora mismo, por lo que se está nutriendo de la
     experiencia de otras federaciones con algo más de tiempo.
 
     Una de las federaciones más activas en lo que se refiere a
     investigación y desarrollo de aplicaciones para la federación de
-    identidad es la federación noruega, \textbf{feide}.
+    identidad es la federación noruega, \textbf{feide} (\cite{feide}).
 
     El proyecto de SSH sobre federación de identidad nace a partir de
     un documento publicado el 20 de agosto de 2007 por la federación
@@ -269,15 +258,15 @@ parte del administrador de las máquinas.
     \href{http://rnd.feide.no/content/feide-and-ssh-secure-shell}{http://rnd.feide.no/content/feide-and-ssh-secure-shell}
     %\textbf{http://rnd.feide.no/content/feide-and-ssh-secure-shell}
 
-    Este documento investiga como las credenciales de la federación
+    Este documento investiga cómo las credenciales de la federación
     de identidad pueden ser usadas para autenticar a diferentes
     servicios, como el SSH.
 
     A partir de esta idea se proponen diferentes formas de conseguir
     la autenticación de SSH sobre la federación de identidad.
     Este proyecto se basa en las ideas propuestas por la federación
-    noruega, dando un paso más, e intentando automatizar al máximo el
-    proceso, para dar una mayor comodidad al usuario, y también al
+    noruega, dando un paso más e intentando automatizar al máximo el
+    proceso, para dar una mayor comodidad al usuario y también al
     administrador.
 
     Todos los métodos propuestos en este documento se basan en la
@@ -293,10 +282,9 @@ parte del administrador de las máquinas.
     de identidad. Hemos mantenido la misma idea de autenticación
     propuesta por la federación noruega.
 
-    En este documento se propone colocar una página web, tras un SP,
+    En este documento se propone colocar una página web tras un SP,
     por cada servidor SSH federado que se ofrezca. En nuestro caso no
-    hemos mantenido esta idea, puesto que complicaría el
-    despliegue del servicio.
+    hemos mantenido esta idea, puesto que complicaría el despliegue del servicio.
 
     A continuación vamos a detallar las diferentes propuestas que se
     pueden encontrar en este documento, además comentaremos los pros y
@@ -307,11 +295,11 @@ parte del administrador de las máquinas.
         \item{One-time passwords. Contraseñas de un solo uso:}
         Este método consiste en generar una contraseña de un solo uso
         para el usuario. Este es un método sencillo en el cual cada
-        vez que un usuario se autentica, se generaría una cuenta con
-        una contraseña aleatoria, valida solo una vez.
+        vez que un usuario se autentica se generaría una cuenta con
+        una contraseña aleatoria valida solo una vez.
 
         Para este caso se puede utilizar OPIE (one-time password in
-        everything), que es una aplicación desarrollada por el
+        everything) que es una aplicación desarrollada por el
         laboratorio de investigación naval de los Estados Unidos de
         América. Se puede utilizar en el servidor web el ejecutable
         ``opie-client'' para generar las contraseñas para los
@@ -331,18 +319,18 @@ parte del administrador de las máquinas.
         una contraseña diferente.
 
         En cambio solventa el problema de tener que introducir tu
-        contraseña en un servidor extraño, puesto que la contraseña
+        contraseña en un servidor extraño puesto que la contraseña
         que se introduce es de un solo uso.
 
         \item{Credenciales de la federación:} 
         Otra posibilidad es proporcionar nuestras credenciales de la
         federación de identidad directamente sobre el servidor SSH,
         sin pasar a través del la autenticación web. Esta solución
-        puede ser implementada usando un pequeño módulo PAM, que se
+        puede ser implementada usando un pequeño módulo PAM que se
         conecta a la federación y autentica al usuario directamente
         con las credenciales que este ha proporcionado.
 
-        Pero este método no es una solución viable, puesto que el
+        Pero este método no es una solución viable puesto que el
         nombre de usuario y la contraseña nunca debería pasar a través
         de un proveedor de servicio.
 
@@ -352,7 +340,7 @@ parte del administrador de las máquinas.
         clave pública del usuario a través de los atributos recibidos
         del IdP.
         
-        Si la clave pública no se proporciona por parte del IdP, se
+        Si la clave pública no se proporciona por parte del IdP se
         puede ofrecer al usuario la posibilidad de subir la suya a
         través de una interfaz web. La clave se almacenará en el
         fichero authorized\_keys, permitiendo al usuario autenticarse
@@ -375,10 +363,10 @@ parte del administrador de las máquinas.
         manualmente.
 
         Sin embargo, aunque solventa el problema de tener que recordar
-        una clave, y otros problemas relacionados con el uso de
-        contraseñas, no es una solución completa. Al estar ligada a un
+        una clave y otros problemas relacionados con el uso de
+        contraseñas no es una solución completa. Al estar ligada a un
         solo servidor SSH no es posible entrar en diferentes
-        servidores con una sola autenticación, sino que habría que
+        servidores con una sola autenticación sino que habría que
         autenticarse en cada uno de ellos. Esa parte es la que aporta
         nuestro proyecto.
 
@@ -389,43 +377,39 @@ parte del administrador de las máquinas.
 
         En este caso se realiza la operación inversa a lo que se busca
         en el proyecto, pero con similar resultado. En un principio
-        queremos llevar los beneficios de la federación de identidad
-        fuera del ámbito web, pero buscando este objetivo hacemos lo
+        se quieren llevar los beneficios de la federación de identidad
+        fuera del ámbito web, pero buscando este objetivo se hace lo
         opuesto, y es llevar otro ámbito, como es el del SSH a la Web,
         mediante el uso de un applet de Java.
 
         Lo bueno de este método es que tiene acceso a cuentas SSH de
-        manera más simple aún, puesto que funcionaría de igual manera
+        manera más simple aún puesto que funcionaría de igual manera
         que cualquier página web federada. Además sigue estando la
         posibilidad de entrar en diferentes servicios SSH, habiendo
         realizado la autenticación una sola vez.
 
-
-        %TODO segunda persona
-        Lo malo es que no te da un acceso SSH completo, sino que te
-        ofrece una shell, pero siempre a través del navegador, con las
+        Lo malo es que no proporciona al usuario un acceso SSH completo,
+        sino que ofrece una shell, pero siempre a través del navegador, con las
         limitaciones que esto conlleva. Además de que no aporta nada a
         la idea de llevar la federación de identidad fuera de la web.
 
     \end{itemize}
 
     En conclusión podemos decir que hay algunas investigaciones
-    previas sobre el concepto de SSH sobre federación de identidad, y
+    previas sobre el concepto de SSH sobre federación de identidad y
     que la idea de realizar este proyecto nace, en gran medida, a
     partir del documento publicado por la federación noruega.
     
-    %TODO revisar esto
     Por supuesto nuestro proyecto no se queda en una prueba de
-    concepto, como es el caso del documento comentado, sino que se a
+    concepto, como es el caso del documento comentado, sino que a
     partir de estas pruebas de concepto se implementa un sistema
-    más completo y funcional, el cuál utiliza y mejora las ideas
+    más completo y funcional el cuál utiliza y mejora las ideas
     propuestas, dando así un nuevo punto de vista a la idea principal.
-
     
     \subsection{Otros antecedentes a destacar}
     
         Como se verá en el capitulo \ref{openssh}, para la
-        implementación hemos optado por crear un parche para el
+        implementación se ha optado por crear un parche para el
         servidor SSH openssh, para realizar la autenticación por clave
         pública a través de un servidor externo, además de por los
         ficheros authorized\_keys.
@@ -434,6 +418,7 @@ parte del administrador de las máquinas.
         que realiza algo similar a nuestra implementación.
 
         \href{http://dev.inversepath.com/trac/openssh-lpk}{http://dev.inversepath.com/trac/openssh-lpk}
+        \cite{lpk}
         %\textbf{http://dev.inversepath.com/trac/openssh-lpk}
 
         Este proyecto consiste en un parche para el servidor SSH
@@ -447,9 +432,9 @@ parte del administrador de las máquinas.
         similar way (Kerberos, SecurID, etc...), except the fact that
         it's based on OpenSSH and its public key code.''
         
-        Para este proyecto buscábamos algo parecido, pero en un
+        Para este proyecto se buscaba algo parecido, pero en un
         principio no nos queríamos restringir al uso de un servido
-        LDAP. Aunque posteriormente nos hemos basado en este protocolo
+        LDAP. Aunque posteriormente se ha basado en este protocolo
         para proporcionar el servidor de claves.
 
         Sin embargo no nos hemos decantado por usar este parche, por

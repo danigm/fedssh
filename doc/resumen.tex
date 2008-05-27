@@ -1,67 +1,66 @@
-% mirar las comas
-% mirar las segundas personas
+\newpage
 \begin{abstract}
 
-Cada vez está tomando más importancia la web, y actualmente están
+Cada vez está tomando más importancia la web y actualmente están
 apareciendo multitud de aplicaciones, ya sea por parte de empresas o
-de instituciones como universidades, etc. Estas aplicaciones
-normalmente requieren autenticación, y la mayoría de ellas basan dicha
+de instituciones como universidades. Estas aplicaciones
+normalmente requieren autenticación y la mayoría de ellas basan dicha
 autenticación en bases de datos locales.
 
-Con el crecimiento de las aplicaciones, crece el número de usuarios de
+Con el crecimiento de las aplicaciones crece el número de usuarios de
 estas, y por parte del usuario, crece el número de cuentas creadas
-para diferentes aplicaciones. Para paliar este problema, nace el
-Single Sing On(SSO), que proporciona una única cuenta, y un único
-punto de autenticación, para diferentes aplicaciones web de una misma
+para diferentes aplicaciones. Para paliar este problema nace el
+Single Sing On(SSO), que proporciona una única cuenta y un único
+punto de autenticación para diferentes aplicaciones web de una misma
 entidad.
 
-El siguiente paso natural, es el uso de aplicaciones de otras
+El siguiente paso natural es el uso de aplicaciones de otras
 entidades, y aquí es donde radica la importancia de la
 \textbf{federación de identidad}.
 
 La federación de identidad consiste en que una serie de entidades
 \textbf{confían} en otras para la autenticación de los usuarios. Es
-decir, que una aplicación de una entidad, acepta usuarios de otra
+decir, que una aplicación de una entidad acepta usuarios de otra
 entidad. Además estos usuarios se autenticarán en su entidad, por lo
-que la gestión de usuarios, contraseñas, y atributos, queda delegada a
+que la gestión de usuarios, contraseñas, y atributos queda delegada a
 cada entidad. Por tanto el usuario final tiene acceso a todas las
-aplicaciones federadas, de todas las entidades que conforman la
+aplicaciones federadas de todas las entidades que conforman la
 federación de identidad.
 
-Esto facilita enormemente la gestión de usuarios, por parte de las
+Esto facilita enormemente la gestión de usuarios por parte de las
 entidades, puesto que tan solo tienen que gestionar sus propios
-usuarios, y prestan servicio a usuarios de otras entidades, gracias a
+usuarios y prestan servicio a usuarios de otras entidades gracias a
 que la autenticación es delegada.
 
 La idea principal de este proyecto es llevar las facilidades que
-proporciona la federación de identidad fuera del ámbito de la web,
+proporciona la federación de identidad fuera del ámbito de la Web,
 más concretamente al ámbito del \textbf{SSH} (Secure SHell).
 
 Para el caso del SSH, si un usuario tiene acceso a diferentes
-máquinas, tendrá diferentes cuentas, y diferentes contraseñas que
-recordar, almacenar y gestionar, con la problemática que eso conlleva.
+máquinas tendrá diferentes cuentas y diferentes contraseñas que
+recordar, almacenar y gestionar con la problemática que eso conlleva.
 Además sus contraseñas estarán en máquinas que no tiene por qué
 controlar, por lo que si se compromete alguna de estas máquinas,
 estará comprometida su contraseña.
 
-Utilizando SSH sobre la federación de identidad, se pueden eliminar
+Utilizando SSH sobre la federación de identidad se pueden eliminar
 estos problemas e incrementar la comodidad, tanto por parte de los
-usuarios, como por parte de los administradores. Para poder acceder
-por SSH, un usuario tendría que autenticarse en la federación, y una
+usuarios como por parte de los administradores. Para poder acceder
+por SSH un usuario tendría que autenticarse en la federación y, una
 vez autenticado, podrá entrar en todas las máquinas que ofrezcan el
-servicio de SSH federado, sin necesidad de poner contraseña, basándose
-en el mecanismo de clave pública y clave privada, y estando el
+servicio de SSH federado sin necesidad de poner contraseña, basándose
+en el mecanismo de clave pública y clave privada y estando el
 servidor en cualquier entidad de la federación.
 
-Así pues, por parte del usuario, se tiene acceso a diferentes máquinas
+Así pues, por parte del usuario se tiene acceso a diferentes máquinas
 necesitando recordar y gestionar una sola contraseña. Además esta
 contraseña nunca se entrega a un servidor extraño, sólo a la entidad
-de la cual procedes (a través de una páginas web segura), y en la cual
+de la cual procedes (a través de una páginas web segura) y en la cual
 confías puesto que es la encargada de gestionar tu identidad.
 
-Y por parte del administrador, se puede delegar la gestión de
-usuarios, confiando en la federación. Automatizando la creación y
-destrucción de cuentas, y sin necesidad de proporcionar ninguna
+Y por parte del administrador se puede delegar la gestión de
+usuarios confiando en la federación. Automatizando la creación y
+destrucción de cuentas y sin necesidad de proporcionar ninguna
 contraseña.
 
 \end{abstract}

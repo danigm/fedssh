@@ -5,30 +5,29 @@
     %TODO repaso, quitar un poco
 
     La gestión de identidad centralizada fue creada para ayudar con el
-    trato de usuarios y seguridad de datos, cuando el usuario accede
+    trato de usuarios y seguridad de datos cuando el usuario accede
     desde dentro de la misma red, o al menos desde dentro del mismo
     dominio de control. Cada vez más, los usuarios están accediendo a
-    sistemas externos, que están fuera de su dominio de control, y
+    sistemas externos que están fuera de su dominio de control y
     usuarios externos están accediendo a sistemas internos.
 
     La federación de identidad es un concepto nuevo, nacido a partir
-    del uso masivo de la web, así como de la necesidad de
+    del uso masivo de la web así como de la necesidad de
     interoperabilidad entre diferentes entidades que gestionan
     diferentes grupos de usuarios de maneras totalmente diferente.
 
-    Mediante soluciones de identidad federada los individuos pueden
-    emplear la misma identificación personal (típicamente usuario y
-    contraseña) para identificarse en redes de diferentes
-    departamentos, empresas o entidades. De este modo las empresas o
-    entidades comparten información sin compartir tecnologías de
-    directorio, seguridad y autenticación, como requieren otras
+    Mediante federación de identidad los usuarios pueden emplear las mismas
+    credenciales (típicamente usuario y contraseña) para identificarse en
+    redes de diferentes universidades, empresas o entidades. De este modo
+    las entidades comparten información sin compartir el almacenamiento,
+    seguridad y autenticación de los usuarios como requieren otras
     soluciones (metadirectorio, Single Sign On, etc.). Para su
-    funcionamiento es necesaria la utilización de estándares que
-    definan mecanismos que permiten a las empresas compartir
+    funcionamiento es necesaria la utilización de estándares que definan
+    mecanismos que permiten a las diferentes organizaciones compartir
     información entre dominios. El modelo es aplicable a un grupo de
-    empresas o a una gran empresa con numerosas delegaciones y se basa
-    en el "círculo de confianza" de estas, un concepto que identifica
-    que un determinado usuario es conocido en una comunidad
+    organizaciones o a una gran organización con numerosas delegaciones y
+    se basa en el "círculo de confianza" de estas, un concepto que
+    identifica que un determinado usuario es conocido en una comunidad
     determinada y tiene acceso a servicios específicos.
 
     La federación de identidad, describe las tecnologías, estándares y
@@ -55,8 +54,8 @@
         \subsection{Partes en la federación de identidad}
 
     Un sistema de federación de identidad está formado por diferentes
-    partes, o sistemas necesarios para dar el servicio. A continuación
-    se detallan las partes más importantes de este tipo de sistema,
+    partes o sistemas necesarios para dar el servicio. A continuación
+    se detallan las partes más importantes de este tipo de sistema
     junto con algunos ejemplos de posibles tecnologías que pueden
     desempeñar el papel.
 
@@ -66,19 +65,19 @@
 
     Un sistema Single Sign On es un sistema que permite simplificar
     el acceso por parte del usuario, y de las aplicaciones, a
-    diferentes aplicaciones, que comparten los mismos usuarios, y por
+    diferentes aplicaciones que comparten los mismos usuarios y por
     tanto el mismo sistema de autenticación.
 
     Este sistema nace de la necesidad de autenticar y autorizar al
     mismo grupo de usuarios, pero en diferentes aplicaciones. Por lo
-    tanto se propone un sistema de autenticación único, de tal modo
+    tanto se propone un sistema de autenticación único de tal modo
     que todas las aplicaciones utilicen este mismo sistema, y
-    mejorando así la experiencia del usuario final, ya que siempre
-    introducirá sus credenciales en un sistema homogéneo,
+    mejorando así la experiencia del usuario final ya que siempre
+    introducirá sus credenciales en un sistema homogéneo
     independientemente de la aplicación, y además la sesión permanece
     entre diferentes aplicaciones. Por parte de las aplicaciones que
     utilizan este sistema, evita la necesidad de tratar con la
-    identidad de estos usuarios, ya que el sistema de Single Sign On
+    identidad de estos usuarios ya que el sistema de Single Sign On
     es el que los autentica.
 
     SSO es un método de control de acceso que permite autenticar al
@@ -86,11 +85,11 @@
     diferentes sistemas software.
 
     En una infraestructura homogénea, o al menos en una en la que
-    exista un único esquema de autenticación, o donde existe una base
+    exista un único esquema de autenticación o donde existe una base
     de datos centralizada de usuarios, el sistema SSO es una gran
     ventaja.
 
-    En la federación de identidad, el Sigle Sign On no es algo
+    En la federación de identidad el Sigle Sign On no es algo
     necesario, pero sí recomendable. No es un requisito indispensable
     para montar un sistema de gestión de identidad federada, pero sí
     que facilita mucho el acceso por parte del usuario.
@@ -101,32 +100,29 @@
     Algunos ejemplos de software que puede servir como SSO:
     \begin{itemize}
         \item \textbf{OpenID} \href{http://openid.net/}{http://openid.net/}
-        \item \textbf{PAPI}
-        \href{http://papi.rediris.es}{http://papi.rediris.es}
-        \item \textbf{Sun Access Manager}
-        \href{http://www.sun.com/software/products/access_mgr/index.jsp}{http://www.sun.com/software/products/access\_mgr/index.jsp}
-        \item \textbf{OpenSSO}
-        \href{https://opensso.dev.java.net/}{https://opensso.dev.java.net/}
+        \item \textbf{PAPI} \href{http://papi.rediris.es}{http://papi.rediris.es}
+        \item \textbf{Sun Access Manager} \href{http://www.sun.com/software/products/access_mgr/index.jsp}{http://www.sun.com/software/products/access\_mgr/index.jsp}
+        \item \textbf{OpenSSO} \href{https://opensso.dev.java.net/}{https://opensso.dev.java.net/}
     \end{itemize}
 
             \item \textbf{Proveedor de identidad (IdP)}
 
     Un proveedor de identidad es un sistema que gestiona la identidad
-    de los usuarios de una organización, y ofrece un servicio de
+    de los usuarios de una organización y ofrece un servicio de
     autenticación a otras aplicaciones.
 
     En la práctica un Proveedor de Identidad es una aplicación web a
     la cual serán redirigidos todos los usuarios de una organización
-    que quieran acceder a una aplicación federada, donde se
+    que quieran acceder a una aplicación federada y donde se
     autenticarán, y este IdP ofrecerá los datos de autenticación a las
     diferentes aplicaciones federadas.
 
     Es necesario que haya un IdP por cada organización participante en
-    la federación de identidad, puesto que es la vía de autenticación
+    la federación de identidad puesto que es la vía de autenticación
     de sus usuarios internos.
 
     Es aquí donde se hace importante el sistema SSO del que hemos
-    hablado antes, ya que se puede enlazar el IdP con el sistema de
+    hablado antes ya que se puede enlazar el IdP con el sistema de
     SSO para ofrecer un sistema de autenticación único para todas las
     aplicaciones federadas, ya sean internas a la organización o
     externas, por lo que el usuario final tendrá un acceso homogéneo a
@@ -135,12 +131,9 @@
     Algunos ejemplos de software que pueden dar el servicio de Proveedor
     de Identidad:
     \begin{itemize}
-        \item \textbf{PAPI}
-        \href{http://papi.rediris.es}{http://papi.rediris.es}
-        \item \textbf{Shibboleth IdP}
-        \href{http://shibboleth.internet2.edu/}{http://shibboleth.internet2.edu/}
-        \item \textbf{SimpleSAMLPHP}
-        \href{http://code.google.com/p/simplesamlphp/}{http://code.google.com/p/simplesamlphp/}
+        \item \textbf{PAPI} \href{http://papi.rediris.es}{http://papi.rediris.es}
+        \item \textbf{Shibboleth IdP} \href{http://shibboleth.internet2.edu/}{http://shibboleth.internet2.edu/}
+        \item \textbf{SimpleSAMLPHP} \href{http://code.google.com/p/simplesamlphp/}{http://code.google.com/p/simplesamlphp/}
     \end{itemize}
 
             \item \textbf{Proveedor de servicio (SP)}
@@ -149,23 +142,23 @@
     las aplicaciones web federadas, deberán estar protegidas por un
     proveedor de servicio.
 
-    El SP permite impedir el acceso a las aplicaciones, redirigiendo a
-    los usuarios a sus correspondientes IdP, para que se autentiquen,
-    y en ese caso permite el acceso, comunicándose con el IdP, que le
-    proporcionará la información necesaria para la autorización, y el
+    El SP permite impedir el acceso a las aplicaciones redirigiendo a
+    los usuarios a sus correspondientes IdP para que se autentiquen,
+    y en ese caso permite el acceso comunicándose con el IdP que le
+    proporcionará la información necesaria para la autorización y el
     correcto funcionamiento de las aplicaciones.
 
-    Un SP está estrechamente relacionado con un servidor web, y se
+    Un SP está estrechamente relacionado con un servidor web y se
     comunica con los diferentes IdPs de la federación. Esta es la
     forma que tiene el sistema de pasar los datos de identidad de una
-    organización a otra, de forma segura.
+    organización a otra de forma segura.
 
     Cada aplicación web federada debería estar protegida por un SP,
     así pues puede haber más de un SP por cada organización.
 
     Dada la estrecha relación entre el IdP y el SP, el software
     necesario para dar este servicio se puede encontrar en las mismas
-    páginas. Tanto Shibboleth, como simplesamlphp ofrecen tanto el
+    páginas. PAPI, Shibboleth y simplesamlphp ofrecen tanto el
     servicio de IdP, como el de SP:
 
     \begin{itemize}
@@ -177,8 +170,8 @@
         \href{http://code.google.com/p/simplesamlphp/}{http://code.google.com/p/simplesamlphp/}
     \end{itemize}
 
-    En teoría es independiente el software que se utilice como IdP, o
-    como SP por las diferentes organizaciones, ya que todos deberían
+    En teoría es independiente el software que se utilice como IdP o
+    como SP por las diferentes organizaciones ya que todos deberían
     compartir el mismo protocolo.
 
             \item \textbf{Where are you from (WAYF)}
@@ -204,12 +197,12 @@
         \href{http://www.switch.ch/aai/support/tools/wayf.html}{http://www.switch.ch/aai/support/tools/wayf.html}
     \end{itemize}
 
-    El WAYF es una parte importante en el sistema de la federación,
+    El WAYF es una parte importante en el sistema de la federación
     puesto que es el elemento que conecta los Proveedores de
     Servicio (SP) con los Proveedores de Identidad (IdP). Cuando un
     usuario intenta acceder a una aplicación protegida tras un SP,
-    este será redirigido al WAYF, donde el usuario seleccionará cuál
-    es su organización, y en consecuencia el sistema WAYF redirigirá
+    este será redirigido al WAYF donde el usuario seleccionará cuál
+    es su organización y en consecuencia el sistema WAYF redirigirá
     al usuario al Proveedor de Identidad pertinente.
 
             \item \textbf{Servicio de directorio (LDAP)}
@@ -223,43 +216,43 @@
     recursos compartidos.''
 
     Realmente no es imprescindible el servicio de directorio para
-    desplegar una arquitectura de identidad federada, pero normalmente
+    desplegar una arquitectura de identidad federada pero normalmente
     siempre va ligada a este tipo de aplicaciones. Esta estrecha
     relación se debe a que últimamente se está imponiendo el uso de
-    esta tecnología para la gestión de identidad, de manera local. Por
+    esta tecnología para la gestión de identidad de manera local. Por
     lo tanto la gran mayoría de las organizaciones ya tendrán un
     servicio de directorio para gestionar sus usuarios.
 
     La mayoría de sistemas y aplicaciones para desplegar una
-    federación de identidad, están desarrollados pensando en este
-    hecho, por lo tanto facilita la tarea.
+    federación de identidad están desarrollados pensando en este
+    hecho por lo tanto facilita la tarea.
 
-    Sin embargo, es posible utilizar bases de datos, y otros tipos de
-    almacenamiento o gestión de usuarios, aunque la configuración será
-    más compleja, y tal vez no sea tan óptima.
+    Sin embargo es posible utilizar bases de datos y otros tipos de
+    almacenamiento o gestión de usuarios aunque la configuración será
+    más compleja y tal vez no sea tan óptima.
 
             \end{itemize}
 
-    \section{Uso de la federación fuera de la web}
+    \section{Uso de la federación fuera de la Web}
 
     Como hemos visto, el sistema de federación de identidad surge a partir
     de un problema con el uso de aplicaciones externas por parte de
-    usuarios internos, o viceversa. Normalmente estas aplicaciones son
-    aplicaciones web, dada la proliferación de este tipo de aplicaciones.
+    usuarios internos o viceversa. Normalmente estas aplicaciones son
+    aplicaciones web dada la proliferación de este tipo de aplicaciones.
     Es por esta razón por la que, por diseño, el sistema de identidad
     federada está pensado para aplicaciones web, es decir, para utilizarlo
     desde un navegador.
 
     Así pues los componentes de un sistema de federación de identidad,
-    tales como IdPs o SPs, son aplicaciones web, y están fuertemente
+    tales como IdPs o SPs, son aplicaciones web y están fuertemente
     ligados a servidores web tales como apache o tomcat.
 
-    El funcionamiento se basa en el paso de cookies al navegador, y
+    El funcionamiento se basa en el paso de cookies al navegador y
     variables de servidor, por lo que claramente es necesario el uso de
-    navegadores modernos, y lenguajes en la parte del servidor preparados
+    navegadores modernos y lenguajes en la parte del servidor preparados
     para esta tarea.
 
-    Intentar federar aplicaciones que no son web, es un trabajo difícil,
+    Intentar federar aplicaciones que no son web es un trabajo difícil,
     dado el terreno en el que nos movemos. Puesto que estas aplicaciones
     tendrán que comunicarse de alguna forma con las aplicaciones que
     conforman la federación, por ejemplo con el IdP para la autenticación
@@ -267,66 +260,66 @@
 
     Por lo tanto para poder llevar el sistema de federación de identidad a
     otro tipo de aplicaciones será necesario incluir interfaces y sistemas
-    intermedios, que hagan de puente o conexión entre el sistema web de la
-    federación, y la aplicación en cuestión. Es necesario idear algún
+    intermedios que hagan de puente o conexión entre el sistema web de la
+    federación y la aplicación en cuestión. Es necesario idear algún
     mecanismo para saber si un usuario está autenticado en la federación o
     no.
 
     El problema reside en que el sistema de federación de identidad conoce
-    quién es el usuario, y si está autenticado por una cookie que muestra
-    el navegador, pero en aplicaciones que no utilicen el navegador, esta
+    quién es el usuario y si está autenticado por una cookie que muestra
+    el navegador, pero en aplicaciones que no utilicen el navegador esta
     cookie no existe, por lo tanto hay que considerar algún otro sistema
-    alternativo, de tal forma que el usuario pueda mostrar al servidor
-    quién es de manera inequívoca, y sin posibilidad de suplantación de
+    alternativo de tal forma que el usuario pueda mostrar al servidor
+    quién es de manera inequívoca y sin posibilidad de suplantación de
     identidad.
 
 
     % TODO usuario y contraseña por credenciales
-    Otro problema es la autenticación, y es que todo usuario sólo escribe
-    su nombre de usuario y contraseña en el IdP conocido, en el de su
-    organización, por lo tanto siempre habrá una confianza en que esa
-    contraseña no está siendo dada a una organización externa. Esto
-    funciona a través de redirecciones del navegador, desde la aplicación
-    protegida tras un SP, a la que quiere acceder, hasta el IdP, pasando
-    por el sistema WAYF. En el caso de otro tipo de aplicaciones, crear un
-    sistema de autenticación diferente sería muy costoso, ya que habría que
+    Otro problema es la autenticación, y es que todo usuario sólo
+    proporciona sus credenciales al IdP conocido, el de su
+    organización, por lo tanto siempre habrá una confianza en que esas
+    credenciales no están siendo dadas a una organización externa. Esto
+    funciona a través de redirecciones del navegador desde la aplicación
+    protegida tras un SP a la que quiere acceder, hasta el IdP, pasando
+    por el sistema WAYF. En el caso de otro tipo de aplicaciones crear un
+    sistema de autenticación diferente sería muy costoso ya que habría que
     implementar todos estos componentes pero para la nueva aplicación.
 
     \section{La importancia del SSH}
 
     SSH (Secure SHell) es un protocolo que sirve para acceder a máquinas
     remotas a través de la red. Permite el manejo de una máquina como si se
-    estuviera delante de ella, dando acceso a una línea de comandos. Así se
-    pueden utilizar recursos de diferentes máquinas, desde un mismo lugar,
+    estuviera delante de ella dando acceso a una línea de comandos. Así se
+    pueden utilizar recursos de diferentes máquinas desde un mismo lugar,
     utilizando este protocolo, además de administrar máquinas remotas.
 
     Además de la línea de comandos, el protocolo SSH da otras
-    posibilidades, como la copia de ficheros entre máquinas, o la ejecución
+    posibilidades como la copia de ficheros entre máquinas o la ejecución
     de aplicaciones gráficas importando el protocolo de comunicación
     gráfico.
 
     Con SSH se trabaja de forma similar a como se haría con el comando
-    telnet, junto con la posibilidad de copiar ficheros con el protocolo
+    telnet junto con la posibilidad de copiar ficheros con el protocolo
     ftp. Sin embargo, SSH es algo más que eso, y como su propio nombre
     indica, es un protocolo seguro. Por lo tanto utiliza técnicas de
     cifrado que hacen que la información, que viaja por el medio de
-    comunicación, vaya cifrada, y así proporcionar algo más de seguridad a
+    comunicación, vaya cifrada y así proporcionar algo más de seguridad a
     las operaciones realizadas en la red.
 
     Hoy en día el protocolo SSH es muy utilizado en la administración de
-    máquinas en redes locales, así como a través de internet, puesto que
+    máquinas en redes locales así como a través de internet, puesto que
     ofrece una manera sencilla y segura de conseguir acceso a estas
     máquinas remotas.
 
-    Además en el ambiente académico, es utilizado para compartir un recurso
-    limitado. Como por ejemplo un supercomputador, puede ser utilizado por
+    Además en el ambiente académico es utilizado para compartir un recurso
+    limitado. Por ejemplo un supercomputador puede ser utilizado por
     diferentes estudiantes, profesores o investigadores utilizando este
     protocolo, y consiguiendo así hacer uso de un hardware no disponible
-    físicamente, pero que a través de la red se presenta ante nosotros como
+    físicamente pero que a través de la red se presenta ante nosotros como
     un recurso más.
 
     Existe una tecnología libre que implementa este protocolo, con
-    diferentes funcionalidades, se trata de openssh.
+    diferentes funcionalidades, se trata de openssh (\cite{openssh}).
 
     Además de lo comentado anteriormente, openssh permite cosas muy
     interesantes, como túneles seguros, diferentes métodos de
@@ -335,12 +328,12 @@
     Además del método de acceso común, usuario y contraseña, openssh ofrece
     la posibilidad de autenticar a través de un sistema de clave pública y
     clave privada. Esta característica es muy interesante para nuestro
-    caso, ya que queremos evitar que el usuario escriba su contraseña, así
-    pues más adelante hablaremos sobre cómo utilizar este mecanismo de
+    caso ya que queremos evitar que el usuario escriba su contraseña, así
+    pues, más adelante hablaremos sobre cómo utilizar este mecanismo de
     clave pública y privada para la implementación de la solución.
 
     Por todas estas razones, SSH es una opción interesante en la cual
-    utilizar federación de identidad. Puesto que es muy utilizado, y en
+    utilizar federación de identidad. Puesto que es muy utilizado y en
     todos los casos se necesita comprobar la identidad del usuario.
 
 
