@@ -1,29 +1,28 @@
 \chapter{Despliegue de una maqueta en CONFIA}
 
     Para la prueba del proyecto, se ha utilizado la federación CONFIA
-    (\url{http://confia.aupa.info/}),
-    montada en fase de pruebas. CONFIA es la federación de identidad de las
-    universidades andaluzas, es un proyecto pionero en España, que está
-    comenzando ahora. Su objetivo principal es montar una infraestructura
-    de identidad federada a nivel Andaluz, con todas las universidades
-    andaluzas.
+    (\cite{confia}) montada en fase de pruebas. CONFIA es la
+    federación de identidad de las universidades andaluzas. Es un
+    proyecto pionero en España que está comenzando ahora. Su objetivo
+    principal es montar una infraestructura de identidad federada a
+    nivel andaluz con todas las universidades andaluzas.
 
-    Esta federación no está aún en producción, y utiliza usuarios de
+    Esta federación no está aún en producción y utiliza usuarios de
     prueba, pero es prácticamente funcional. Actualmente utiliza el
     protocolo Shibboleth 1.3, y hay varios IdPs (Universidad de Sevilla,
     Universidad de Málaga, Universidad de Córdoba, etc), y varios SPs
     protegiendo diferentes aplicaciones en diferentes universidades.
 
-    Además existe una infraestructura de metadatos y un WAYF global,
+    Además existe una infraestructura de metadatos y un WAYF global
     que están en el CICA.
 
     Así pues, el proyecto se puede desplegar en este entorno, y en este
     entorno es en el que se ha desarrollado, sobretodo en la parte de la
     Universidad de Sevilla.
 
-    Por parte de la Universidad de Sevilla, hay un IdP de Shibboleth, sobre
-    un servidor Tomcat, que utiliza como sistema de SSO el SUN Access
-    Manager.
+    Por parte de la Universidad de Sevilla, hay un IdP de Shibboleth
+    sobre un servidor Tomcat que utiliza como sistema de SSO el SUN
+    Access Manager.
 
 
     En la máquina \texttt{federacion21.us.es} hay un servidor Apache2
@@ -32,8 +31,8 @@
 \section{Máquinas involucradas}
 
     Hay varios servidores SSH parcheados funcionando dentro de la
-    federación, a modo de ejemplo. Los servidores SSH parcheados se han
-    colocado en el puerto 2222, para no interferir con los servidores SSH
+    federación a modo de ejemplo. Los servidores SSH parcheados se han
+    colocado en el puerto 2222 para no interferir con los servidores SSH
     por defecto de cada máquina.
 
     \begin{itemize}
@@ -45,69 +44,47 @@
 
     \end{itemize}
 
-    Tanto federacion21 como federacion22, son máquinas virtuales que corren
+    Tanto federacion21 como federacion22 son máquinas virtuales que corren
     sobre un entorno de virtualización XEN. Así pues el despliegue de
-    pruebas no pone en peligro ninguna infraestructura delicada, puesto que
-    estos servidores no contienen información sensible, ni prestan ningún
-    servicio.
+    pruebas no pone en peligro ninguna infraestructura delicada puesto que
+    estos servidores no contienen información sensible ni prestan ningún
+    servicio de cara al usuario final.
 
-    Las aplicaciones web necesarias para la autenticación, y para la
+    Las aplicaciones web necesarias para la autenticación y para la
     creación de cuentas están desplegadas en el servidor
     \texttt{federacion21.us.es}, tras el servidor web apache2, y protegidas
     con un SP.
 
     El servidor de claves es un servidor openldap, instalado en
     \texttt{goonie.us.es}, que almacena las claves públicas, los nombres de
-    usuarios, y el tiempo de sesión, que luego consultan los servidores SSH
+    usuarios y el tiempo de sesión que luego consultan los servidores SSH
     parcheados.
 
-    Dada esta infraestructura de pruebas implementada, hoy en día es posible
+    Dada esta infraestructura de pruebas implementada hoy en día es posible
     acceder a estos servidores SSH parcheados con cualquier usuario de la
     Universidad de Málaga, que se autentique en la federación, o de la
     Universidad de Córdoba, etc.
 
-\section{Servicio SSH federado en la Universidad de Sevilla}
-
-    %TODO llevar esto a los agradecimientos
-    La Universidad de Sevilla es una de las impulsoras del proyecto, siendo
-    parte importante en él, y cobrando relevancia en las pruebas
-    realizadas.
-
-    A este proyecto se le ha facilitado acceso a todas las máquinas
-    necesarias, y se le ha dado permiso para implantar un entorno de
-    prueba, permitiendo así probar la viabilidad del sistema en un entorno
-    más o menos real, y con diferentes organizaciones implicadas.
-
-    De no ser así, habría sido imposible probar este proyecto, puesto que
-    la infraestructura que hay detrás del proyecto implica tener muchas
-    máquinas, en localizaciones diferentes, y con una base de usuarios de
-    prueba.
-
-    Además de los medios materiales, me han permitido el asistir a
-    diferentes reuniones de trabajo del proyecto CONFIA, lo que me ha
-    permitido compartir opiniones y difundir este proyecto, más allá del
-    ámbito puramente académico.
-
 \section{Pruebas}
 
-    Se han realizado pruebas de acceso a diferentes servidores SSH, (tanto a
-    federacion21, como a federacion22), con usuarios de la federación.
+    Se han realizado pruebas de acceso a diferentes servidores SSH (tanto a
+    federacion21 como a federacion22) con usuarios de la federación.
 
     En principio las pruebas se han realizado con usuarios de la misma
     Universidad de Sevilla. Puesto que el proveedor de identidad de la
-    Universidad trabaja con una maqueta que aprovisiona los usuarios, no se
-    trata de usuarios reales, en producción, sino que son ficticios, aunque
+    Universidad trabaja con una maqueta que aprovisiona los usuarios no se
+    trata de usuarios reales, en producción, sino que son ficticios aunque
     basados en datos reales.
 
     Por otra parte, una vez el proyecto se consideró lo suficientemente
-    maduro, se publicó el sistema a toda la federación, y diferentes
-    universidades, desde sus propias instalaciones han probado y verificado
+    maduro se publicó el sistema a toda la federación y diferentes
+    universidades desde sus propias instalaciones han probado y verificado
     el correcto funcionamiento del proyecto.
 
     Así pues se puede decir que se han realizado varias pruebas, con
-    usuarios ficticios, y reales, aunque aún querían una serie de pruebas
-    más estrictas, con mayor número de usuarios, y un nivel de concurrencia
-    alto, para comprobar qué carga soporta, y comprobar que no ocurre
+    usuarios ficticios, y reales, aunque aún quedarían una serie de pruebas
+    más estrictas con mayor número de usuarios y un nivel de concurrencia
+    alto para comprobar qué carga soporta y comprobar que no ocurre
     ningún fallo no previsto.
 
 \section{Futuros despliegues}
@@ -115,19 +92,16 @@
     \begin{itemize}
 
     \item El proyecto se ha desarrollado en paralelo con la federación de
-    identidad de las universidades andaluzas, y en colaboración con CONFIA,
-    por lo que es posible que cuando la federación se implante, alguna
+    identidad de las universidades andaluzas y en colaboración con CONFIA,
+    por lo que es posible que cuando la federación se implante alguna
     Universidad quiera dar este servicio. Por esa parte el proyecto tiene
     futuro dentro de las universidades andaluzas.
 
-    %TODO explicar que el proyecto es interesante, que se ha
-    %presentado en foros europeos, y es posible que se despliegue en
-    %otras federaciones
-    \item Al partir de un articulo publicado por la federación noruega, feide, es
-    posible que esta esté interesada en probar el proyecto en su propia
-    infraestructura, o quizás coger el código y adaptarlo a sus
-    necesidades, mejorarlo, o realizar otro proyecto a partir de este. En
-    todo caso espero que este proyecto sirva para otras federaciones.
+    \item El proyecto está teniendo difusión a nivel internacional, ha
+    sido presentado en foros europeos donde se ha mostrado interés en
+    este proyecto por parte de diferentes federaciones. Por lo tanto
+    es posible que en un futuro alguna otra federación se anime a
+    implantar este proyecto en su sistema.
 
     \item El supercomputador más potente de España, llamado "MareNostrum",
     está situado en Barcelona. Actualmente se está dando acceso a

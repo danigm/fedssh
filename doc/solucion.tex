@@ -344,9 +344,9 @@
     \subsection{Esquemas LDAP}
 
     Los sistemas de directorio utilizan diferentes atributos para guardar los
-    datos pertenecientes a los diferentes objetos. Cada posible campo a
+    datos pertenecientes a los diferentes objetos. Cada posible atributo a
     utilizar está definido en un ``Esquema LDAP'', y se podrá utilizar
-    siempre que la entrada tenga el ``objectclass'' que define ese atributo.
+    siempre que el objeto tenga el ``objectclass'' que define ese atributo.
 
     Existen muchos estándares de esquemas LDAP, que suelen venir por defecto
     en la mayoría de los servicios de directorio. Y cada esquema tiene sus
@@ -366,8 +366,6 @@
     atributos que necesitamos para almacenar los usuarios junto a sus claves
     en el servidor de claves.
 
-
-    %FIX por aquí
     En principio los datos que ha de almacenar el servidor de claves para
     este proyecto son:
 
@@ -379,25 +377,25 @@
 
     \end{itemize}
 
-    El primer campo, \textbf{uid}, está cubierto en los esquemas que vienen
-    por defecto, en el esquema \textbf{person}.
+    El primer atributo, \textbf{uid}, está cubierto en los esquemas que vienen
+    por defecto en el esquema \textbf{person}.
 
-    Para el segundo campo, en principio se pensó en utilizar el campo
-    usercertificate, pero no es el más adecuado, ya que está pensado para
+    Para el segundo atributo en principio se pensó en utilizar
+    usercertificate, pero no es el más adecuado ya que está pensado para
     almacenar un certificado personal. Así pues buscando alternativas se ha
     decidido utilizar el esquema \textit{openssh-lpk}
     \url{http://dev.inversepath.com/openssh-lpk} que ofrece un atributo
     sshPublicKey, destinado para este propósito.
 
-    Y por último, para cubrir las necesidades del segundo campo se ha
+    Y por último, para cubrir las necesidades del segundo atributo se ha
     optado por utilizar el esquema \textit{schac}
     \url{http://www.terena.org/activities/tf-emc2/schac.html}, y utilizar
     el atributo schacUserStatus para guardar el timeout con el siguiente
     formato: \texttt{schac:userStatus:us.es:timeout:1205274586}, donde el
-    número representa la fecha, en segundos, de expiración.
+    número representa la fecha en segundos de expiración.
 
     Por supuesto se pueden utilizar otros atributos para almacenar los
-    datos de usuario, y tan solo habría que cambiar la configuración del
+    datos de usuario y tan solo habría que cambiar la configuración del
     servidor sshd. No sería necesario recompilar el parche.
 
     \section{Aplicación de login}
@@ -408,8 +406,8 @@
     proyecto, ya que será lo que conecte la federación con el servidor de
     claves al que consultarán los servidores SSH. Por lo tanto todo usuario
     que quiera utilizar el servicio de SSH federado deberá entrar antes en
-    esta aplicación federada, para que la propia aplicación pueda tener
-    acceso a los datos que le facilite el IdP del usuario en concreto, y
+    esta aplicación federada para que la propia aplicación pueda tener
+    acceso a los datos que le facilite el IdP del usuario en concreto y
     así indicar al servidor de claves que el usuario está autenticado, y
     cuál es su clave pública.
 
@@ -419,35 +417,34 @@
     usuarios de todas las organizaciones implicadas en la federación.
 
     Se ha buscado que la interfaz de la aplicación sea lo más simple y
-    clara posible. Al estar protegida tras un SP, todo usuario que
+    clara posible. Al estar protegida tras un SP todo usuario que
     intente acceder a esta página será redirigido al WAYF de la federación
     si no está autenticado aún. En el WAYF seleccionará su organización de
-    origen, y será redirigido a la página de login de su IdP.
+    origen y será redirigido a la página de login de su IdP.
 
-    Una vez que el usuario se autentique en su IdP, será redirigido a la
+    Una vez que el usuario se autentique en su IdP será redirigido a la
     aplicación de login, y en este momento, la aplicación tendrá acceso a
     los datos necesarios del usuario.
 
-    La aplicación mirará si el campo especificado en la federación para
-    almacenar la clave pública del usuario está asignado, y en caso
-    afirmativo, cogerá la clave pública que viene dada en ese campo, y la
+    La aplicación mirará si el atributo especificado en la federación para
+    almacenar la clave pública del usuario está asignado y en caso
+    afirmativo cogerá la clave pública que viene dada en ese atributo y la
     introducirá en el servidor de claves. Se muestra al usuario una
     pantalla en la cual se especifica el nombre de usuario para acceder por
     SSH, así como la fecha y hora de caducidad de esa sesión.
 
-    En el caso en el que no se encuentre la clave pública del usuario, se
-    ofrece la posibilidad de introducirla manualmente, en un cuadro de
-    texto. Este campo de texto también es de utilidad cuando un usuario no
-    está en su puesto de trabajo habitual, y quiere acceder utilizando un
+    En el caso en el que no se encuentre la clave pública del usuario se
+    ofrece la posibilidad de introducirla manualmente en un cuadro de
+    texto. Este atributo de texto también es de utilidad cuando un usuario no
+    está en su puesto de trabajo habitual y quiere acceder utilizando un
     par de claves temporal.
 
-    Cuando se introduce de manera manual, la aplicación verifica que es una
-    clave pública correcta, y la introduce en el servidor de claves,
+    Cuando se introduce de manera manual la aplicación verifica que es una
+    clave pública correcta y la introduce en el servidor de claves
     actualizando el timeout.
 
-    %TODO comentar esto como posibilidad opcional
-    Cada vez que se refresque esta página, la aplicación actualiza el
-    timeout, como si el usuario acabara de acceder por primera vez.
+    Cada vez que se refresque esta página la aplicación actualiza el
+    timeout como si el usuario acabara de acceder por primera vez.
 
     Esta es la apariencia de la aplicación de login:
      
@@ -455,95 +452,94 @@
         \includegraphics[width=\textwidth]{img/sshApp.png}
     \end{center}
      
-    Por facilidad de desarrollo, e integración con distintos servidores
-    web, se ha elegido utilizar la tecnología PHP para el desarrollo de
+    Por facilidad de desarrollo e integración con distintos servidores
+    web se ha elegido utilizar la tecnología PHP para el desarrollo de
     esta aplicación.
 
     La aplicación está separada en un frontend y un backend. El frontend se
-    encarga de mostrar los datos, y en el backend están definidas las
-    funciones tanto de búsqueda y petición de datos, como las de
+    encarga de mostrar los datos y en el backend están definidas las
+    funciones tanto de búsqueda y petición de datos como las de
     almacenamiento en el servidor de claves.
 
     La implementación actual de esta aplicación está ligeramente ligada al
     SP de shibboleth 1.3. Pero es fácilmente modificable para que utilice
-    otro tipo de SP, solo cambiando unas variables en el código, de tal
+    otro tipo de SP solo cambiando unas variables en el código, de tal
     forma que consulte otro tipo de cabeceras.
 
     Puesto que hemos decidido utilizar un servidor de claves basado en un
     servicio de directorio se han tenido que utilizar las bibliotecas
     pertinentes del lenguaje PHP para LDAP.
 
-    Toda la información sobre atributos a consultar, y atributos necesarios
-    para guardar la información está especificada en forma de variables,
+    Toda la información sobre atributos a consultar y atributos necesarios
+    para guardar la información, está especificada en forma de variables
     para que su modificación sea fácil.
 
-    Para aumentar el grado de seguridad del sistema, cabe la posibilidad de
-    extender la aplicación de manera sencilla, de tal forma que antes de
-    almacenar los datos del usuario en el servidor de claves, informara al
-    usuario sobre los datos que se van a almacenar, y pidiera confirmación.
+    Para aumentar el grado de seguridad del sistema cabe la posibilidad de
+    extender la aplicación de manera sencilla de tal forma que antes de
+    almacenar los datos del usuario en el servidor de claves informara al
+    usuario sobre los datos que se van a almacenar y pidiera confirmación.
 
     \section{Ejemplo aplicación creación de cuentas}
 
     Un problema que hay que tener en cuenta en el despliegue de este
-    proyecto, es la necesidad de crear las cuentas de los usuarios de forma
+    proyecto es la necesidad de crear las cuentas de los usuarios de forma
     dinámica en los servidores parcheados.
 
-    En principio, y según la implementación actual del proyecto, el
-    servidor SSH parcheado supone que la cuenta de usuario existe, y por
-    tanto cuando pida la clave pública al servidor de claves, generará un
-    fichero temporal con esa clave en el directorio HOME de ese usuario, y
+    En principio y según la implementación actual del proyecto, el
+    servidor SSH parcheado supone que la cuenta de usuario existe y por
+    tanto cuando pida la clave pública al servidor de claves generará un
+    fichero temporal con esa clave en el directorio HOME de ese usuario y
     utilizará ese fichero para hacer la autenticación por clave pública.
 
     Dado que esta implementación delega el problema de la creación de
-    cuentas al administrador del sistema, es necesario que se creen y se
-    destruyan las cuentas de manera dinámica, en el servidor.
+    cuentas al administrador del sistema es necesario que se creen y se
+    destruyan las cuentas de manera dinámica en el servidor.
 
     La delegación de la creación de cuentas en el administrador del
-    sistema, permite un mayor control sobre quién va a poder acceder a este
-    servicio, permitiendo crear políticas de creación de cuentas, y no
+    sistema permite un mayor control sobre quién va a poder acceder a este
+    servicio, permitiendo crear políticas de creación de cuentas y no
     permitiendo entrar al servidor a cualquier usuario autenticado en la
     federación.
 
-    Para facilitar el trabajo de administración de estos servidores, y
+    Para facilitar el trabajo de administración de estos servidores y
     además ofrecer al usuario un punto central de acceso a servidores SSH,
     se ha desarrollado un ejemplo sencillo de aplicación de creación de
     cuentas.
 
     La idea consiste en hacer una aplicación con un aspecto visual similar
-    a la de autenticación, y que ofrezca una lista de los servidores de SSH
-    disponibles, junto con una corta descripción del servicio. Además da la
-    posibilidad de solicitar las cuentas a los diferentes servidores, para
-    así tener una creación de cuentas automática, y que no haya que hacer
+    a la de autenticación y que ofrezca una lista de los servidores de SSH
+    disponibles junto con una corta descripción del servicio. Además da la
+    posibilidad de solicitar las cuentas a los diferentes servidores para
+    así tener una creación de cuentas automática y que no haya que hacer
     una creación de cuentas manual.
 
-    La aplicación iría protegida tras un SP y tampoco tiene que ser parte
-    de ninguna organización, al igual que la aplicación de acceso. Cuando
+    La aplicación iría protegida tras un SP. Cuando
     el usuario acceda a la aplicación, si no está autenticado ya en la
     federación, será redirigido al WAYF. En el WAYF seleccionará su
-    institución de origen, y será redirigido al IdP correspondiente, donde
-    se autenticará. Una vez autenticado tendrá acceso a la aplicación, y la
+    institución de origen y será redirigido al IdP correspondiente, donde
+    se autenticará. Una vez autenticado tendrá acceso a la aplicación y la
     misma aplicación a partir del uid del usuario consulta si el usuario
-    tiene cuenta en el servidor, y permite la creación de la cuenta, con un
+    tiene cuenta en el servidor y permite la creación de la cuenta con un
     enlace.
 
     Para crear las cuentas desde el servidor donde esté instalada esta
-    aplicación web, hay que permitir el acceso por SSH al comando useradd,
+    aplicación web hay que permitir el acceso por SSH al comando useradd,
     puesto que se va a utilizar una llamada al sistema para lanzar el
     comando a través de este protocolo, y así crear la cuenta solicitada.
-    Para ello, se ha introducido la clave pública de acceso SSH del
+    Para ello se ha introducido la clave pública de acceso SSH del
     servidor web en el fichero authorized\_keys de cada servidor SSH.
 
-    Este despliegue tiene fallos de seguridad, puesto que cualquiera que
-    tenga acceso al servidor web, tendrá acceso a la creación de cuentas de
+    Este despliegue tiene fallos de seguridad puesto que cualquiera que
+    tenga acceso al servidor web tendrá acceso a la creación de cuentas de
     todos los servidores SSH.
 
     Una mejora de esta aplicación, y el siguiente paso lógico si esto se
     quiere implantar en un sistema federado en producción, sería utilizar
-    servicios web, o llamadas a otro tipo de procesos remotos, que
-    verificaran el origen de la petición, con algún sistema
-    criptográficamente seguro, y tan sólo permitiendo la creación de la
-    cuenta, es decir, un proceso en cada servidor, que recibiera peticiones
-    del servidor web que aloja esta aplicación, y que creara las cuentas.
+    servicios web o llamadas a otro tipo de procesos remotos que
+    verificaran el origen de la petición con algún sistema
+    criptográficamente seguro y tan sólo permitiendo la creación de la
+    cuenta, es decir, un proceso en cada servidor que recibiera peticiones
+    del servidor web que aloja esta aplicación y que creara las cuentas.
 
     El desarrollo de este sistema permitiría también definir políticas de
     creación de cuentas, dando la posibilidad de que cada administrador de
@@ -560,18 +556,18 @@
         \includegraphics[width=\textwidth]{img/userAdd.png}
     \end{center}
 
-    Otra posibilidad, menos flexible, pero más integrada sería incluir en
+    Otra posibilidad menos flexible pero más integrada sería incluir en
     el parche la posibilidad de que se crearan y destruyeran las cuentas
     de manera dinámica. Así por ejemplo, se crearía la cuenta justo antes
     de intentar autenticar al usuario.
 
-    Esta segunda forma es mucho más invasiva en el sistema, ya que para
+    Esta segunda forma es mucho más invasiva en el sistema ya que para
     implementarla el servidor SSH debe comunicarse con el sistema en
-    cuestión, y hacer llamadas al mismo para crear las cuentas.
+    cuestión y hacer llamadas al mismo para crear las cuentas.
 
     Independientemente del sistema utilizado para la creación de las
-    cuentas, la aplicación de ejemplo de creación de cuentas puede servir
+    cuentas la aplicación de ejemplo de creación de cuentas puede servir
     como listado de todos los servicios SSH sobre federación de identidad
-    que se ofrecen. Así estaría accesible en un punto centralizado, y
+    que se ofrecen. Así estaría accesible en un punto centralizado y
     cualquier usuario de cualquier organización tendría acceso al listado y
     podría saber a qué recursos tiene acceso.

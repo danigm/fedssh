@@ -1,19 +1,19 @@
 
 \chapter{Implementación y despliegue}
     \label{implementacion}
-    \section{Cambios al openssh}
+    \section{Cambios realizados sobre openssh}
 
     El código del parche para el servidor SSH debe tocar lo mínimo
-    posible, para tener seguridad a la hora de aplicar actualizaciones
-    de openssh. Así pues, la idea principal y que ha guiado el
-    desarrollo de esta modificación ha sido esta, y por lo tanto se ha
+    posible para tener seguridad a la hora de aplicar actualizaciones
+    de openssh. Así pues la idea principal y que ha guiado el
+    desarrollo de esta modificación ha sido esta y por lo tanto se ha
     creado un parche lo más simple posible, con las menores
-    dependencias de librerías externas, y fácilmente ampliable,
+    dependencias de librerías externas y fácilmente ampliable
     pensando en casos futuros.
 
     Lo primero que hay que hacer para hacer una mejora o una adaptación de
-    un proyecto software libre, es descargarse el código, y empezar a
-    estudiarlo, para ver en qué partes del mismo hay que encajar la nueva
+    un proyecto software libre, es descargarse el código y empezar a
+    estudiarlo para ver en qué partes del mismo hay que encajar la nueva
     funcionalidad.
 
     Para descargar el código se ha usado el sistema de control de versiones
@@ -30,12 +30,12 @@
 
     \end{verbatim}
 
-    Una vez conseguido el código, hubo un proceso de estudio del mismo,
+    Una vez conseguido el código hubo un proceso de estudio del mismo
     para entender minimamente el funcionamiento de la aplicación, antes de
     empezar a tocar nada.
 
-    Tras estudiar el código, y realizar varias pruebas, se localizó la zona
-    de código dónde se realiza la autenticación del usuario, y se comienza
+    Tras estudiar el código y realizar varias pruebas se localizó la zona
+    de código dónde se realiza la autenticación del usuario y se comienza
     a modificar este código para añadirle la funcionalidad que estamos
     buscando.
 
@@ -68,7 +68,7 @@
 
     La variable \textit{file} tiene la ruta hacia el fichero dónde están las claves
     públicas para acceder, así pues añadir a este código la idea de que si
-    un usuario no puede acceder por el método estandar, se compruebe si
+    un usuario no puede acceder por el método estandar se compruebe si
     está en la federación, es tan simple como:
 
 
@@ -109,46 +109,47 @@
 
     \end{lstlisting}
 
-    De esta manera, si no se ha podido acceder de la manera convencional,
-    si está puesta la opción de usar el acceso federado, se hace una
-    llamada a la función \texttt{get\_rsa\_key\_ldap}, que devolverá una
-    cadena con la clave pública de este usuario si está autenticado, y en
-    tal caso se creará un fichero temporal que se usará para intentar
+    De esta manera si no se ha podido acceder de la manera
+    convencional y si está puesta la opción de usar el acceso
+    federado, se hace una llamada a la función
+    \texttt{get\_rsa\_key\_ldap} que devolverá una cadena con la
+    clave pública de este usuario si está autenticado y en tal caso
+    se creará un fichero temporal que se usará para intentar
     autenticar.
 
     Este simple cambio, y alguno más para definir las posibles opciones
     configurables con el fichero de configuración, es lo que se cambiaría
-    de verdad sobre el código del servidor ssh real, por lo que el riesgo
+    de verdad sobre el código del servidor ssh real por lo que el riesgo
     de introducir fallos adicionales al código se reduce considerablemente.
 
     Por tanto se delega la responsabilidad de saber si el usuario está
     autenticado o no a la función \texttt{get\_rsa\_key\_ldap}. Esta
-    función se puede modificar, y cambiar por cualquier otra que devuelva
+    función se puede modificar y cambiar por cualquier otra que devuelva
     una cadena con la clave pública del usuario que se le está pasando como
     argumento. Por esto es fácil implementar la comunicación con otros
     sistemas que no sean un servicio de directorio, o por alguna función
     que haga alguna operación más.
 
     Ya que la complejidad de la autenticación se ha delegado en esta
-    función, se ha implementado en un fichero aparte, que se introduce en
+    función, se ha implementado en un fichero aparte que se introduce en
     las herramientas de compilación, \texttt{automake}, y se enlaza para
     que sea accesible desde el código anteriormente comentado.
 
     Lo que hace la función básicamente es realizar una consulta al servidor
-    LDAP buscando al usuario en cuestión. Si existe este, se extraen los
+    LDAP buscando al usuario en cuestión. Si existe se extraen los
     datos de clave pública y timeout. Inmediatamente después se comprueba
-    que el timeout no esté cumplido, y en ese caso se devuelve la clave
-    pública del usuario, y se termina. En caso de que el timeout esté
-    cumplido, o que no se encuentre al usuario, se devuelve una cadena
+    que el timeout no esté cumplido y en ese caso se devuelve la clave
+    pública del usuario y se termina. En caso de que el timeout esté
+    cumplido o que no se encuentre al usuario se devuelve una cadena
     vacía.
 
     En realidad la función es bastante sencilla y simple, pues así lo hemos
-    requerido, y este era nuestro objetivo. Donde radica la mayor
+    requerido y este era nuestro objetivo. Donde radica la mayor
     complejidad es en el uso de las llamadas a LDAP en el lenguaje de
     programación C, puesto que el acceso no es trivial, y durante el
-    desarrollo del proyecto, en la infraestructura de pruebas se ha
-    modificado la librería de acceso openldap, cambiando la forma de
-    acceso, y poniendo las funciones utilizadas en la primera versión como
+    desarrollo del proyecto en la infraestructura de pruebas se ha
+    modificado la librería de acceso openldap cambiando la forma de
+    acceso y poniendo las funciones utilizadas en la primera versión como
     \texttt{deprecated}, por lo tanto se ha tenido que reescribir el código
     para utilizar las nuevas funciones.
 
@@ -187,24 +188,24 @@
     \section{Aplicaciones federadas: ssh, useradd}
 
     Como se vió en \ref{login}, la aplicación de login tiene un cometido
-    específico, y una funcionalidad claramente definida. Por lo tanto la
+    específico y una funcionalidad claramente definida. Por lo tanto la
     implementación de la misma ha sido el objetivo más fácil dentro de este
     proyecto.
 
-    Se ha elegido la tecnología PHP, por su rápidez para el desarrollo web,
+    Se ha elegido la tecnología PHP por su rápidez para el desarrollo web
     además de por su simple integración con todo tipo de servidores web, y
     en nuestro caso con apache2. Además, dado que se ha decidido utilizar
-    un servidor de claves basado en un servicio de directorio, se ha
+    un servidor de claves basado en un servicio de directorio se ha
     buscado una tecnología que ofrezca simplicidad a la hora de realizar
     estos accesos, y PHP cumple todos los requisitos.
 
-    Se ha descompuesto la aplicación en dos partes diferenciables, para
+    Se ha descompuesto la aplicación en dos partes diferenciables para
     seguir un modelo vista controlador. De tal forma que las operaciones
-    con datos, y la lógica de la aplicación esté centralizada en
-    \texttt{ssh\_backend.php}, y que la parte de muestra de información, y
+    con datos y la lógica de la aplicación esté centralizada en
+    \texttt{ssh\_backend.php} y la parte de muestra de información y
     formateo de los datos con html esté en \texttt{ssh.php}.
 
-    Explicaré paso a paso las funciones que se pueden encontrar en
+    Se explica a continuación paso a paso las funciones que se pueden encontrar en
     \texttt{ssh\_backend.php}.
     
     \begin{itemize}
@@ -247,7 +248,8 @@
         $timeout = $hoy[0]+$timeout;
         $dn = "uid=".  $uid .",".  $base_dn;
         $info[$rsa_server_key_attr][0] = $pubkey;
-        $info[$rsa_server_timeout][0] = "schac:userStatus:us.es:timeout:" . $timeout;
+        $info[$rsa_server_timeout][0] = 
+            "schac:userStatus:us.es:timeout:" . $timeout;
 
         // anadir la informacion al directorio
         $r=ldap_modify($ds, $dn, $info);
@@ -262,7 +264,7 @@
 
     \end{lstlisting}
 
-    Esta función modifica una entrada ya existente en el directorio,
+    Esta función modifica una entrada ya existente en el directorio
     cambiando la clave pública y poniendo nuevamente el timeout.
 
     \item función \texttt{add}
@@ -291,7 +293,8 @@
             $info["cn"] = $cn;
 
             $info[$rsa_server_key_attr] = $pubkey;
-            $info[$rsa_server_timeout] = "schac:userStatus:us.es:timeout:" . $timeout;
+            $info[$rsa_server_timeout] 
+             = "schac:userStatus:us.es:timeout:" . $timeout;
 
             // anadir la informacion al directorio
             $r=ldap_add($ds, $dn, $info);
@@ -314,7 +317,8 @@
             $cad = $_SERVER["REMOTE_USER"];
 
             //$cad = $_SERVER["REMOTE_USER"];
-            //partiendo el nombre, para crear danigm-us a partir de danigm@us.es
+            //partiendo el nombre, para crear danigm-us
+            //a partir de danigm@us.es
             $cad = $_SESSION['user'];
             $nado = explode('@', $cad);
             $name = $nado[0];
@@ -334,7 +338,6 @@
     separador, puesto que si se utiliza la '@', complicaría un poco el
     acceso por ssh.
 
-    %TODO cuidado que se sale el texto
     \item función \texttt{get\_certificate}
     \begin{lstlisting}
     
@@ -342,10 +345,12 @@
         global $shib_header;
             $certificate = "";
         if (isset($_POST['key'])) {
-            // Public key was not received from IdP. First check if user is posting its public key
+            // Public key was not received from IdP.
+            // First check if user is posting its public key
             $certificate = $_POST['key'];
             }
-            // Check if userCertificate attribute is set in SAML response
+            // Check if userCertificate attribute is 
+            //set in SAML response
             else if (isset($_SERVER[$shib_header])) {
                     $certificate = $_SERVER[$shib_header];
                     $certificate = base64_decode($certificate);
@@ -360,7 +365,7 @@
     \end{lstlisting}
 
     Intenta conseguir la clave pública del usuario a través de las
-    cabeceras que introduce el SP de shibboleth, a través de los datos que
+    cabeceras que introduce el SP de shibboleth a través de los datos que
     le manda el IdP.
 
     \item función \texttt{check\_certificate}
@@ -395,7 +400,7 @@
 
     \end{lstlisting}
 
-    Mira en el servicio de directorio, para un usuario ya existente cuál es
+    Mira en el servicio de directorio para un usuario ya existente cuál es
     la última clave pública que se utilizó.
 
     \item función \texttt{get\_attr}
@@ -409,7 +414,8 @@
 
             //Conectando con el ldap
             $ds=ldap_connect($servidor_ldap, $puerto_ldap)
-                or die("No ha sido posible conectarse al servidor ".$servidor_ldap."");
+                or die("No ha sido posible conectarse al
+                  servidor ".$servidor_ldap."");
             //Version del protocolo que vamos a usar
             ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
             //Bind como usuario, vamos a buscar, para ver si ya esta
@@ -432,14 +438,15 @@
     }
     \end{lstlisting}
 
-    Busca en el servicio de directorio, para un usuario existente un
+    Busca en el servicio de directorio para un usuario existente un
     atributo.
 
     \item función \texttt{doit}
     \begin{lstlisting}
 
     /**
-     * Esta funcion mira en el servidor de claves, si este usuario esta ya
+     * Esta funcion mira en el servidor de claves,
+     * si este usuario esta ya
      * si esta modifica la clave, y el timeout
      * si no esta lo anade
     **/
@@ -450,11 +457,16 @@
             global $bn, $pw;
 
             //Conectando con el ldap
-            $ds=ldap_connect($servidor_ldap, $puerto_ldap) or die("No ha sido posible conectarse al servidor ".$servidor_ldap."");
+            $ds=ldap_connect($servidor_ldap, $puerto_ldap)
+             or die("No ha sido posible conectarse al servidor
+             ".$servidor_ldap."");
+            
             //Version del protocolo que vamos a usar
             ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
             //Bind como usuario, vamos a buscar, para ver si ya esta
-            ldap_bind($ds, $bn, $pw) or die("No ha sido posible enlazar con el servidor ".$servidor_ldap." con el usuario ".$bn."");
+            ldap_bind($ds, $bn, $pw) 
+            or die("No ha sido posible enlazar con el servidor
+             ".$servidor_ldap." con el usuario ".$bn."");
 
             //se guardan por uid, por lo que filtramos por este campo
             $filter = '(uid='.$uid.')';
@@ -478,8 +490,8 @@
     \end{lstlisting}
 
 
-     Mira en el servidor de claves, si este usuario está ya. Si está
-     modifica la clave, y el timeout. Si no está lo añade.
+     Mira en el servidor de claves si este usuario está ya. Si está
+     modifica la clave y el timeout. Si no está lo añade.
 
     \item función \texttt{anadir\_usuario}
     \begin{lstlisting}
@@ -492,7 +504,8 @@
      *  1 Todo bien 
     **/
     function anadir_usuario(){
-            // If $certificate is set, public key has been successfully received
+            // If $certificate is set, public key has been 
+            // successfully received
             $certificate = get_certificate();
             if ($certificate != "") {
                     // Check if certificate syntax is correct
@@ -513,140 +526,33 @@
     \end{lstlisting}
 
     Esta función intenta conseguir el certificado pasado por el formulario
-    de la página, si no lo consigue, intenta conseguirlo mirando los
+    de la página, si no lo consigue intenta conseguirlo mirando los
     atributos pasados por el IdP.
 
-    Una vez que tiene el certificado, comprueba su validez, y si es
+    Una vez que tiene el certificado comprueba su validez y, si es
     correcto, añade al usuario en el servidor de claves.
 
     \end{itemize}
 
-    %TODO quitar estos cachos de código
     Por otro lado está la parte que muestra la información,
-    \texttt{ssh.php}, cuyo funcionamiento es muy simple, y sólo hace
+    \texttt{ssh.php}, cuyo funcionamiento es muy simple y sólo hace
     llamadas al \texttt{ssh\_backend.php}.
 
-    \begin{lstlisting}
+    La aplicación de ejemplo de creación de cuentas es una simple
+    aplicación en php que está basada en la anterior, por lo tanto
+    comparte la mayor parte del estilo y algo del código.
 
-<?php 
-
-session_start();
-//soporte para traducciones
-$lang=$_GET['lang'];
-if($lang=='en')
-    $language="en_US.utf8";
-else
-    $language="es_ES.utf8";
-putenv("LC_ALL=$language");
-setlocale(LC_ALL, $language);
-bindtextdomain("ssh", "./locale");
-textdomain("ssh");
-
-require("ssh_backend.php");
-
-//Esta cosita sirve para poder cerrar una aplicacion, aunque
-//las lazy sessions del shibboleth permitan el acceso
-$GLOBALS['shib_Https'] = false;
-$GLOBALS['shib_AssertionConsumerServiceURL'] =
-"/federacion21.us.es/Shibboleth.sso";
-$GLOBALS['shib_WAYF'] = "federacion21.us.es";
-
-//si no esta autenticado, redirigimos al wayf
-if( $_SERVER['HTTP_SHIB_IDENTITY_PROVIDER'] != "") {
-        $_SESSION["user"] = $_SERVER['REMOTE_USER'];
-}
-else{
-        $pageurl = "http://federacion21.us.es/protegido/ssh/ssh.php";
-        $url = ($GLOBALS['shib_Https'] ? 'https' :  'http') .'://' .
-                $GLOBALS['shib_AssertionConsumerServiceURL'] . "/WAYF/" .
-                $GLOBALS['shib_WAYF'] .
-                '?target=' . $pageurl;
-        header("Location: ".$url);
-}
-?>
-
-<html>
-    <head>
-        <title>SSH por federacion</title>
-	<link rel="stylesheet" type="text/css" media="screen" href="style.css" />
-    </head>
-    <body>
-
-	<div id="head"></div>
-	<div id="main">
-        <h2> <?php echo _('Bienvenido ') .
-        htmlentities(get_remote_user()); ?></h2>
-        <?php
-            $var = anadir_usuario();
-            $name = htmlentities(get_remote_user());
-
-            if ($var == -1)
-                echo '<p class="warning">'.
-                _('No ha introducido un certificado valido.').'</p>';
-            else if($var == -2)
-                echo '<p class="warning">'.
-                _('La operaci&oacute;n no se ha completado.').'</p>';
-
-            else if($var == -3)
-                echo '<p class="warning">'.
-                _('No se ha facilitado un certificado, introduzcalo manualmente').'</p>';
-            else
-                echo '<p class="ok">'.
-                _('Ahora puedes entrar por ssh en los servidores de la
-                federaci&oacute;n, utilizando como nombre de usuario: 
-                ').'<span class="user">'. $name .'</span></p>';
-                
-            $certificate = get_certificate_used($name);
-            echo '<p>'._('Usando el certificado: ').'<br/>';
-            $cert = str_split($certificate, 50);
-	    echo '<div class="certificate">';
-            foreach ($cert as $line){
-                echo htmlentities($line)."<br/>";
-            }
-	    echo '</div>';
-            echo '</p>';
-        ?>
-
-	<div class="info">
-    <p>
-<?php
-            echo _('Si no est&aacute;s en tu puesto de trabajo,
-            o no se encuentra tu clave, puedes proporcionar una manualmente,
-            introducciendola en el siguiente campo. Mira en tu directorio
-            $HOME/.ssh/id_rsa.pub');
-?>
-        </p>
-        <p>
-<?php
-            echo _('Para utilizar el proceso autom&aacute;tico,
-            ponte en contacto con tu proveedor de identidad.');
-?>
-        </p>
-	</div>
-	<div class="form">
-            <?php display_form() ?>
-	</div>
-	</div>
-    </body>
-</html>
-
-    \end{lstlisting}
-
-    La aplicación de ejemplo de creación de cuentas, es una simple
-    aplicación en php, que está basada en la anterior, por lo tanto
-    comparte la mayor parte del estilo, y algo del código.
-
-    Sin embargo, dado que es una aplicación de ejemplo, y su
+    Sin embargo, dado que es una aplicación de ejemplo y su
     funcionamiento en teoría es muy simple, no se ha separado en
-    varios ficheros, sino toda la aplicación está sobre un único
+    varios ficheros, sino que toda la aplicación está sobre un único
     fichero \texttt{useradd.php}.
 
-    Esta aplicación hace uso de llamadas al sistema, para realizar
+    Esta aplicación hace uso de llamadas al sistema para realizar
     comandos remotos en los servidores SSH registrados. Para que esto
-    funcione, es necesario que el servidor donde se ejecute esta
+    funcione es necesario que el servidor donde se ejecute esta
     aplicación tenga las claves públicas de los demás servidores,
     puesto que se van a hacer llamadas a comandos remotos a través de
-    SSH, y esto debería hacerse de manera automática.
+    SSH y esto debería hacerse de manera automática.
 
     Veamos con más detalle cada una de las funciones que componen la
     pequeña aplicación de ejemplo.
@@ -680,7 +586,8 @@ function useradd($uid, $servidor){
         if ($servidor == '')
                 $servidor = "federacion21.us.es";
 
-	$val = system("sudo ssh root@".$servidor." useradd -m -s /bin/bash -p xx -d /home/".$uid." ".$uid, $retval);
+	$val = system("sudo ssh root@".$servidor." 
+      useradd -m -s /bin/bash -p xx -d /home/".$uid." ".$uid, $retval);
 	return $retval;
 }
 
@@ -693,173 +600,52 @@ function useradd($uid, $servidor){
     \end{itemize}
     
     El resto de la aplicación es trivial, y no tiene importancia
-    comentarlo. Aquí se puede ver el código completo:
+    comentarlo.
 
-    \begin{lstlisting}
-
-<?php 
-
-$servers[0] = 'federacion21.us.es';
-$desc[0] = "servidor1";
-$servers[1] = 'federacion22.us.es';
-$desc[1] = "servidor2";
-$error = '';
-$info = 'En esta p&aacute;gina podr&aacute;s solicitar la creaci&oacute;n
-para el acceso ssh a los servidores';
-
-session_start();
-//soporte para traducciones
-$lang=$_GET['lang'];
-if($lang=='en')
-$language="en_US.utf8";
-else
-$language="es_ES.utf8";
-putenv("LC_ALL=$language");
-setlocale(LC_ALL, $language);
-bindtextdomain("ssh", "./locale");
-textdomain("ssh");
-
-//Esta cosita sirve para poder cerrar una aplicacion, aunque
-//las lazy sessions del shibboleth permitan el acceso
-$GLOBALS['shib_Https'] = false;
-$GLOBALS['shib_AssertionConsumerServiceURL'] = "/federacion21.us.es/Shibboleth.sso";
-$GLOBALS['shib_WAYF'] = "federacion21.us.es";
-
-//si no esta autenticado, redirigimos al wayf
-if( $_SERVER['HTTP_SHIB_IDENTITY_PROVIDER'] != "") {
-        $_SESSION["user"] = $_SERVER['REMOTE_USER'];
-}
-else{
-        $pageurl = "http://federacion21.us.es/protegido/ssh/useradd/";
-        $url = ($GLOBALS['shib_Https'] ? 'https' :  'http') .'://' .
-                $GLOBALS['shib_AssertionConsumerServiceURL'] . "/WAYF/" . $GLOBALS['shib_WAYF'] .
-                '?target=' . $pageurl;
-        header("Location: ".$url);
-}
-
-function useradd($uid, $servidor){
-        if ($servidor == '')
-                $servidor = "federacion21.us.es";
-
-    $val = system("sudo ssh root@".$servidor." useradd -m -s /bin/bash -p xx -d /home/".$uid." ".$uid, $retval);
-    return $retval;
-}
-
-function check_user($uid, $servidor){
-        if ($servidor == '')
-                $servidor = "federacion21.us.es";
-
-    exec("sudo ssh root@".$servidor." id ".$uid, $array, $retval);
-    return $retval == 0;
-}
-
-function get_remote_user(){
-        $cad = $_SERVER["REMOTE_USER"];
-
-        //$cad = $_SERVER["REMOTE_USER"];
-        //partiendo el nombre, para crear danigm-us a partir de danigm@us.es
-        $cad = $_SESSION['user'];
-        $nado = explode('@', $cad);
-        $name = $nado[0];
-        $dominio = substr($nado[1], 0, stripos($nado[1], '.'));
-        $name = $name.'-'.$dominio;
-        return $name;
-}
-?>
-
-<html>
-    <head>
-            <title>SSH por federacion</title>
-            <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
-    <script type="text/javascript" src="js/jquery-1.2.1.min.js"></script>
-    <script type="text/javascript" src="js/useradd.js"></script>
-
-    </head>
-    <body>
-
-        <div id="head"></div>
-        <div id="main">
-            <h2> <?php echo _('Bienvenido ') . htmlentities(get_remote_user()); ?></h2>
-            <?php
-            if(isset($_GET['server'])){
-                $s = $servers[$_GET['server']];
-                $var = useradd(get_remote_user(), $s);
-                if ($var != 0 && $var != 9)
-                        $error = 'No ha sido posible crear la cuenta';
-                else
-                        $info = '<p>Se ha creado la cuenta correctamente en el servidor'.$s.'</p>';
-            }
-            //$var = useradd(get_remote_user(), 'federacion22.us.es');
-            else{
-                /*
-                Mostrar lista de servidores
-                disponibles, junto con enlace para crear cuenta.  Se crean por ssh, estando
-                este servidor autorizado para entrar como root en los demas.  Quizas es
-                mejor no hacerlo con usuario root, sino con un usuario que tenga permiso
-                solo para el useradd.
-                */
-                echo "<h3>Servidores ssh ofrecidos por la Universidad de Sevilla</h3>";
-                ?>
-                <table>
-                        <tr>
-                                <th>Nombre</th>
-                                <th>Descripci&oacute;n</th>
-                                <th></th>
-                        </tr>
-                <?php
-                for($i = 0; $i<count($servers); $i++){
-                        echo '<tr>';
-                        echo '<td>'.$servers[$i].'</td>';
-                        echo '<td>'.$desc[$i].'</td>';
-        if (check_user(get_remote_user(), $servers[$i]))
-            echo '<td>Ya tienes cuenta en este servidor</td>';
-        else
-            echo '<td><a href="?server='.$uid.'" class="solicitar" id="'.$i.'" >solicitar cuenta</a></td>';
-                        echo '</tr>';
-                }
-                echo "</table>";
-        }
-            ?>
-            <div class="info">
-                    <p class="warning">
-                            <?php echo $error;?>
-                    </p>
-                    <?php echo $info ?>
-            </div>
-        </div>
-    </body>
-</html>
-
-    \end{lstlisting}
-
-    \subsection{Internacionalización}
+\subsection{Internacionalización}
 
     Puesto que estas aplicaciones son la parte que va a ver el
-    usuario, se ha utilizado un sistema de internacionalización,
+    usuario se ha utilizado un sistema de internacionalización,
     \texttt{gettext}, para facilitar la traducción de las mismas. Así
     pues sería muy simple traducir estas aplicaciones y ofrecerlas en
     diferentes idiomas, según el idioma en el que esté configurado el
     navegador del usuario.
 
-    De momento, y para este proyecto se ha realizado la versión en
-    castellano, y una traducción al inglés.
+    De momento y para este proyecto se ha realizado la versión en
+    castellano y una traducción al inglés. Realizar cualquier otra
+    traducción sería tan simple como modificar un fichero de texto
+    plano donde aparecen las cadenas en el idioma original y habría
+    que introducir las cadenas traducidas.
 
-    \section{Necesidades para montar la plataforma}
+\section{Necesidades para montar la plataforma}
 
-    Este proyecto se ha realizado con un software base determinado,
+    Este proyecto se ha realizado con un software base determinado
     puesto que depende de muchos componentes. En este apartado
-    explicaremos cómo montar el proyecto desde cero, y tener una
+    explicaremos cómo montar el proyecto desde cero y tener una
     versión funcional.
 
-    Como este proyecto depende de una federación de identidad,
+    Como este proyecto depende de una federación de identidad
     supondremos que pertenecemos a una organización de una federación,
     y por lo tanto tendremos diferentes SPs montados.
 
-    Todo el código, el parche, y las dos aplicaciones en php, se
+    Todo el código, el parche y las dos aplicaciones en php, se
     pueden conseguir en la forja de rediris, en el proyecto AUPAAI 
-    \url{https://forja.rediris.es/projects/aupaai/}.
+    \cite{forja}.
 
-    %TODO comentar cómo se consiguen los fuentes
+    Para conseguir los fuentes del proyecto se debe utilizar el
+    sistema de control de versiones subversion \cite{svn}. Con el
+    sistema de control de versiones se conseguiría una copia del
+    código fuente más reciente. Para poder hacer uso de estos comandos
+    es necesario tener instalado "Subversion".
+
+    Se utiliza este sistema de control de versiones porque es el que
+    ofrece la forja de software que ofrece RedIRIS para alojar
+    proyectos.
+
+    Este proyecto está englobado dentro del proyecto aupaai que
+    contiene más software para federación, por lo tanto sólo nos
+    interesa en este caso el directorio fed+ssh dentro del
+    repositorio.
 
     \begin{verbatim}
 
@@ -868,172 +654,211 @@ function get_remote_user(){
 
     \end{verbatim}
 
-        \subsection{Cómo aplicar el parche}
 
-        Para poder aplicar el parche, es necesario bajarse el código
-        fuente de openssh, \url{http://www.openssh.org/portable.html}
+\subsection{Instalando el servidor SSH parcheado}
 
-        \begin{verbatim}
+    Para poder aplicar el parche, es necesario bajarse el código
+    fuente de openssh, \url{http://www.openssh.org/portable.html}.
+    Utiliza CVS como sistema de control de versiones, por lo tanto, si
+    queremos descargar la última versión de desarrollo tendremos que
+    tener instalado esta aplicación y se descargaría de la siguierte
+    manera:
 
-        export CVSROOT=anoncvs@anoncvs.mindrot.org:/cvs
-        export CVS_RSH=/usr/bin/ssh
-        cvs get openssh
+    \begin{verbatim}
 
-        \end{verbatim}
+    export CVSROOT=anoncvs@anoncvs.mindrot.org:/cvs
+    export CVS_RSH=/usr/bin/ssh
+    cvs get openssh
 
-        Una vez hecho esto, el siguiente paso es copiar el fichero
-        .patch dentro del directio donde vayamos a compilar el
-        servidor SSH, y aplicarlo.
+    \end{verbatim}
 
-        \begin{verbatim}
-        
-        cd openssh
-        cp ../aupaai/fed+ssh/parche-openssh.patch .
-        patch -p0 < parche-openssh.patch
+    Una vez hecho esto el siguiente paso sería copiar el fichero
+    .patch dentro del directio donde vayamos a compilar el
+    servidor SSH y aplicar el parche.
 
-        \end{verbatim}
+    Para esto se utiliza el comando patch al que se le pasa un fichero
+    de diferencias y modifica los fuentes con los cambios necesarios.
 
-        Por otra parte, para simplificar la instalación, y dado que la
-        licencia BSD lo permite, está disponible el código parcheado,
-        junto con las aplicaciones en la forja de rediris
-        \url{http://forja.rediris.es/frs/download.php/775/openssh-federado.tar.gz}.
+    \begin{verbatim}
+    
+    cd openssh
+    cp ../aupaai/fed+ssh/parche-openssh.patch .
+    patch -p0 < parche-openssh.patch
 
-        Si todo ha ido bien, es hora de compilar, antes de nada, es
-        necesario tener instalado el compilador, y todas las
-        dependencias de openssh, además de las librerías openldap, ya
-        que el parche hace uso de las mismas para comunicarse con el
-        servidor de claves. Así pues se deben ejecutar los siguientes
-        comandos.
+    \end{verbatim}
 
-        \begin{verbatim}
+    Por otra parte, para simplificar la instalación y dado que la
+    licencia BSD lo permite, está disponible el código parcheado
+    junto con las aplicaciones en la forja de rediris
+    \url{http://forja.rediris.es/frs/download.php/775/openssh-federado.tar.gz}
+    de donde se puede descargar de manera más simple el código del
+    servidor ya parcheado y listo para su compilación.
 
-        ./configure --prefix=/ruta/de/instalacion
-        make
-        make install
+    Si todo ha ido bien, es hora de compilar. Antes de nada es
+    necesario tener instalado el compilador y todas las
+    dependencias de openssh además de las librerías openldap, ya
+    que el parche hace uso de las mismas para comunicarse con el
+    servidor de claves. Así pues se deben ejecutar los siguientes
+    comandos.
 
-        \end{verbatim}
+    \begin{verbatim}
 
-        Una vez compilado, es hora de configurarlo para que funcione
-        con nuestro sistema, cambiando el fichero \texttt{sshd\_config}
+    ./configure --prefix=/ruta/de/instalacion
+    make
+    make install
 
-        \begin{verbatim}
+    \end{verbatim}
 
-        # External RSA key
-        fedserver host.servidorclaves.com
-        fedport 389
-        usefed yes
-        fedserver_root_dn "cn=admin,dc=us,dc=es"
-        fedserver_root_pw password
-        fedserver_base "o=People,dc=us,dc=es"
-        fedserver_attr sshPublicKey
-        fedserver_timeattr schacUserStatus
+    Openssh utiliza las herramientas de compilación autotools, que son
+    un conjuto de herramientas que facilitan la compilación de
+    aplicaciones en diferentes arquitecturas y sistemas. Por tanto es
+    necesario tener instaladas estas herramientas, tanto
+    \texttt{configure} como \texttt{make} son herramientas que
+    facilitan la compilación.
 
-        \end{verbatim}
+    Una vez compilado es hora de configurarlo para que funcione
+    con nuestro sistema, cambiando el fichero \texttt{sshd\_config}
 
-        Y con esto, ya estaría el servidor SSH parcheado, listo para
-        funcionar de manera federada. Ahora sólo sería necesario crear
-        las cuentas de los usuarios, que se puede hacer de forma
-        dinámica, o estática, y sólo tendrán acceso cuando se
-        autentiquen frente a la federación.
+    \begin{verbatim}
 
-        \subsection{Cómo montar el SP y la aplicación web}
+    # External RSA key
+    fedserver host.servidorclaves.com
+    fedport 389
+    usefed yes
+    fedserver_root_dn "cn=admin,dc=us,dc=es"
+    fedserver_root_pw password
+    fedserver_base "o=People,dc=us,dc=es"
+    fedserver_attr sshPublicKey
+    fedserver_timeattr schacUserStatus
 
-        La aplicación web de autenticación está hecha pensando en el
-        SP de shibboleth 1.3. Por lo tanto será necesario tener un SP
-        de shibboleth sobre un servidor web apache.
+    \end{verbatim}
 
-        Para funcionar, la aplicación requiere que estén instaladas
-        las librerias de acceso a LDAP, para php, puesto que se va a
-        comunicar con el servidor de claves, que en este caso será un
-        servicio de directorio.
-        
-        Sobre un directorio protegido se despliega el directorio
-        \texttt{ssh}, y ya estaría la aplicación de autenticación
-        instalada en la federación.
+    Y con esto ya estaría el servidor SSH parcheado listo para
+    funcionar de manera federada. Ahora sólo sería necesario crear
+    las cuentas de los usuarios, que se puede hacer de forma
+    dinámica o estática y sólo tendrán acceso cuando se
+    autentiquen frente a la federación.
 
-        Cualquier usuario que quisiera acceder a algún servidor SSH
-        federado, tendrá que entrar en esta página, de tal forma que
-        escriba el registro correspondiente en el servidor de claves,
-        y así el usuario tenga acceso a todos los servidores SSH
-        federados.
+\subsection{Cómo montar el SP y la aplicación web}
 
-        La aplicación es configurable, así que habrá que cambiar unas
-        variables en el fichero \texttt{ssh\_backend.php}
+    La aplicación web de autenticación está hecha pensando en el
+    SP de shibboleth 1.3. Por lo tanto será necesario tener un SP
+    de shibboleth sobre un servidor web apache.
 
-        \begin{verbatim}
+    Para funcionar la aplicación requiere que estén instaladas
+    las librerias de acceso a LDAP para php, además por supuesto del
+    modulo de php para el servidor web correspondiente, puesto que se va a
+    comunicar con el servidor de claves que en este caso será un
+    servicio de directorio.
+    
+    Sobre un directorio protegido por el proveedor de servicio se
+    despliega el directorio \texttt{ssh}, y ya estaría la aplicación
+    de autenticación instalada en la federación.
 
-        $base_dn ='o=People,dc=us,dc=es';
-        $servidor_ldap = "goonie.us.es";
-        $puerto_ldap = 389;
-        $bn = 'cn=admin,dc=us,dc=es';
-        $pw = 'xxxx';
-        $minutes_timeout = 30;
-        $shib_header = "HTTP_USERCERTIFICATE";
-        $rsa_server_key_attr = 'sshpublickey';
-        $rsa_server_timeout = 'schacuserstatus';
+    Cualquier usuario que quisiera acceder a algún servidor SSH
+    federado tendrá que entrar en esta página, de tal forma que
+    escriba el registro correspondiente en el servidor de claves
+    y así el usuario tenga acceso a todos los servidores SSH
+    federados.
 
-        \end{verbatim}
+    La aplicación es configurable así que habrá que cambiar unas
+    variables en el fichero \texttt{ssh\_backend.php}
 
-        Con estas opciones se pueden configurar, el servidor de
-        claves, el tiempo en minutos que va a durar una sesión de un
-        usuario autenticado, la cabecera de shibboleth que mirará la
-        aplicación para intentar conseguir la clave pública y los
-        campos en el servidor de claves para almacenar la clave
-        pública y el tiempo de sesión.
+    \begin{verbatim}
 
-        \subsection{Cómo instalar el servidor de claves (openldap)}
+    $base_dn ='o=People,dc=us,dc=es';
+    $servidor_ldap = "goonie.us.es";
+    $puerto_ldap = 389;
+    $bn = 'cn=admin,dc=us,dc=es';
+    $pw = 'xxxx';
+    $minutes_timeout = 30;
+    $shib_header = "HTTP_USERCERTIFICATE";
+    $rsa_server_key_attr = 'sshpublickey';
+    $rsa_server_timeout = 'schacuserstatus';
 
-        La última parte que hace falta para tener montado todo el
-        proyecto, es el servidor de claves.
+    \end{verbatim}
 
-        Puesto que nos hemos decidido por un servicio de directorio,
-        aquí es muy fácil la instalación, es más, hay diferentes
-        opciones, comerciales, y no comerciales. Y dado que los
-        campos a utilizar para almacenar los datos son variables,
-        tanto en el servidor SSH parcheado, como en la aplicación de
-        autenticación, no es obligatorio instalar ningún esquema,
-        aunque sí recomendable.
+    Con estas opciones se pueden configurar el servidor de
+    claves, el tiempo en minutos que va a durar una sesión de un
+    usuario autenticado, la cabecera de shibboleth que mirará la
+    aplicación para intentar conseguir la clave pública y los
+    atributos en el servidor de claves para almacenar la clave
+    pública y el tiempo de sesión.
 
-        Explicaremos aquí cómo instalar un servidor de claves, en una
-        distribución tipo Debian, y aplicarle los esquemas usados.
+\subsection{Cómo instalar el servidor de claves (openldap)}
 
-        Lo primero es instalar el servicio de directorio.
+    La última parte que hace falta para tener montado todo el
+    proyecto es el servidor de claves.
 
-        \begin{verbatim}
+    Puesto que nos hemos decidido por un servicio de directorio
+    aquí es muy fácil la instalación, es más, hay diferentes
+    opciones comerciales y no comerciales. Y dado que los
+    atributos a utilizar para almacenar los datos son variables
+    tanto en el servidor SSH parcheado como en la aplicación de
+    autenticación, no es obligatorio instalar ningún esquema,
+    aunque sí recomendable.
 
-        apt-get install slapd
+    Explicaremos aquí cómo instalar un servidor de claves en una
+    distribución tipo Debian y aplicarle los esquemas usados.
 
-        \end{verbatim}
+    Lo primero es instalar el servicio de directorio.
 
-        La configuración está en el directorio /etc/ldap/, y los
-        esquemas para openldap hay que meterlos en /etc/ldap/schemas/.
+    \begin{verbatim}
 
-        Descarga de los esquemas necesarios:
+    apt-get install slapd
 
-        Schema schac: 
-        \url{http://www.rediris.es/ldap/esquemas/schac/schac-20061017-1.3.0b2.schema.txt}
+    \end{verbatim}
 
-        Schema openssh-lpk:
-        \url{http://dev.inversepath.com/openssh-lpk/openssh-lpk\_openldap.schema}
+    La configuración está en el directorio /etc/ldap/ y los
+    esquemas para openldap hay que meterlos en /etc/ldap/schemas/.
+
+    Descarga de los esquemas necesarios:
+
+    Esquema schac: 
+    \url{http://www.rediris.es/ldap/esquemas/schac/schac-20061017-1.3.0b2.schema.txt}
+
+    Esquema openssh-lpk:
+    \url{http://dev.inversepath.com/openssh-lpk/openssh-lpk\_openldap.schema}
 
 
-        Se ha de mover los esquemas al directorio /etc/ldap/schemas/ y
-        posteriormente modificar el fichero
-        \texttt{/etc/ldap/slapd.conf} añadiendole las lineas
+    Se ha de mover los esquemas al directorio /etc/ldap/schemas/ y
+    posteriormente modificar el fichero
+    \texttt{/etc/ldap/slapd.conf} añadiendole las lineas
 
-        \begin{verbatim}
+    \begin{verbatim}
 
-        include         /etc/ldap/schema/openssh-lpk_openldap.schema
-        include         /etc/ldap/schema/schac-20061017-1.3.0b2.schema
+    include         /etc/ldap/schema/openssh-lpk_openldap.schema
+    include         /etc/ldap/schema/schac-20061017-1.3.0b2.schema
 
-        \end{verbatim}
+    \end{verbatim}
 
-        
-        \subsection{Todo en conjunto}
+    
+\subsection{Todo en conjunto}
 
-        Una vez que ya están todas las partes instaladas, hay que
-        configurar tanto los servidores ssh parcheados, como la
-        aplicación de autenticación para que se comuniquen con el
-        servidor de claves públicas.
+    Una vez que ya están todas las partes instaladas, hay que
+    configurar tanto los servidores ssh parcheados como la
+    aplicación de autenticación para que se comuniquen con el
+    servidor de claves públicas.
 
-        %TODO poner algo más
+    El despliegue de este proyecto requiere de diferentes partes que
+    tienen sus problemas propios de despliegue. Así pues es importante
+    no introducir demasiados requisitos para el despliegue de nuestras
+    herramientas.
+
+    En realidad el servicio es un conjunto de pequeñas herramientas
+    que hacen bien su trabajo y que se comunican entre sí para dar un
+    servicio conjunto. Esto requiere configurar cada parte del
+    proyecto para que se comunique correctamente con todas las demás
+    partes.
+
+    También influye enormemente el que sea un sistema distribuido, es
+    decir, que cada servicio pueda estar en una máquina diferente y en
+    una subred diferente. Por lo tanto existe otro factor de
+    complejidad que es introducido por la complejidad de los sistemas
+    distribuidos en red.
+
+    Tanto las aplicaciones web en PHP como los servidores SSH
+    parcheados forman parte de la federación de identidad, puesto que
+    comparten información de identidad a través de diferentes
+    servidores de diferentes organizaciones basándose en un sistema de
+    confianza.
