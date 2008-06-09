@@ -27,137 +27,114 @@
 
 Using Federation credentials to SSH login
 
-This project is based in the paper of Feide:
+This project is based on the Feide paper available at:
 \url{http://rnd.feide.no/content/feide-and-ssh-secure-shell}
 
 Problem:
 
     When we have lots of SSH accounts, we need to remember lots of
-    passwords and it is in all SSH servers.
+    passwords, and these passwords are stored by each individual SSH
+    server.
 
-    Because that, if we want to change the password, it is needed to
-    change it in all servers.  Furthermore, if one of that SSH servers
-    is hacked our password could be known by other person.
+    Because of that, whenever we want to change passwords, it is required
+    to change it in all servers.  Furthermore, if one of those SSH servers
+    is hacked our password at many others may be at risk.
 
-    Other problem related to password and SSH could be when you want
-    to give a SSH service to many users, and you don't manage that
-    users accounts. 
+    Other problem related to password management in SSH deployments
+    arises when you want to give SSH service to many users, complicating
+    the management of that many users accounts. 
 
-    Identity federation solves that problems, but it is designer only
-    for web. This document describes how we use identity federation
-    credentials to solve that problems in SSH services.
+    Identity federation can solve those problems, but it is currently
+    designed for web-only scenarios. This document describes how we use
+    identity federation credentials to solve those problems in SSH services.
 
 Objective:
 
-    The objective of this project is use identity federation
-    credentials to authenticate in SSH. We try to make easiest for
-    user and for the administer of the service.
+    The objective of this project is to enable the use of identity
+    federation credentials to authenticate in SSH. We have tried to make it
+    as easy as possible for both the user and the admin of the service.
 
-    We want the user could access to the service without writes his own
-    password. And could access to others federated servers
-    automatically.
 
 Solution:
 
-    To make this, we use the ssh public key system that could be used
-    with SSH servers. With that, there is not needed to write the
-    password.
+    To achieve this, we take the advantage of the possibility of using
+    a public key system with SSH servers. By means of the use of trusted
+    public keys there is not needed to write passwords.
 
     The SSH server needs to get the user public key from the federation
-    system, but it works only in web applications. For that we put a
-    global LDAP server. In that LDAP server we put an entry when the
-    user login in the federation, and then from the SSH server we can
-    look up if the user is authenticated.
+    system, that works only for web applications. Therefore we put a
+    common LDAP server. In that LDAP server we add an entry whenever the
+    user logins to the federation, so the SSH server can verify whether
+    the user is authenticated.
 
     Our solution has two parts:
     
     1.- SP application
 
-    One is an SP application made in php.  That is a global
-    application, only one it's needed for all entities. The user enter
-    in that web application, and it's redirected to his own IdP. Then
-    when the user is authenticated, it's redirected to that
-    application.
+    One is a SP application made in PHP.  This is an application global
+    for the federation; only one instance is needed. The user enters
+    to that web application, being redirected to their own IdP. Once
+    the user is authenticated is redirected to that application.
 
-    That application receives the user name and ssh public
+    The application expects to receive an uid and a ssh public
     key from the IdP, and writes an entry in the global LDAP server.
 
-    Furthermore in that application it is possible to write your
-    ssh public key manually, if your IdP don't have it or if your
-    aren't in your own machine.
+    Furthermore, the application allows the user to write their
+    ssh public key manually, covering the case of the IdP not having it
+    or of the user not using the machine where their private key lives.
 
-    The application makes an entry in the LDAP server with the name of
-    the user concatenated with his entity name, some like
-    username-entity (danigm-us), with the ssh public key and with an
-    timeout number.
+    The application makes an entry in the LDAP server, containing the
+    uid  concatenated with the IdP name, something like username-IdP
+    (danigm-us), the ssh public key, and a timeout value.
 
-    Since the login in that web application the user can logins in all
-    the SSH servers automatically without write any password.
-
-    The look of that application is like that [1]
-
-    2.- Openssh path
+    From the moment access to that web application is granted, the user
+    can login to all the participating SSH servers automatically.
     
-    The ssh server work this way:
-        First try to authenticate the user with ssh public key,
+    2.- Openssh patch
+    
+    The ssh server works in this way:
+        First, it  tries to authenticate the user with a ssh public key,
         looking for keys in \$HOME/.ssh/authorized\_keys. If that works,
-        login without ask for password.
+        it accepts the login without asking for a password.
 
-        Second try to authenticate with PAM modules if that it's
+        Second it tries to authenticate with PAM modules if PAM has been
         activated.
 
-    At first, we think in a PAM module but because of the ssh
-    working, that method requires the user writes a password or
-    something similar.
+    At first, we thought of a PAM module but, because of the way in
+    which the ssh server works, that method required the user to write a
+    password or something similar, losing the automatic login.
 
-    The way we take is to modify the openssh server, that it's
-    free software.
+    The way we took is to modify the openssh server, taking advantage of
+    its condition of free software.
 
-    To make it we write a patch to that ssh server. The objective of
-    this patch is to touch only the needed files to make it strong to
-    the variation of the openssh code.
+    We wrote a patch for this ssh server. The objective of this patch was
+    to modify the least possible number of files, making it robust with respect
+    to future evolutions of the openssh code.
 
-    This patch touch the authenticate method of the server
-    introducing a subroutine exact after the server look for the
-    public key in the local filesystem. 
+    The patch medifies the authenticate() method in the server, including a
+    subroutine right after the segment in which the server looks for the public
+    key in the local filesystem. 
 
-    If the server don't finds the user public key, that subroutine is
-    called. Then asks for the user to the LDAP server, that we mentioned
+    If the server does not find the user public key, that subroutine is
+    called. It queries the user at the LDAP server that we mentioned
     before. If the user is authenticated the patched ssh server
     receives the public key and the timestamp that indicates the
     timeout of the login.
 
     The subroutine checks if the time is correct and then creates a
-    temp file in the local filesystem with the rsa public key. After
-    that checks again the user identity but now with the new temp
-    file. If all is well, the user is authenticated directly. Else,
+    temporary file in the local filesystem with the rsa public key. After
+    that, it checks again the user identity but now with the new temp
+    file. If all goes well, the user is authenticated directly. Otherwise,
     the ssh server authentication method continues asking for the user
     password.
 
-    All the parameters needed by that patch could be sets in the
+    All the parameters needed by that patch could be set in the
     sshd.conf file.
 
-    Now we use like public ssh key server a LDAP server, but the patch
-    it's implemented to support others servers easily. You only need
-    to write a function that asks for the user to the server and
-    returns the ssh public key if it exist.
-
-Problems:
-    
-    One problem for the solution is the ssh server needs
-    the user has an account in the machine.
-
-    For this problem we write a simple solution, it's a web
-    application that is protected by an SP, and when the user login in
-    the application he could creates an account in all machines that
-    has the patched ssh server and looks like this [2].
-
-    Other problem is the user could change the password and if
-    the user change the password or write a file in the directory
-    .ssh, he can logins after without authenticate in the federation
-    system, and we don't want that.
-
-All the code could be found in the RedIRIS forge [3].
+    Currently we are using and LDAP server as public key server, but the
+    method could be able to easily support others query protocols. You only need
+    to write a function that asks for the uid to the server and
+    returns the ssh public key if it exists.
 
 Images:
     [1] sshApp.png
